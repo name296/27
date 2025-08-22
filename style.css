@@ -1,0 +1,200 @@
+:root {
+  --button-width: 160px;
+  --button-height: 256px;
+
+  --border-style: solid;
+  --border-style-active: solid;
+  --border-style-disabled: dashed;
+  --border-style-hover: solid;
+  --border-style-focus: dashed;
+
+  --border-color: #8C532C;
+  --border-color-active: #A4693F;
+  --border-color-disabled: #A4693F;
+  --border-color-hover: #A4693F;
+  --border-color-focus: #FF00E1;
+  
+  /*
+  --border-width는 js로 인라인
+  --border-radius는 js로 인라인
+  */
+  
+  --background-color: #EEDCD2;
+  --background-color-active: #A4693F;
+  --background-color-disabled: #FAFAFA;
+  --background-color-hover: #A4693F;
+
+  --color: #A4693F;
+  --color-hover: #FFFFFF;
+  --color-active: #FFFFFF;
+  --color-disabled: #8C532C;
+
+  --font-family: 'Pretendard GOV', sans-serif;
+  --font-size: 58px;
+  --font-weight: 600;
+
+  --svg-size: var(--font-size);
+}
+
+body {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 0;
+  height: 100vh;
+  background: #FAFAFA;
+}
+
+.table {
+  display: flex;
+  flex-flow: column nowrap;
+  width: fit-content;
+  height: fit-content;
+  align-items: center;
+}
+
+.plain-text {
+  text-align: center;
+}
+
+button {
+  all: unset;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--button-width);
+  height: var(--button-height);
+  color: var(--color);
+  cursor: pointer;
+}
+
+.button:active {
+  color: var(--color-active);
+}
+
+.button-background {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+  outline-style: var(--border-style);
+  outline-color: var(--border-color);
+}
+
+.button:not([aria-disabled="true"]):active .button-background {
+  outline-style: var(--border-style-active);
+  outline-color: var(--border-color-active);
+  background-color: var(--background-color-active);
+}
+
+/* 키보드 시각 효과: Enter/Space 누르는 동안 active 스타일 부여 */
+.button:not([aria-disabled="true"]).key-active {
+  color: var(--color-active);
+}
+
+.button:not([aria-disabled="true"]).key-active .button-background {
+  outline-style: var(--border-style-active);
+  outline-color: var(--border-color-active);
+  background-color: var(--background-color-active);
+}
+
+.button-background .icon {
+  width: fit-content;
+  height: fit-content;
+}
+
+.button-background .icon svg {
+  width: var(--svg-size);
+  height: var(--svg-size);
+  fill: currentColor;
+}
+
+.button-background .label {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+}
+
+.selected-icon {
+  display: none;
+  width: fit-content;
+  height: fit-content;
+}
+
+.selected-icon svg {
+  width: var(--svg-size);
+  height: var(--svg-size);
+  fill: currentColor;
+}
+
+.button:not([aria-disabled="true"]):hover {
+  outline-style: var(--border-style-focus);
+  outline-color: var(--border-color-focus);
+}
+
+.button:focus-visible {
+  outline-style: var(--border-style-focus);
+  outline-color: var(--border-color-focus);
+}
+
+.button[aria-disabled="true"] .button-background,
+.button.disabled .button-background {
+  background-color: var(--background-color-disabled);
+  outline-style: var(--border-style-disabled);
+  outline-color: var(--border-color-disabled);
+}
+
+.button[aria-disabled="true"] {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.button[aria-disabled="true"] * {
+  pointer-events: none;
+}
+
+.button[aria-disabled="true"]:hover,
+.button[aria-disabled="true"]:active,
+.button[aria-disabled="true"]:focus-visible {
+  outline-style: var(--border-style-focus);
+  outline-color: var(--border-color-focus);
+}
+
+.button[aria-disabled="true"]:hover .button-background,
+.button[aria-disabled="true"]:active .button-background {
+  outline-style: var(--border-style-disabled);
+  outline-color: var(--border-color-disabled);
+  background-color: var(--background-color-disabled);
+}
+
+.button[aria-disabled="true"].selected {
+  color: var(--color-disabled);
+}
+
+.button[aria-disabled="true"].selected .button-background {
+  outline-style: var(--border-style-disabled);
+  outline-color: var(--border-color-disabled);
+  background-color: var(--background-color-disabled);
+}
+
+.button:not([aria-disabled="true"]).selected {
+  color: var(--color-active);
+}
+
+.button:not([aria-disabled="true"]).selected .button-background {
+  outline-style: var(--border-style-active);
+  outline-color: var(--border-color-active);
+  background-color: var(--background-color-active);
+}
+
+.button:not([aria-disabled="true"]).selected .selected-icon {
+  display: flex;
+}

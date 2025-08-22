@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>버튼 테스트</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 기본상태, default 버튼 -->
+  <div class="table">
+    <span class="plain-text">기본상태</span>
+    <button type="button" class="button">
+      <div class="button-background">
+        <span class="icon"><!-- fetch 영역 --></span>
+        <span class="label">label</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- 클릭상태, pressed 버튼 -->
+  <div class="table">
+    <span class="plain-text">클릭상태</span>
+    <button type="button" class="button">
+      <div class="button-background">
+        <span class="icon"><!-- fetch 영역 --></span>
+        <span class="label">label</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- 선택상태, selected 버튼 -->
+  <div class="table">
+    <span class="plain-text">선택상태</span>
+    <button type="button" class="button selected">
+      <div class="button-background">
+        <span class="selected-icon"></span>
+        <span class="icon"><!-- fetch 영역 --></span>
+        <span class="label">label</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- 비활성상태, disabled 버튼 -->
+  <div class="table">
+    <span class="plain-text">비활성상태</span>
+    <button type="button" class="button disabled" aria-disabled="true">
+      <div class="button-background">
+        <span class="icon"><!-- fetch 영역 --></span>
+        <span class="label">label</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- 초점상태, focused 버튼 -->
+  <div class="table">
+    <span class="plain-text">초점상태</span>
+    <button type="button" class="button">
+      <div class="button-background">
+        <span class="icon"><!-- fetch 영역 --></span>
+        <span class="label">label</span>
+      </div>
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
