@@ -1,0 +1,86 @@
+name: 🚀 Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 빌드 및 테스트 Job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📦 Checkout
+      uses: actions/checkout@v4
+
+    - name: 🔍 HTML 유효성 검사
+      uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+      with:
+        root: ./
+        css: true
+        
+    - name: 🎨 CSS 린트 검사
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - run: |
+        npm install -g stylelint stylelint-config-standard
+        echo '{
+          "extends": ["stylelint-config-standard"],
+          "rules": {
+            "selector-class-pattern": null,
+            "custom-property-pattern": null,
+            "color-function-notation": null
+          }
+        }' > .stylelintrc.json
+        stylelint "*.css" || true
+
+    - name: 🚀 Setup Pages
+      uses: actions/configure-pages@v5
+      
+    - name: 📄 Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+
+  # 배포 Job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: 🌐 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+  # 품질 검사 Job
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📦 Checkout
+      uses: actions/checkout@v4
+      
+    - name: 🎯 접근성 검사 (axe)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - run: |
+        npm install -g @axe-core/cli
+        # 로컬 서버 시작 후 접근성 검사
+        python3 -m http.server 8000 &
+        sleep 5
+        axe http://localhost:8000 --verbose || true
