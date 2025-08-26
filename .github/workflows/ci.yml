@@ -1,0 +1,157 @@
+name: 🔍 Code Quality Check
+
+on:
+  # Pull Request와 Push 시 실행
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 코드 품질 검사
+  quality-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📂 Checkout
+      uses: actions/checkout@v4
+      
+    - name: 🔍 HTML 구문 검사
+      run: |
+        echo "🔍 HTML 파일 구문 검사 중..."
+        
+        # HTML 파일들을 찾아서 기본 구문 검사
+        for file in *.html; do
+          if [ -f "$file" ]; then
+            echo "📄 검사 중: $file"
+            
+            # 기본 HTML 구조 검사
+            if grep -q "<!DOCTYPE html>" "$file" && \
+               grep -q "<html" "$file" && \
+               grep -q "<head>" "$file" && \
+               grep -q "<body>" "$file"; then
+              echo "✅ $file: 기본 HTML 구조 확인"
+            else
+              echo "⚠️ $file: 기본 HTML 구조에 문제가 있을 수 있습니다"
+            fi
+            
+            # 메타 태그 검사
+            if grep -q "<meta charset=" "$file"; then
+              echo "✅ $file: 문자 인코딩 설정됨"
+            else
+              echo "⚠️ $file: 문자 인코딩이 설정되지 않음"
+            fi
+            
+            # 뷰포트 메타 태그 검사
+            if grep -q "viewport" "$file"; then
+              echo "✅ $file: 뷰포트 설정됨"
+            else
+              echo "⚠️ $file: 뷰포트가 설정되지 않음"
+            fi
+          fi
+        done
+        
+    - name: 🎨 CSS 기본 검사
+      run: |
+        echo "🎨 CSS 파일 기본 검사 중..."
+        
+        for file in *.css; do
+          if [ -f "$file" ]; then
+            echo "📄 검사 중: $file"
+            
+            # CSS 파일 크기 확인
+            size=$(wc -c < "$file")
+            echo "📏 $file 크기: $size bytes"
+            
+            # 기본 CSS 문법 검사 (중괄호 쌍 확인)
+            open_braces=$(grep -o '{' "$file" | wc -l)
+            close_braces=$(grep -o '}' "$file" | wc -l)
+            
+            if [ "$open_braces" -eq "$close_braces" ]; then
+              echo "✅ $file: 중괄호 균형 맞음 ({: $open_braces, }: $close_braces)"
+            else
+              echo "❌ $file: 중괄호 불균형 ({: $open_braces, }: $close_braces)"
+              exit 1
+            fi
+          fi
+        done
+        
+    - name: ⚡ JavaScript 기본 검사
+      run: |
+        echo "⚡ JavaScript 파일 기본 검사 중..."
+        
+        for file in *.js; do
+          if [ -f "$file" ]; then
+            echo "📄 검사 중: $file"
+            
+            # JavaScript 파일 크기 확인
+            size=$(wc -c < "$file")
+            echo "📏 $file 크기: $size bytes"
+            
+            # 기본 구문 검사 (괄호 쌍 확인)
+            open_parens=$(grep -o '(' "$file" | wc -l)
+            close_parens=$(grep -o ')' "$file" | wc -l)
+            open_braces=$(grep -o '{' "$file" | wc -l)
+            close_braces=$(grep -o '}' "$file" | wc -l)
+            open_brackets=$(grep -o '\[' "$file" | wc -l)
+            close_brackets=$(grep -o '\]' "$file" | wc -l)
+            
+            echo "🔍 괄호 검사:"
+            echo "  - 소괄호: ( $open_parens | ) $close_parens"
+            echo "  - 중괄호: { $open_braces | } $close_braces"
+            echo "  - 대괄호: [ $open_brackets | ] $close_brackets"
+            
+            if [ "$open_parens" -eq "$close_parens" ] && \
+               [ "$open_braces" -eq "$close_braces" ] && \
+               [ "$open_brackets" -eq "$close_brackets" ]; then
+              echo "✅ $file: 괄호 균형 맞음"
+            else
+              echo "❌ $file: 괄호 불균형 발견"
+              exit 1
+            fi
+          fi
+        done
+        
+    - name: 📊 프로젝트 통계
+      run: |
+        echo "📊 프로젝트 파일 통계:"
+        echo "----------------------------------------"
+        
+        # 파일 개수
+        html_count=$(ls *.html 2>/dev/null | wc -l)
+        css_count=$(ls *.css 2>/dev/null | wc -l)
+        js_count=$(ls *.js 2>/dev/null | wc -l)
+        svg_count=$(ls *.svg 2>/dev/null | wc -l)
+        
+        echo "📄 HTML 파일: $html_count개"
+        echo "🎨 CSS 파일: $css_count개"
+        echo "⚡ JavaScript 파일: $js_count개"
+        echo "🖼️ SVG 파일: $svg_count개"
+        
+        # 총 코드 라인 수
+        total_lines=0
+        if [ "$html_count" -gt 0 ]; then
+          html_lines=$(cat *.html | wc -l)
+          echo "📏 HTML 총 라인: $html_lines"
+          total_lines=$((total_lines + html_lines))
+        fi
+        
+        if [ "$css_count" -gt 0 ]; then
+          css_lines=$(cat *.css | wc -l)
+          echo "📏 CSS 총 라인: $css_lines"
+          total_lines=$((total_lines + css_lines))
+        fi
+        
+        if [ "$js_count" -gt 0 ]; then
+          js_lines=$(cat *.js | wc -l)
+          echo "📏 JavaScript 총 라인: $js_lines"
+          total_lines=$((total_lines + js_lines))
+        fi
+        
+        echo "📏 총 코드 라인: $total_lines"
+        echo "----------------------------------------"
+        
+    - name: ✅ 검사 완료
+      run: |
+        echo "🎉 모든 코드 품질 검사가 완료되었습니다!"
+        echo "✅ 프로젝트가 배포 준비되었습니다."
