@@ -3,67 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>버튼 테스트</title>
+  
+  <!-- SEO 및 소셜 미디어 최적화 -->
+  <meta name="description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모">
+  <meta name="keywords" content="버튼, 컴포넌트, 접근성, 반응형, 웹 개발">
+  <meta name="author" content="개발팀">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="버튼 컴포넌트 시스템">
+  <meta property="og:description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템">
+  <meta property="og:type" content="website">
+  
+  <!-- 파비콘 -->
+  <link rel="icon" type="image/svg+xml" href="favicon.ico">
+  
+  <!-- CSS 최적화 -->
+  <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css">
+  
+  <title>버튼 컴포넌트 시스템 - 데모</title>
 </head>
 <body>
-
-  <!-- 기본상태, default 버튼 -->
-  <div class="table">
-    <span class="plain-text">기본상태</span>
-    <button type="button" class="button">
+  <!-- 메인 헤더 -->
+  <header>
+    <h1>버튼 컴포넌트 시스템</h1>
+    <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
+    
+    <!-- 하이 콘트라스트 모드 토글 버튼 -->
+    <button 
+      type="button"
+      style="width: fit-content; height: fit-content;"
+      class="button high-contrast-toggle"
+      aria-label="하이 콘트라스트 모드 전환"
+      aria-pressed="false">
       <div class="button-background">
-        <span class="icon"><!-- fetch 영역 --></span>
-        <span class="label">label</span>
+        <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+        <span class="label">고대비<br>모드</span>
       </div>
     </button>
-  </div>
+  </header>
 
-  <!-- 클릭상태, pressed 버튼 -->
-  <div class="table">
-    <span class="plain-text">클릭상태</span>
-    <button type="button" class="button">
-      <div class="button-background">
-        <span class="icon"><!-- fetch 영역 --></span>
-        <span class="label">label</span>
+  <!-- 메인 콘텐츠 -->
+  <main>
+    
+    <!-- Primary-1 팔레트 (Primary 기본) -->
+    <section class="button-showcase" aria-labelledby="primary-1-palette-title">
+      <h2 id="primary-1-palette-title">Primary-1 팔레트 (Primary 기본)</h2>
+      <p>Primary 기본 색상 팔레트를 사용하는 버튼들입니다.</p>
+      <div class="palette-showcase">
+
+        <div class="palette-showcase-box">
+          <span class="palette-label">기본 버튼</span>
+          <button type="button" class="button" aria-label="Primary-1 기본 버튼">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+          
+        <div class="palette-showcase-box">
+          <span class="palette-label">토글 버튼</span>
+          <button type="button" class="button selected" aria-label="Primary-1 토글 버튼" aria-pressed="true">
+            <div class="button-background">
+              <span class="selected-icon" aria-hidden="true"></span>
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">비활성 버튼</span>
+          <button type="button" class="button disabled" aria-label="Primary-1 비활성 버튼" aria-disabled="true">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
       </div>
-    </button>
-  </div>
+    </section>
 
-  <!-- 선택상태, selected 버튼 -->
-  <div class="table">
-    <span class="plain-text">선택상태</span>
-    <button type="button" class="button selected">
-      <div class="button-background">
-        <span class="selected-icon"></span>
-        <span class="icon"><!-- fetch 영역 --></span>
-        <span class="label">label</span>
+    <!-- Primary-2 팔레트 (Primary 변형) -->
+    <section class="button-showcase" aria-labelledby="primary-2-palette-title">
+      <h2 id="primary-2-palette-title">Primary-2 팔레트 (Primary 변형)</h2>
+      <p>Primary 변형 색상 팔레트를 사용하는 버튼들입니다.</p>
+      
+      <div class="palette-showcase">
+        <div class="palette-showcase-box">
+          <span class="palette-label">기본 버튼튼</span>
+          <button type="button" class="button primary-2" aria-label="Primary-2 기본 버튼">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">선택 상태</span>
+          <button type="button" class="button primary-2 selected" aria-label="Primary-2 토글 버튼" aria-pressed="true">
+            <div class="button-background">
+              <span class="selected-icon" aria-hidden="true"></span>
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">비활성 상태</span>
+          <button type="button" class="button primary-2 disabled" aria-label="Primary-2 비활성 버튼" aria-disabled="true">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
       </div>
-    </button>
-  </div>
+    </section>
 
-  <!-- 비활성상태, disabled 버튼 -->
-  <div class="table">
-    <span class="plain-text">비활성상태</span>
-    <button type="button" class="button disabled" aria-disabled="true">
-      <div class="button-background">
-        <span class="icon"><!-- fetch 영역 --></span>
-        <span class="label">label</span>
+    <!-- Secondary-1 팔레트 (기본 Secondary) -->
+    <section class="button-showcase" aria-labelledby="secondary-1-palette-title">
+      <h2 id="secondary-1-palette-title">Secondary-1 팔레트 (기본 Secondary)</h2>
+      <p>기본 Secondary 색상 팔레트를 사용하는 버튼들입니다.</p>
+      
+      <div class="palette-showcase">
+        <div class="palette-showcase-box">
+          <span class="palette-label">기본 상태</span>
+          <button type="button" class="button secondary-1" aria-label="Secondary-1 기본 버튼">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">선택 상태</span>
+          <button type="button" class="button secondary-1 selected" aria-label="Secondary-1 토글 버튼" aria-pressed="true">
+            <div class="button-background">
+              <span class="selected-icon" aria-hidden="true"></span>
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">비활성 상태</span>
+          <button type="button" class="button secondary-1 disabled" aria-label="Secondary-1 비활성 버튼" aria-disabled="true">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
       </div>
-    </button>
-  </div>
+    </section>
 
-  <!-- 초점상태, focused 버튼 -->
-  <div class="table">
-    <span class="plain-text">초점상태</span>
-    <button type="button" class="button">
-      <div class="button-background">
-        <span class="icon"><!-- fetch 영역 --></span>
-        <span class="label">label</span>
+    <!-- Secondary-2 팔레트 (Secondary 변형) -->
+    <section class="button-showcase" aria-labelledby="secondary-2-palette-title">
+      <h2 id="secondary-2-palette-title">Secondary-2 팔레트 (Secondary 변형)</h2>
+      <p>Secondary 변형 색상 팔레트를 사용하는 버튼들입니다.</p>
+      
+      <div class="palette-showcase">
+        <div class="palette-showcase-box">
+          <span class="palette-label">기본 상태</span>
+          <button type="button" class="button secondary-2" aria-label="Secondary-2 기본 버튼">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">선택 상태</span>
+          <button type="button" class="button secondary-2 selected" aria-label="Secondary-2 토글 버튼" aria-pressed="true">
+            <div class="button-background">
+              <span class="selected-icon" aria-hidden="true"></span>
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+              </div>
+          </button>
+        </div>
+        
+        <div class="palette-showcase-box">
+          <span class="palette-label">비활성 상태</span>
+          <button type="button" class="button secondary-2 disabled" aria-label="Secondary-2 비활성 버튼" aria-disabled="true">
+            <div class="button-background">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="label">Label</span>
+            </div>
+          </button>
+        </div>
       </div>
-    </button>
-  </div>
+    </section>
 
-  <script src="script.js"></script>
+    <!-- 사용법 안내 섹션 -->
+    <section class="usage-guide" aria-labelledby="usage-title">
+      <h2 id="usage-title">사용법</h2>
+      <div class="usage-content">
+        <h3>버튼 타입</h3>
+        <ul>
+          <li><strong>기본 버튼</strong>: 기본 상태 ↔ 눌림 상태</li>
+          <li><strong>토글 버튼</strong>: 기본 상태 ↔ 선택 상태</li>
+          <li><strong>비활성 버튼</strong>: 비활성 상태 (상호작용 불가)</li>
+        </ul>
+        
+        <h3>버튼 상태</h3>
+        <ul>
+          <li><strong>기본 상태</strong>: 버튼의 기본 모습</li>
+          <li><strong>눌림 상태</strong>: 기본 버튼이 눌린 상태</li>
+          <li><strong>선택 상태</strong>: 토글 버튼이 선택된 상태</li>
+          <li><strong>비활성 상태</strong>: 상호작용이 불가능한 상태</li>
+          <li><strong>초점 상태</strong>: 모든 버튼에 복합적으로 적용</li>
+          <li><strong>호버 상태</strong>: 모든 버튼에 복합적으로 적용</li>
+        </ul>
+        
+        <h3>키보드 조작</h3>
+        <ul>
+          <li><kbd>Tab</kbd>: 버튼 간 초점 이동</li>
+          <li><kbd>Enter</kbd> 또는 <kbd>Space</kbd>: 버튼 활성화</li>
+        </ul>
+        
+        <h3>마우스 조작</h3>
+        <ul>
+          <li><strong>클릭</strong>: 기본 버튼은 눌림 상태, 토글 버튼은 선택 상태 토글</li>
+          <li><strong>호버</strong>: 마우스 오버 시 호버 상태 표시</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- 푸터 -->
+  <footer>
+    <p>&copy; 이강철 / 2025 / 버튼 컴포넌트 시스템 v1.0.0</p>
+  </footer>
+
+  <!-- JavaScript 최적화 -->
+  <script src="script.js" defer></script>
 </body>
 </html>
