@@ -117,10 +117,10 @@ html {
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
   --secondary-1-background-color-default: var(--primitive-color-gray-07-757575);
-  --secondary-1-background-color-active: var(--primitive-color-gray-11-E8E8E8); /* pre-sel: E8E8E8 */
-  --secondary-1-background-color-active-2: var(--primitive-color-gray-03-252525);/
+  --secondary-1-background-color-active: var(--primitive-color-gray-11-E8E8E8);
+  --secondary-1-background-color-active-2: var(--primitive-color-gray-03-252525);
   --secondary-1-background-color-disabled: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-background-color-disabled-2: var(--primitive-color-gray-01-000000); /* dis-2: 000000 */
+  --secondary-1-background-color-disabled-2: var(--primitive-color-gray-01-000000);
   
   --secondary-1-border-color-default: var(--primitive-color-gray-07-757575); /* def: 757575 */
   --secondary-1-border-color-default-2: var(--primitive-color-gray-07-757575); /* def-2: 757575 */
