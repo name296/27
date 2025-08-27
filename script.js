@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", () => {
    * - Dark 테마: 고대비 모드, 접근성 최적화된 어두운 인터페이스
    * - Static 요소: 테마 독립적 포커스/호버 (핑크)
    * - 로컬 스토리지 연동으로 설정 유지
-   * - 시스템 설정 자동 감지 (@media prefers-contrast)
+
    * - 키보드 단축키 지원 (Ctrl+Alt+H)
    */
   const ThemeManager = {
@@ -73,25 +73,18 @@ window.addEventListener("DOMContentLoaded", () => {
       this.isManualMode = savedManualMode === 'true';
       
       if (this.isManualMode) {
-
         this.currentTheme = savedTheme === this.THEMES.DARK ? this.THEMES.DARK : this.THEMES.LIGHT;
       } else {
-
-        this.currentTheme = this.detectSystemPreference();
+        this.currentTheme = this.THEMES.LIGHT; // 기본값은 Light 테마
       }
       
       console.log('🎨 테마 설정 로드:', {
         theme: this.currentTheme,
-        manual: this.isManualMode,
-        systemPreference: this.detectSystemPreference()
+        manual: this.isManualMode
       });
     },
     
-    // 시스템 테마 선호도 감지
-    detectSystemPreference() {
-      const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
-      return prefersHighContrast ? this.THEMES.DARK : this.THEMES.LIGHT;
-    },
+
     
     // DOM 조작 메소드
     
@@ -211,35 +204,19 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
       
-      // 시스템 설정 변경 감지 (자동 모드일 때만)
-      const contrastQuery = window.matchMedia('(prefers-contrast: high)');
-      
-      const handleSystemChange = () => {
-        if (!this.isManualMode) {
-          const newSystemPreference = this.detectSystemPreference();
-          if (newSystemPreference !== this.currentTheme) {
-            this.currentTheme = newSystemPreference;
-            this.applyCurrentState();
-            this.syncToggleButton();
-            console.log('🖥️ 시스템 테마 설정 변경 감지:', this.currentTheme);
-          }
-        }
-      };
-      
-      contrastQuery.addEventListener('change', handleSystemChange);
+
     },
     
-    // 자동 모드로 재설정
+    // 자동 모드로 재설정 (Light 테마로)
     resetToAuto() {
       this.isManualMode = false;
-      this.currentTheme = this.detectSystemPreference();
+      this.currentTheme = this.THEMES.LIGHT; // 기본값은 Light 테마
       this.applyCurrentState();
       this.saveSettings();
       this.syncToggleButton();
       
       console.log('🔄 자동 테마 모드로 재설정:', {
-        theme: this.currentTheme,
-        systemPreference: this.detectSystemPreference()
+        theme: this.currentTheme
       });
     }
   };
