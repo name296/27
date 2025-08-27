@@ -564,7 +564,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const SELECTED_ICON_SIZE = 4 * BASE; // 선택 상태 아이콘 크기 비율 (minSide 기준)
   
   // 상태 변수
-  let selectedSvgContent = null; // 누락된 컨테이너 보강용 SVG 내용
+  let iconSelectedSvgContent = null; // 누락된 컨테이너 보강용 SVG 내용
   const buttonElements = Array.from(document.querySelectorAll('.button'));
   const styleCache = new WeakMap(); // 불필요한 스타일 업데이트 방지를 위한 마지막 적용값 캐시
 
@@ -596,7 +596,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const buttonOutlineOffset = minSide * BUTTON_OUTLINE_OFFSET;
       const backgroundBorderRadius = minSide * BACKGROUND_BORDER_RADIUS;
       const backgroundOutlineWidth = minSide * BACKGROUND_OUTLINE_WIDTH;
-      const selectedIconSize = minSide * SELECTED_ICON_SIZE;
+      const iconSelectedSize = minSide * SELECTED_ICON_SIZE;
 
       // 업데이트 필요 여부 확인 (캐시 최적화)
       const cached = styleCache.get(button) || {};
@@ -608,7 +608,7 @@ window.addEventListener("DOMContentLoaded", () => {
         (cached.buttonOutlineOffset || 0) !== buttonOutlineOffset ||
         (cached.backgroundBorderRadius || 0) !== backgroundBorderRadius ||
         (cached.backgroundOutlineWidth || 0) !== backgroundOutlineWidth ||
-        (cached.selectedIconSize || 0) !== selectedIconSize
+        (cached.iconSelectedSize || 0) !== iconSelectedSize
       );
 
       if (!needsUpdate) continue;
@@ -624,18 +624,18 @@ window.addEventListener("DOMContentLoaded", () => {
       background.style.outlineWidth = `${backgroundOutlineWidth}px`;
 
       // 선택 상태 아이콘 스타일 적용 (min-side 기준)
-      const selectedIcon = button.querySelector('.icon-selected');
-      if (selectedIcon) {
-        selectedIcon.style.width = `${selectedIconSize}px`;
-        selectedIcon.style.height = `${selectedIconSize}px`;
-        selectedIcon.style.top = `${buttonPadding}px`;
-        selectedIcon.style.right = `${buttonPadding}px`;
+      const iconSelected = button.querySelector('.icon-selected');
+      if (iconSelected) {
+        iconSelected.style.width = `${iconSelectedSize}px`;
+        iconSelected.style.height = `${iconSelectedSize}px`;
+        iconSelected.style.top = `${buttonPadding}px`;
+        iconSelected.style.right = `${buttonPadding}px`;
       }
 
       // 적용된 값들을 캐시에 저장
       styleCache.set(button, {
         minSide, buttonPadding, buttonBorderRadius, buttonOutlineWidth, buttonOutlineOffset,
-        backgroundBorderRadius, backgroundOutlineWidth, selectedIconSize
+        backgroundBorderRadius, backgroundOutlineWidth, iconSelectedSize
       });
     }
   }
@@ -665,22 +665,22 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // 두 아이콘 타입을 동시에 로드
   const iconPromise = loadSvg('icon.svg', '.icon');
-  const selectedIconPromise = loadSvg('selected.svg', '.icon-selected')
-    .then(svg => { selectedSvgContent = svg; });
+  const iconSelectedPromise = loadSvg('selected.svg', '.icon-selected')
+    .then(svg => { iconSelectedSvgContent = svg; });
 
-  Promise.all([iconPromise, selectedIconPromise])
+  Promise.all([iconPromise, iconSelectedPromise])
     .then(() => {
       // 누락된 icon-selected 컨테이너를 생성하고 SVG 주입
       for (const button of buttonElements) {
         const background = button.querySelector('.button-background');
         if (!background) continue;
         if (!background.querySelector('.icon-selected')) {
-          const selectedIconSpan = document.createElement('span');
-          selectedIconSpan.className = 'icon-selected';
-          if (selectedSvgContent) selectedIconSpan.innerHTML = selectedSvgContent;
+          const iconSelectedSpan = document.createElement('span');
+          iconSelectedSpan.className = 'icon-selected';
+          if (iconSelectedSvgContent) iconSelectedSpan.innerHTML = iconSelectedSvgContent;
           const iconEl = background.querySelector('.icon');
-          if (iconEl && iconEl.parentNode) background.insertBefore(selectedIconSpan, iconEl);
-          else background.insertBefore(selectedIconSpan, background.firstChild);
+          if (iconEl && iconEl.parentNode) background.insertBefore(iconSelectedSpan, iconEl);
+          else background.insertBefore(iconSelectedSpan, background.firstChild);
         }
       }
 
@@ -722,19 +722,19 @@ window.addEventListener("DOMContentLoaded", () => {
         button.dataset.toggleSelected !== 'true') return;
 
     const wasSelected = button.classList.contains('selected');
-    const selectedIcon = button.querySelector('.selected-icon');
+    const iconSelected = button.querySelector('.icon-selected');
 
     if (wasSelected) {
       // 아이콘을 먼저 숨기고 다음 프레임에서 선택 상태 제거
-      if (selectedIcon) selectedIcon.style.display = 'none';
+      if (iconSelected) iconSelected.style.display = 'none';
       requestAnimationFrame(() => {
         button.classList.remove('selected');
         button.setAttribute('aria-pressed', 'false');
-        if (selectedIcon) selectedIcon.style.removeProperty('display');
+        if (iconSelected) iconSelected.style.removeProperty('display');
       });
     } else {
       // 선택 상태를 즉시 표시
-      if (selectedIcon) selectedIcon.style.removeProperty('display');
+      if (iconSelected) iconSelected.style.removeProperty('display');
       button.classList.add('selected');
       button.setAttribute('aria-pressed', 'true');
     }
