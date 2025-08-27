@@ -481,16 +481,16 @@ footer {
   & .button-background {
     position: relative;
     z-index: var(--z-index-background);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  background-color: var(--primary1-background-color-default);
-  outline-style: var(--border-style);
-  outline-color: var(--primary1-border-color-default);
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary1-background-color-default);
+    outline-style: var(--border-style);
+    outline-color: var(--primary1-border-color-default);
     will-change: background-color, outline;
     contain: layout style;
     
