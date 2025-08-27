@@ -34,12 +34,38 @@ button {
 
 :root {
   /* ==============================
-     rem 기반 디자인 시스템
+     🎯 기본 원시 값들 (최우선 정의)
      ============================== */
   /* 기준값 정의 (1rem = 16px) */
   --base-unit: 1rem; /* 16px */
   --scale-factor: 0.25; /* 4px 단위 */
   
+  /* 타이포그래피 기본값 */
+  --font-family: 'Pretendard GOV', sans-serif;
+  --font-size-base: 2.5rem;
+  --font-size-scale: 1;
+  --font-weight: 600;
+  --line-height-label: 1;
+  
+  /* 기본 치수 */
+  --button-width: 16rem;  /* 256px → 16rem */
+  --button-height: 16rem; /* 256px → 16rem */
+  
+  /* 레이어 순서 */
+  --z-index-button: 0;
+  --z-index-background: -1;
+  --z-index-icon-selected: 1;
+  
+  /* 테두리 스타일 */
+  --border-style: solid;
+  --border-style-pressed: solid;
+  --border-style-disabled: dashed;
+  --border-style-focus: dashed;
+  --border-style-hover: dashed;
+  
+  /* ==============================
+     🧮 계산된 값들 (파생 변수)
+     ============================== */
   /* 스케일링 단위들 */
   --unit-xs: calc(var(--base-unit) * 0.25); /* 4px = 0.25rem */
   --unit-sm: calc(var(--base-unit) * 0.5);  /* 8px = 0.5rem */
@@ -49,11 +75,16 @@ button {
   --unit-2xl: calc(var(--base-unit) * 3);   /* 48px = 3rem */
   --unit-3xl: calc(var(--base-unit) * 4);   /* 64px = 4rem */
   
-  /* ==============================
-     기본 치수 (rem 기반)
-     ============================== */
-  --button-width: 16rem;  /* 256px → 16rem */
-  --button-height: 16rem; /* 256px → 16rem */
+  /* 타이포그래피 계산값 */
+  --font-size: calc(var(--font-size-base) * var(--font-size-scale));
+  --font-size-xl: calc(var(--font-size-base) * var(--font-size-scale) * 1.125);
+  --font-size-lg: calc(var(--font-size-base) * var(--font-size-scale) * 0.72);
+  --font-size-md: calc(var(--font-size-base) * var(--font-size-scale) * 0.52);
+  --font-size-sm: calc(var(--font-size-base) * var(--font-size-scale) * 0.44);
+  --font-size-xs: calc(var(--font-size-base) * var(--font-size-scale) * 0.36);
+  
+  /* 아이콘 크기 (폰트 크기와 동일) */
+  --icon-size: var(--font-size);
 
   /* ==============================
    테마 기반 색상 시스템 🎨
@@ -177,12 +208,7 @@ button {
   --secondary2-border-color-focus: var(--system-focus);
   --secondary2-border-color-hover: var(--system-hover);
   
-  /* 테두리 스타일 */
-  --border-style: solid;
-  --border-style-pressed: solid;
-  --border-style-disabled: dashed;
-  --border-style-focus: dashed;
-  --border-style-hover: dashed;
+
   
   }
 
@@ -251,28 +277,6 @@ button {
   --secondary2-border-color-disabled: var(--gray-600);
   --secondary2-border-color-focus: var(--system-focus);
   --secondary2-border-color-hover: var(--system-hover);
-
-  /* 타이포그래피 */
-  --font-family: 'Pretendard GOV', sans-serif;
-  --font-size-base: 2.5rem;
-  --font-size-scale: 1;
-  --font-size: calc(var(--font-size-base) * var(--font-size-scale));
-  
-  --font-weight: 600;
-  --line-height-label: 1;
-
-  --font-size-xl: calc(var(--font-size-base) * var(--font-size-scale) * 1.125);
-  --font-size-lg: calc(var(--font-size-base) * var(--font-size-scale) * 0.72);
-  --font-size-md: calc(var(--font-size-base) * var(--font-size-scale) * 0.52);
-  --font-size-sm: calc(var(--font-size-base) * var(--font-size-scale) * 0.44);
-  --font-size-xs: calc(var(--font-size-base) * var(--font-size-scale) * 0.36);
-
-  --icon-size: calc(var(--font-size-base) * var(--font-size-scale));
-
-  /* 레이어 순서 */
-  --z-index-button: 0;
-  --z-index-background: -1;
-  --z-index-icon-selected: 1;
 }
 
 /* 큰글씨 모드 */
