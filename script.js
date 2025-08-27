@@ -469,7 +469,7 @@ window.addEventListener("DOMContentLoaded", () => {
    * 적용 범위:
    * - 버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
    * - 버튼 상태: 기본, 눌림, 선택, 비활성, 초점, 호버 (초점/호버는 복합 적용)
-   * - 모든 팔레트: Primary-1, Primary-2, Secondary-1, Secondary-2
+   * - 모든 팔레트: Primary1, Primary2, Secondary1, Secondary2
    * 
    * 캐싱을 통해 불필요한 스타일 업데이트를 최소화합니다.
    */

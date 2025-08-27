@@ -607,8 +607,8 @@ footer {
   
   /* Secondary 버튼 타입별 스타일 */
   
-  /* Secondary-1 버튼 */
-  &.secondary-1 {
+  /* Secondary1 버튼 */
+  &.secondary1 {
     color: var(--secondary1-contents-color-default);
     
     & .button-background {
@@ -646,8 +646,8 @@ footer {
     }
   }
   
-  /* Secondary-2 버튼 */
-  &.secondary-2 {
+  /* Secondary2 버튼 */
+  &.secondary2 {
     color: var(--secondary2-contents-color-default);
     
     & .button-background {
@@ -685,8 +685,8 @@ footer {
     }
   }
   
-  /* Primary-2 버튼 */
-  &.primary-2 {
+  /* Primary2 버튼 */
+  &.primary2 {
     color: var(--primary2-contents-color-default);
     
     & .button-background {
@@ -731,6 +731,26 @@ footer {
 /* 유틸리티 클래스 */
 @layer utilities {
 
+/* 컨트롤 버튼 그룹 */
+.control-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 테마 시스템 도움말 */
+.theme-help {
+  margin-top: 0.625rem;
+  font-size: 0.9em;
+  color: #666;
+  max-width: 37.5rem;
+}
+
+.theme-help ul {
+  margin: 0.3125rem 0;
+  padding-left: 1.25rem;
+}
 
 .sr-only {
   position: absolute;

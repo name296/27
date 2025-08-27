@@ -71,7 +71,7 @@
 
     <div id="theme-controls" class="theme-control-group" role="region" aria-labelledby="theme-controls-title">
       <!-- 버튼 그룹 컨테이너 -->
-      <div class="control-buttons" style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
+      <div class="control-buttons">
         <!-- 테마 전환 버튼 -->
         <button 
           type="button"
@@ -88,7 +88,7 @@
         <!-- 큰글씨 모드 전환 버튼 -->
         <button 
           type="button"
-          class="button secondary-1 large-text-toggle"
+          class="button secondary1 large-text-toggle"
           aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)"
           aria-pressed="false"
           title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
@@ -100,9 +100,9 @@
       </div>
       
       <!-- 테마 시스템 도움말 -->
-      <div style="margin-top: 0.625rem; font-size: 0.9em; color: #666; max-width: 37.5rem;">
+      <div class="theme-help">
         🎨 <strong id="theme-controls-title">테마 & 접근성 시스템 사용법:</strong>
-        <ul style="margin: 0.3125rem 0; padding-left: 1.25rem;">
+        <ul>
           <li><strong>Light 테마:</strong> 기본 브랜드 색상 중심의 밝은 인터페이스</li>
           <li><strong>Dark 테마:</strong> 접근성 최적화된 어두운 고대비 인터페이스</li>
           <li><strong>큰글씨 모드:</strong> 모든 텍스트가 1.2배 확대 (40px → 48px)</li>
@@ -169,7 +169,7 @@
       <div class="palette-showcase">
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
-          <button type="button" class="button primary-2" aria-label="Primary-2 기본 버튼">
+          <button type="button" class="button primary2" aria-label="Primary-2 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -179,7 +179,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">선택 상태</span>
-          <button type="button" class="button primary-2 selected" aria-label="Primary-2 토글 버튼" aria-pressed="true">
+          <button type="button" class="button primary2 selected" aria-label="Primary-2 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="selected-icon" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -190,7 +190,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 상태</span>
-          <button type="button" class="button primary-2 disabled" aria-label="Primary-2 비활성 버튼" aria-disabled="true">
+          <button type="button" class="button primary2 disabled" aria-label="Primary-2 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -208,7 +208,7 @@
       <div class="palette-showcase">
         <div class="palette-showcase-box">
           <span class="palette-label">기본 상태</span>
-          <button type="button" class="button secondary-1" aria-label="Secondary-1 기본 버튼">
+          <button type="button" class="button secondary1" aria-label="Secondary-1 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -218,7 +218,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">선택 상태</span>
-          <button type="button" class="button secondary-1 selected" aria-label="Secondary-1 토글 버튼" aria-pressed="true">
+          <button type="button" class="button secondary1 selected" aria-label="Secondary-1 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="selected-icon" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -229,7 +229,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 상태</span>
-          <button type="button" class="button secondary-1 disabled" aria-label="Secondary-1 비활성 버튼" aria-disabled="true">
+          <button type="button" class="button secondary1 disabled" aria-label="Secondary-1 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -247,7 +247,7 @@
       <div class="palette-showcase">
         <div class="palette-showcase-box">
           <span class="palette-label">기본 상태</span>
-          <button type="button" class="button secondary-2" aria-label="Secondary-2 기본 버튼">
+          <button type="button" class="button secondary2" aria-label="Secondary-2 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -257,7 +257,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">선택 상태</span>
-          <button type="button" class="button secondary-2 selected" aria-label="Secondary-2 토글 버튼" aria-pressed="true">
+          <button type="button" class="button secondary2 selected" aria-label="Secondary-2 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="selected-icon" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -268,7 +268,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 상태</span>
-          <button type="button" class="button secondary-2 disabled" aria-label="Secondary-2 비활성 버튼" aria-disabled="true">
+          <button type="button" class="button secondary2 disabled" aria-label="Secondary-2 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
