@@ -503,9 +503,10 @@ footer {
       justify-content: center;
       
       & svg {
-        width: 100%;                
+        width: 100%;
         height: 100%;
         fill: currentColor;
+        display: block;
       }
     }
     
@@ -558,15 +559,16 @@ footer {
   & .selected-icon {
     position: absolute;
     z-index: var(--z-index-selected-icon);
-  display: none;
-  width: fit-content;
-  height: fit-content;
+    display: none;
+    width: fit-content;
+    height: fit-content;
     
     & svg {
       width: var(--icon-size);
       height: var(--icon-size);
-  fill: currentColor;
-}
+      fill: currentColor;
+      display: block;
+    }
   }
   
   /* 🎯 버튼 상태별 스타일 그룹 */
