@@ -552,13 +552,12 @@ main {
    팔레트 견본 스타일
    ============================== */
 .palette-showcase {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
   gap: var(--unit-md);
   width: 100%;
   max-width: 75rem; /* 1200px → 75rem */
+  justify-items: center;
 }
 
 .palette-showcase-box {
