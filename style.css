@@ -466,32 +466,42 @@ main {
   background: var(--page-bg-secondary);
   border-radius: calc(var(--unit-xs) * 3);
   border: var(--unit-xs) solid var(--page-border-primary);
+  padding: 0;
 }
 
 .usage-guide h2 {
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--page-text-primary);
+  margin: 0;
+  padding: var(--unit-md) var(--unit-lg);
+  background: var(--page-bg-tertiary);
+  border-bottom: 1px solid var(--page-border-primary);
 }
 
 .usage-guide h3 {
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--page-text-primary);
+  margin: 0;
+  padding: var(--unit-sm) var(--unit-md);
 }
 
 .usage-guide ul {
   color: var(--page-text-secondary);
+  margin: 0;
+  padding: 0 var(--unit-md) var(--unit-sm) var(--unit-xl);
 }
 
 /* li 스타일은 상위 ul에서 상속받습니다 */
 
 .usage-guide kbd {
-  background: var(--page-bg-secondary);
+  background: var(--page-bg-primary);
   border: var(--unit-xs) solid var(--page-border-secondary);
   border-radius: var(--unit-xs);
   font-family: monospace;
   font-size: var(--font-size-xs);
+  padding: calc(var(--unit-xs) / 2) var(--unit-xs);
 }
 
 .usage-guide strong {
@@ -511,6 +521,29 @@ footer {
   font-size: var(--font-size-xs);
   padding: var(--unit-lg);
   margin-top: auto;
+  
+  /* 푸터 내 모든 목록 글머리기호 제거 */
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  & li {
+    display: inline-block;
+    margin: 0;
+  }
+  
+  /* 푸터 링크 스타일 */
+  & a {
+    color: var(--page-text-secondary);
+    text-decoration: none;
+    
+    &:hover {
+      color: var(--page-text-primary);
+      text-decoration: underline;
+    }
+  }
 }
 
 /* ==============================
