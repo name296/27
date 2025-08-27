@@ -8,7 +8,7 @@
 - **동적 스케일링**: 뷰포트 치수 기반
 - **버튼 타입**: 기본 버튼, 토글 버튼, 비활성 버튼
 - **다중 상태**: 기본, 눌림, 선택, 비활성, 초점, 호버 상태
-- **팔레트 지원**: Primary-1, Primary-2, Secondary-1, Secondary-2
+- **테마 시스템**: Light 테마, Dark 테마, Neutral 색상, Static 요소
 - **접근성 준수**: ARIA 속성, 키보드 내비게이션
 - **성능 최적화**: 스타일 캐싱, 일괄 업데이트
 - **반응형 디자인**: 비례적 간격과 크기 조정
@@ -73,32 +73,36 @@ button.dataset.toggleSelected = 'true'; // 선택 가능한 버튼만
 5. **초점 상태**: 모든 버튼에 복합적으로 적용 (키보드 내비게이션)
 6. **호버 상태**: 모든 버튼에 복합적으로 적용 (마우스 피드백)
 
-### **팔레트 시스템**
-- **Primary-1**: Primary 기본 색상 팔레트
-- **Primary-2**: Primary 변형 색상 팔레트
-- **Secondary-1**: 기본 Secondary 색상 팔레트
-- **Secondary-2**: Secondary 변형 색상 팔레트
+### **🎨 테마 기반 색상 시스템**
+- **☀️ Light 테마**: 기본 브랜드 색상 중심의 밝은 인터페이스
+- **🌙 Dark 테마**: 고대비 모드, 접근성 최적화된 어두운 인터페이스  
+- **⚪ Neutral 색상**: 테마에 독립적인 그레이스케일 색상
+- **🎯 Static 요소**: 테마에 관계없이 일관된 포커스/호버 색상
 
-### CSS 커스텀 속성 (팔레트 예시)
+### 테마 시스템 CSS 구조
 ```css
 :root {
-  /* 기본 치수 */
-  --button-width: 240px;
-  --button-height: 240px;
+  /* 🎨 기본 색상 (테마별) */
+  --color-light-300: #A4693F;    /* Light 테마 메인 */
+  --color-dark-100: #FFE100;     /* Dark 테마 메인 */
+  --color-neutral-500: #8C8C8C;  /* 중성 그레이 */
+  --color-static-focus: #FF00E1; /* Static 포커스 */
   
-  /* Primary-1 팔레트 (Primary 기본) */
-  --primary-1-background-color-default: #A4693F;
-  --primary-1-background-color-active: #EEDCD2;
-  --primary-1-border-color-default: #A4693F;
-  --primary-1-contents-color-default: #FFFFFF;
+  /* 🎯 의미적 토큰 */
+  --theme-light-bg-primary: var(--color-light-300);
+  --theme-dark-bg-primary: var(--color-dark-300);
   
-  /* 초점/호버 상태 (모든 버튼에 복합 적용) */
-  --static-focus-color: #FF00E1;
-  --static-hover-color: #FF00E1;
+  /* 🔄 현재 활성 테마 */
+  --current-bg-primary: var(--theme-light-bg-primary);
   
-  /* 타이포그래피 */
-  --font-family: 'Pretendard GOV', sans-serif;
-  --font-size: 58px;
+  /* 🔘 컴포넌트 토큰 */
+  --btn-primary-bg: var(--current-bg-primary);
+  --btn-focus-border: var(--color-static-focus);
+}
+
+/* 🌙 Dark 테마 전환 */
+.high-contrast {
+  --current-bg-primary: var(--theme-dark-bg-primary);
 }
 ```
 
@@ -113,6 +117,7 @@ button.dataset.toggleSelected = 'true'; // 선택 가능한 버튼만
 ### 키보드 지원
 - **Enter/Space**: 버튼 활성화 (기본 버튼은 눌림, 토글 버튼은 선택 상태 토글)
 - **Tab**: 버튼 간 초점 이동
+- **Ctrl+Alt+H**: 테마 전환 (Light ↔ Dark)
 - **Escape**: 초점 관리 (구현 시)
 
 ### 스크린 리더 지원
@@ -213,17 +218,36 @@ if (!needsUpdate) continue;
 
 ## 🛠️ 커스터마이징
 
-### 팔레트 색상 수정
+### 🎨 테마 색상 수정
 ```css
 :root {
-  /* Primary-1 팔레트 커스터마이징 */
-  --primary-1-background-color-default: #원하는-배경;
-  --primary-1-border-color-default: #원하는-테두리;
-  --primary-1-contents-color-default: #원하는-텍스트;
+  /* Light 테마 커스터마이징 */
+  --color-light-300: #새로운-브랜드-색상;
+  --color-light-50: #새로운-밝은-변형;
   
-  /* 초점/호버 상태 커스터마이징 */
-  --static-focus-color: #원하는-초점-색상;
-  --static-hover-color: #원하는-호버-색상;
+  /* Dark 테마 커스터마이징 */
+  --color-dark-100: #새로운-고대비-색상;
+  --color-dark-300: #새로운-어두운-변형;
+  
+  /* Static 요소 커스터마이징 */
+  --color-static-focus: #새로운-포커스-색상;
+  --color-static-hover: #새로운-호버-색상;
+  
+  /* Neutral 색상 조정 */
+  --color-neutral-500: #새로운-중성-색상;
+}
+```
+
+### 🔄 새 테마 추가
+```css
+/* Blue 테마 정의 */
+--color-blue-300: #2563EB;
+--theme-blue-bg-primary: var(--color-blue-300);
+
+/* Blue 테마 클래스 */
+.blue-theme {
+  --current-bg-primary: var(--theme-blue-bg-primary);
+  --current-text-primary: var(--color-neutral-0);
 }
 ```
 

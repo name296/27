@@ -1,6 +1,12 @@
 /* ==============================
+   현대 CSS 계층 구조 정의
+   ============================== */
+@layer reset, tokens, components, states, utilities;
+
+/* ==============================
    CSS Reset - 브라우저 기본 스타일 제거
    ============================== */
+@layer reset {
 * {
   margin: 0;
   padding: 0;
@@ -13,35 +19,205 @@
 }
 
 html {
+  /* 반응형 기준 폰트 사이즈 설정 */
+  font-size: clamp(14px, 2.5vw, 18px); /* 모바일 14px ~ 데스크톱 18px */
   line-height: 1.15; /* iOS에서 줄 높이 정규화 */
   -webkit-text-size-adjust: 100%; /* iOS Safari에서 텍스트 크기 조정 방지 */
+  
+  /* 접근성: 사용자가 브라우저에서 폰트 크기를 조정한 경우 반영 */
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 }
+
+button {
+  all: unset;
+}
+
+} /* @layer reset 끝 */
+
+/* ==============================
+   디자인 토큰 (CSS 변수)
+   ============================== */
+@layer tokens {
 
 :root {
   /* ==============================
-     기본 치수
+     rem 기반 디자인 시스템
      ============================== */
-  --button-width: 256px;
-  --button-height: 256px;
+  /* 기준값 정의 (1rem = 16px) */
+  --base-unit: 1rem; /* 16px */
+  --scale-factor: 0.25; /* 4px 단위 */
+  
+  /* 스케일링 단위들 */
+  --unit-xs: calc(var(--base-unit) * 0.25); /* 4px = 0.25rem */
+  --unit-sm: calc(var(--base-unit) * 0.5);  /* 8px = 0.5rem */
+  --unit-md: var(--base-unit);              /* 16px = 1rem */
+  --unit-lg: calc(var(--base-unit) * 1.5);  /* 24px = 1.5rem */
+  --unit-xl: calc(var(--base-unit) * 2);    /* 32px = 2rem */
+  --unit-2xl: calc(var(--base-unit) * 3);   /* 48px = 3rem */
+  --unit-3xl: calc(var(--base-unit) * 4);   /* 64px = 4rem */
+  
+  /* ==============================
+     기본 치수 (rem 기반)
+     ============================== */
+  --button-width: 16rem;  /* 256px → 16rem */
+  --button-height: 16rem; /* 256px → 16rem */
 
   /* ==============================
-   Primitive 색상 변수
+   테마 기반 색상 시스템 🎨
    ============================== */
-  /* Light theme 색상들 */
-  --primitive-color-light-01-4C3F37: #4C3F37;
-  --primitive-color-light-02-8C532C: #8C532C;
-  --primitive-color-light-03-A4693F: #A4693F;
-  --primitive-color-light-04-C4895F: #C4895F;
-  --primitive-color-light-05-EB9B63: #EB9B63;
-  --primitive-color-light-06-EEDCD2: #EEDCD2;
+  
+  /* ☀️ Light 테마 색상 */
+  --color-light-50: #EEDCD2;     /* 가장 밝음 */
+  --color-light-100: #EB9B63;    
+  --color-light-200: #C4895F;    
+  --color-light-300: #A4693F;    /* 메인 색상 */
+  --color-light-400: #8C532C;    
+  --color-light-500: #4C3F37;    /* 가장 어두움 */
+  
+  /* 🌙 Dark 테마 색상 (고대비) */
+  --color-dark-50: #FFEF80;      /* 가장 밝음 */
+  --color-dark-100: #FFE100;     /* 메인 색상 */
+  --color-dark-200: #807000;     
+  --color-dark-300: #241F00;     /* 가장 어두움 */
+  
+  /* ⚪ Neutral 색상 (테마 독립적 그레이스케일) */
+  --color-neutral-0: #FFFFFF;    /* 순백 */
+  --color-neutral-50: #FAFAFA;   
+  --color-neutral-100: #F2F2F2;  
+  --color-neutral-200: #E8E8E8;  
+  --color-neutral-300: #DBDBDB;  
+  --color-neutral-400: #BFBFBF;  
+  --color-neutral-500: #8C8C8C;  /* 중간 그레이 */
+  --color-neutral-600: #757575;  
+  --color-neutral-700: #737373;  
+  --color-neutral-800: #606060;  
+  --color-neutral-850: #4C4C4C;  
+  --color-neutral-900: #252525;  
+  --color-neutral-950: #1F1F1F;  
+  --color-neutral-1000: #000000; /* 순흑 */
+  
+  /* 🎯 Static 색상 (테마에 독립적) */
+  --color-static-focus: #FF00E1;     /* 포커스 핑크 */
+  --color-static-hover: #FF00E1;     /* 호버 핑크 */
+  --color-static-error: #CC1D00;     /* 에러 빨강 */
+  --color-static-warning: #FF4800;   /* 경고 오렌지 */
+  --color-static-success: #00A86B;   /* 성공 녹색 */
+  
+  /* ==============================
+   테마별 의미적 토큰 🎯
+   ============================== */
+   
+  /* ☀️ Light 테마 토큰 */
+  --theme-light-bg-primary: var(--color-light-300);      /* 메인 배경 */
+  --theme-light-bg-hover: var(--color-light-50);         /* 호버 배경 */
+  --theme-light-bg-active: var(--color-light-50);        /* 활성 배경 */
+  --theme-light-bg-surface: var(--color-neutral-0);      /* 표면 배경 */
+  --theme-light-bg-body: var(--color-neutral-1000);      /* 바디 배경 */
+  
+  --theme-light-text-primary: var(--color-neutral-0);    /* 주요 텍스트 */
+  --theme-light-text-secondary: var(--color-neutral-400);/* 보조 텍스트 */
+  --theme-light-text-on-primary: var(--color-neutral-0); /* 프라이머리 위 텍스트 */
+  --theme-light-text-on-surface: var(--color-neutral-1000); /* 표면 위 텍스트 */
+  
+  --theme-light-border-primary: var(--color-light-300);  /* 메인 테두리 */
+  --theme-light-border-subtle: var(--color-neutral-400); /* 서브틀 테두리 */
+  
+  /* 🌙 Dark 테마 토큰 (고대비) */
+  --theme-dark-bg-primary: var(--color-dark-300);        /* 메인 배경 */
+  --theme-dark-bg-hover: var(--color-dark-100);          /* 호버 배경 */
+  --theme-dark-bg-active: var(--color-dark-100);         /* 활성 배경 */
+  --theme-dark-bg-surface: var(--color-neutral-1000);    /* 표면 배경 */
+  --theme-dark-bg-body: var(--color-neutral-1000);       /* 바디 배경 */
+  
+  --theme-dark-text-primary: var(--color-dark-100);      /* 주요 텍스트 */
+  --theme-dark-text-secondary: var(--color-neutral-500); /* 보조 텍스트 */
+  --theme-dark-text-on-primary: var(--color-dark-100);   /* 프라이머리 위 텍스트 */
+  --theme-dark-text-on-surface: var(--color-dark-100);   /* 표면 위 텍스트 */
+  
+  --theme-dark-border-primary: var(--color-dark-100);    /* 메인 테두리 */
+  --theme-dark-border-subtle: var(--color-neutral-600);  /* 서브틀 테두리 */
+  
+  /* 🎯 Static 토큰 (테마 독립적) */
+  --static-focus: var(--color-static-focus);             /* 포커스 */
+  --static-hover: var(--color-static-hover);             /* 호버 */
+  --static-error: var(--color-static-error);             /* 에러 */
+  --static-warning: var(--color-static-warning);         /* 경고 */
+  --static-success: var(--color-static-success);         /* 성공 */
+  
+  /* ==============================
+   현재 활성 테마 토큰 🎨
+   ============================== */
+  /* 기본값은 Light 테마 */
+  --current-bg-primary: var(--theme-light-bg-primary);
+  --current-bg-hover: var(--theme-light-bg-hover);
+  --current-bg-active: var(--theme-light-bg-active);
+  --current-bg-surface: var(--theme-light-bg-surface);
+  --current-bg-body: var(--theme-light-bg-body);
+  
+  --current-text-primary: var(--theme-light-text-primary);
+  --current-text-secondary: var(--theme-light-text-secondary);
+  --current-text-on-primary: var(--theme-light-text-on-primary);
+  --current-text-on-surface: var(--theme-light-text-on-surface);
+  
+  --current-border-primary: var(--theme-light-border-primary);
+  --current-border-subtle: var(--theme-light-border-subtle);
+  
+  /* ==============================
+   컴포넌트 토큰 (테마 독립적 설계) 🔘
+   ============================== */
+  /* 버튼 Primary */
+  --btn-primary-bg: var(--current-bg-primary);
+  --btn-primary-bg-hover: var(--current-bg-hover);
+  --btn-primary-bg-active: var(--current-bg-active);
+  --btn-primary-text: var(--current-text-on-primary);
+  --btn-primary-text-active: var(--color-light-400);
+  --btn-primary-border: var(--current-border-primary);
+  
+  /* 버튼 Secondary */
+  --btn-secondary-bg: var(--current-bg-surface);
+  --btn-secondary-text: var(--current-text-on-surface);
+  --btn-secondary-border: var(--current-border-subtle);
+  
+  /* 버튼 Disabled */
+  --btn-disabled-bg: transparent;
+  --btn-disabled-text: var(--current-text-secondary);
+  --btn-disabled-border: var(--current-border-subtle);
+  
+  /* Static 상태 (테마 독립적) */
+  --btn-focus-border: var(--static-focus);
+  --btn-hover-border: var(--static-hover);
+  --btn-error-border: var(--static-error);
 
-  /* High Contrast theme 색상들 */
-  --primitive-color-high-contrast-01-241F00: #241F00;
-  --primitive-color-high-contrast-02-807000: #807000;
-  --primitive-color-high-contrast-03-FFE100: #FFE100;
-  --primitive-color-high-contrast-04-FFEF80: #FFEF80;
+} /* :root 끝 */
 
-  /* Gray theme 색상들 */
+/* ==============================
+   테마 전환 시스템 🔄
+   ============================== */
+
+/* 🌙 Dark 테마 (고대비 모드) 활성화 */
+.high-contrast {
+  /* 현재 활성 테마를 Dark로 전환 */
+  --current-bg-primary: var(--theme-dark-bg-primary);
+  --current-bg-hover: var(--theme-dark-bg-hover);
+  --current-bg-active: var(--theme-dark-bg-active);
+  --current-bg-surface: var(--theme-dark-bg-surface);
+  --current-bg-body: var(--theme-dark-bg-body);
+  
+  --current-text-primary: var(--theme-dark-text-primary);
+  --current-text-secondary: var(--theme-dark-text-secondary);
+  --current-text-on-primary: var(--theme-dark-text-on-primary);
+  --current-text-on-surface: var(--theme-dark-text-on-surface);
+  
+  --current-border-primary: var(--theme-dark-border-primary);
+  --current-border-subtle: var(--theme-dark-border-subtle);
+  
+  /* 컴포넌트 토큰 업데이트 (Dark 테마 특수값) */
+  --btn-primary-text-active: var(--color-dark-200);
+}
+
+  /* Gray theme 색상들 (기존 호환성) */
   --primitive-color-gray-01-000000: #000000;
   --primitive-color-gray-02-1F1F1F: #1F1F1F;
   --primitive-color-gray-03-252525: #252525;
@@ -275,17 +451,17 @@ html {
   --border-style-focus: dashed;
 
   /* ==============================
-     타이포그래피
+     타이포그래피 (rem 기반)
      ============================== */
   --font-family: 'Pretendard GOV', sans-serif;
-  --font-size: 48px;
+  --font-size: var(--unit-2xl);    /* 48px → 3rem */
   --font-weight: 600;
   --line-height-label: 1;
 
   /* ==============================
-     아이콘 크기
+     아이콘 크기 (rem 기반)
      ============================== */
-  --icon-size: var(--font-size);
+  --icon-size: var(--font-size);   /* 폰트 사이즈와 동일 */
 
   /* ==============================
      레이어 순서
@@ -295,15 +471,22 @@ html {
   --z-index-selected-icon: 1;
 }
 
+} /* @layer tokens 끝 */
+
+/* ==============================
+   컴포넌트 스타일
+   ============================== */
+@layer components {
+
 /* ==============================
    레이아웃 기본 설정
    ============================== */
 body {
   margin: 0; /* 브라우저 기본 마진 제거 */
-  padding: 1rem;
-  gap: 1rem;
-  background: var(--primitive-color-gray-01-000000); /* body/page bg: 000000 */
-  color: var(--primitive-color-gray-14-FFFFFF); /* body/text sec: FFFFFF */
+  padding: var(--unit-md); /* 1rem = 16px */
+  gap: var(--unit-md);     /* 1rem = 16px */
+  background: var(--current-bg-body); /* 테마 기반 바디 배경 */
+  color: var(--current-text-primary); /* 테마 기반 주요 텍스트 */
   font-family: var(--font-family);
   line-height: 1.0;
 }
@@ -313,8 +496,8 @@ body {
    ============================== */
 header {
   text-align: center;
-  background: #000000FF;
-  border-bottom: 1px solid var(--primitive-color-gray-09-BFBFBF); /* body/page bor: BFBFBF */
+  background: var(--current-bg-body); /* 테마 기반 배경 */
+  border-bottom: var(--unit-xs) solid var(--current-border-subtle); /* 테마 기반 테두리 */
 }
 
 header h1 {
@@ -344,8 +527,8 @@ main {
    ============================== */
 .button-showcase {
   background: #FFFFFF05; /* rgba(255, 255, 255, 0.02) → HEX */
-  border-radius: 12px;
-  border: 1px solid #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
+  border-radius: calc(var(--unit-xs) * 3); /* 12px → 0.75rem */
+  border: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
 }
 
 .button-showcase h2 {
@@ -368,7 +551,7 @@ main {
   width: fit-content;
   height: fit-content;
   align-items: center;
-  gap: 16px;
+  gap: var(--unit-md); /* 16px → 1rem */
 }
 
 .plain-text {
@@ -422,8 +605,8 @@ main {
    ============================== */
 .usage-guide {
   background: #FFFFFF05;
-  border-radius: 12px;
-  border: 1px solid #FFFFFF1A;
+  border-radius: calc(var(--unit-xs) * 3); /* 12px → 0.75rem */
+  border: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
 }
 
 .usage-guide h2 {
@@ -443,12 +626,13 @@ main {
 }
 
 .usage-guide li {
+  /* li 스타일은 상위 ul에서 상속받습니다 */
 }
 
 .usage-guide kbd {
   background: #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
-  border: 1px solid #FFFFFF33; /* rgba(255, 255, 255, 0.2) → HEX */
-  border-radius: 4px;
+  border: var(--unit-xs) solid #FFFFFF33; /* 1px → 0.25rem */
+  border-radius: var(--unit-xs); /* 4px → 0.25rem */
   font-family: monospace;
   font-size: 0.9rem;
 }
@@ -464,26 +648,21 @@ main {
 footer {
   text-align: center;
   background: #FFFFFF0D; /* rgba(255, 255, 255, 0.05) → HEX */
-  border-top: 1px solid #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
-  border-bottom: 1px solid #FFFFFF1A; /* 푸터 하단 테두리 추가 */
+  border-top: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
+  border-bottom: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
   color: #FFFFFF99; /* rgba(255, 255, 255, 0.6) → HEX */
   font-size: 0.9rem;
-  padding: 0.5rem;
+  padding: var(--unit-sm); /* 0.5rem = 8px */
 }
 
-/* ==============================
-   버튼 기본 설정
-   ============================== */
-button {
-  all: unset;
-}
+/* 중복 제거됨 - @layer reset에서 이미 정의 */
 
 /* ==============================
    상호작용 상태 (기본, 눌림, 선택, 비활성, 포커스, 호버)
    ============================== */
 
 /* ==============================
-   기본 상태
+   버튼 컴포넌트 (CSS 중첩 구조)
    ============================== */
 .button {
   position: relative;
@@ -494,234 +673,288 @@ button {
   box-sizing: border-box;
   width: var(--button-width);
   height: var(--button-height);
-  color: var(--primary-1-contents-color-default);
+  color: var(--btn-primary-text); /* 테마 기반 텍스트 */
   cursor: pointer;
-  /* 성능 최적화 */
   will-change: transform;
   contain: layout style;
-}
-
-/* ==============================
-   버튼 배경
-   ============================== */
-.button-background {
-  position: relative;
-  z-index: var(--z-index-background);
+  
+  /* 버튼 배경 */
+  & .button-background {
+    position: relative;
+    z-index: var(--z-index-background);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box;
+    box-sizing: border-box;
   width: 100%;
   height: 100%;
-  background-color: var(--primary-1-background-color-default);
+    background-color: var(--btn-primary-bg); /* 테마 기반 배경 */
   outline-style: var(--border-style);
-  outline-color: var(--primary-1-border-color-default);
-  /* 성능 최적화 */
-  will-change: background-color, outline;
-  contain: layout style;
-}
-
-/* ==============================
-   아이콘 및 라벨
-   ============================== */
-.button-background .icon {
-  width: var(--icon-size);
-  height: var(--icon-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.button-background .icon svg {
-  width: 100%;                
-  height: 100%;
-  fill: currentColor;
-}
-
-.button-background .label {
-  width: fit-content;
-  height: fit-content;
-  font-size: var(--font-size);
-  font-weight: var(--font-weight);
-  line-height: var(--line-height-label);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ==============================
-   눌림 상태 (클릭/키보드)
-   ============================== */
-.button:not([aria-disabled="true"]):active,
-.button:not([aria-disabled="true"]).key-active {
-  color: var(--primary-1-contents-color-active);
-}
-
-.button:not([aria-disabled="true"]):active .button-background,
-.button:not([aria-disabled="true"]).key-active .button-background {
+    outline-color: var(--btn-primary-border); /* 테마 기반 테두리 */
+    will-change: background-color, outline;
+    contain: layout style;
+    
+    /* 아이콘 */
+    & .icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      & svg {
+        width: 100%;                
+        height: 100%;
+        fill: currentColor;
+      }
+    }
+    
+    /* 라벨 */
+    & .label {
+      width: fit-content;
+      height: fit-content;
+      font-size: var(--font-size);
+      font-weight: var(--font-weight);
+      line-height: var(--line-height-label);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
+  /* 상태별 스타일 통합 */
+  &:not([aria-disabled="true"]) {
+    /* 눌림 상태 (클릭/키보드) */
+    &:active,
+    &.key-active {
+      color: var(--btn-primary-text-active); /* 테마 기반 활성 텍스트 */
+      
+      & .button-background {
   outline-style: var(--border-style-active);
-  outline-color: var(--primary-1-border-color-active);
-  background-color: var(--primary-1-background-color-active);
-}
-
-/* ==============================
-   호버 상태
-   ============================== */
-.button:not([aria-disabled="true"]):hover {
-  outline-style: var(--border-style-hover);
-  outline-color: var(--static-hover-color);
-}
-
-/* ==============================
-   포커스 상태
-   ============================== */
-.button:focus-visible {
-  outline-style: var(--border-style-focus);
-  outline-color: var(--static-focus-color);
-}
-
-/* ==============================
-   선택 상태 표시 아이콘
-   ============================== */
-.selected-icon {
-  position: absolute;
-  z-index: var(--z-index-selected-icon);
+        outline-color: var(--btn-primary-border); /* 테마 기반 테두리 */
+        background-color: var(--btn-primary-bg-active); /* 테마 기반 활성 배경 */
+      }
+    }
+    
+    /* 호버 상태 */
+    &:hover {
+      outline-style: var(--border-style-hover);
+      outline-color: var(--btn-hover-border); /* Static 테마 호버 */
+      
+      & .button-background {
+        /* 테마 기반 호버 색상 + color-mix() 동적 계산 */
+        background-color: var(--btn-primary-bg-hover);
+      }
+    }
+  }
+  
+  /* 포커스 상태 (모든 버튼에 적용) */
+  &:focus-visible {
+    outline-style: var(--border-style-focus);
+    outline-color: var(--btn-focus-border); /* Static 테마 포커스 */
+  }
+  
+  /* 선택 상태 아이콘 */
+  & .selected-icon {
+    position: absolute;
+    z-index: var(--z-index-selected-icon);
   display: none;
   width: fit-content;
   height: fit-content;
-}
-
-.selected-icon svg {
-  width: var(--icon-size);
-  height: var(--icon-size);
+    
+    & svg {
+      width: var(--icon-size);
+      height: var(--icon-size);
   fill: currentColor;
 }
-
-/* ==============================
-   선택 상태 (토글 버튼)
-   ============================== */
-/* 활성화된 버튼의 선택 상태 */
-.button:not([aria-disabled="true"]).selected {
-  color: var(--primary-1-contents-color-active);
-}
-
-.button:not([aria-disabled="true"]).selected .button-background {
-  outline-style: var(--border-style-active);
-  outline-color: var(--primary-1-border-color-active);
-  background-color: var(--primary-1-background-color-active);
-}
-
-.button:not([aria-disabled="true"]).selected .selected-icon {
-  display: flex;
-}
-
-/* 비활성화된 버튼의 선택 상태 */
-.button[aria-disabled="true"].selected {
-  color: var(--primary-1-contents-color-disabled);
-}
-
-.button[aria-disabled="true"].selected .button-background {
-  outline-style: var(--border-style-disabled);
-  outline-color: var(--primary-1-border-color-disabled);
-  background-color: var(--primary-1-background-color-disabled);
-}
-
-/* ==============================
-   비활성 상태
-   ============================== */
-.button[aria-disabled="true"] {
+  }
+  
+  /* 선택 상태 (토글 버튼) */
+  &:not([aria-disabled="true"]).selected {
+    color: var(--primary-1-contents-color-active);
+    
+    & .button-background {
+      outline-style: var(--border-style-active);
+      outline-color: var(--primary-1-border-color-active);
+      background-color: var(--primary-1-background-color-active);
+    }
+    
+    & .selected-icon {
+      display: flex;
+    }
+  }
+  
+  /* 비활성 상태 */
+  &[aria-disabled="true"] {
   cursor: not-allowed;
   pointer-events: none;
-  color: var(--primary-1-contents-color-disabled);
-}
+    color: var(--primary-1-contents-color-disabled);
 
-.button[aria-disabled="true"] * {
+    & * {
   pointer-events: none;
 }
 
-.button[aria-disabled="true"] .button-background {
-  background-color: var(--primary-1-background-color-disabled);
-  outline-style: var(--border-style-disabled);
-  outline-color: var(--primary-1-border-color-disabled);
-}
-
-/* 비활성 상태에서의 상호작용 시각 효과 */
-.button[aria-disabled="true"]:hover,
-.button[aria-disabled="true"]:active,
-.button[aria-disabled="true"]:focus-visible {
+    & .button-background {
+      background-color: var(--primary-1-background-color-disabled);
+      outline-style: var(--border-style-disabled);
+      outline-color: var(--primary-1-border-color-disabled);
+    }
+    
+    /* 비활성 상태에서의 상호작용 시각 효과 */
+    &:hover,
+    &:active,
+    &:focus-visible {
   outline-style: var(--border-style-focus);
-  outline-color: var(--static-focus-color);
-}
-
-.button[aria-disabled="true"]:hover .button-background,
-.button[aria-disabled="true"]:active .button-background {
+      outline-color: var(--static-focus-color);
+      
+      & .button-background {
+        outline-style: var(--border-style-disabled);
+        outline-color: var(--primary-1-border-color-disabled);
+      }
+    }
+    
+    /* 비활성화된 버튼의 선택 상태 */
+    &.selected {
+      color: var(--primary-1-contents-color-disabled);
+      
+      & .button-background {
   outline-style: var(--border-style-disabled);
-  outline-color: var(--primary-1-border-color-disabled);
-  background-color: var(--primary-1-background-color-disabled);
+        outline-color: var(--primary-1-border-color-disabled);
+        background-color: var(--primary-1-background-color-disabled);
+      }
+    }
+  }
+  
+  /* 팔레트별 스타일 확장 */
+  &.primary-2 {
+    color: var(--primary-2-contents-def);
+    
+    & .button-background {
+      background-color: var(--primary-2-background-color-default);
+      outline-color: var(--primary-2-border-color-default);
+    }
+    
+    &:not([aria-disabled="true"]) {
+      &:active,
+      &.key-active {
+        color: var(--primary-2-contents-pre-sel);
+        
+        & .button-background {
+          background-color: var(--primary-2-background-color-active);
+          outline-color: var(--primary-2-border-color-active);
+        }
+      }
+      
+      &:hover {
+        outline-color: var(--primary-2-border-color-active);
+        
+        & .button-background {
+          background-color: color-mix(in srgb, var(--primary-2-background-color-default) 90%, var(--primary-2-background-color-active));
+        }
+      }
+      
+      &.selected {
+        color: var(--primary-2-contents-pre-sel);
+        
+        & .button-background {
+          background-color: var(--primary-2-background-color-active);
+          outline-color: var(--primary-2-border-color-active);
+        }
+      }
+    }
+    
+    &[aria-disabled="true"] {
+      color: var(--primary-2-contents-color-disabled);
+      
+      & .button-background {
+        background-color: var(--primary-2-background-color-disabled);
+        outline-color: var(--primary-2-border-color-disabled);
+      }
+      
+      &.selected {
+        color: var(--primary-2-contents-color-disabled-2);
+        
+        & .button-background {
+          background-color: var(--primary-2-background-color-disabled-2);
+          outline-color: var(--primary-2-border-color-disabled-2);
+        }
+      }
+    }
+  }
 }
 
+} /* @layer components 끝 */
+
 /* ==============================
-   Primary-2 버튼 스타일
+   상태별 오버라이드 (고대비 모드 등)
    ============================== */
-.button.primary-2 {
-  color: var(--primary-2-contents-def);
+@layer states {
+
+/* Secondary 팔레트들 생략 - 동일한 패턴으로 중첩 가능 */
+
+/* ==============================
+   하이 콘트라스트 모드 상태
+   ============================== */
+/* Primary-1 팔레트 하이 콘트라스트 */
+.high-contrast .button:not(.primary-2):not(.secondary-1):not(.secondary-2) {
+  --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
+  --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
+  --primary-1-border-color-default: var(--primary-1-high-contrast-border-color-default);
+  --primary-1-border-color-active: var(--primary-1-high-contrast-border-color-active);
+  --primary-1-contents-color-default: var(--primary-1-high-contrast-contents-color-default);
+  --primary-1-contents-color-active: var(--primary-1-high-contrast-contents-color-active);
+  /* 기타 하이콘트라스트 변수들... */
 }
 
-.button.primary-2 .button-background {
-  background-color: var(--primary-2-background-color-default);
-  outline-color: var(--primary-2-border-color-default);
+} /* @layer states 끝 */
+
+/* ==============================
+   유틸리티 클래스
+   ============================== */
+@layer utilities {
+
+/* 레이아웃 유틸리티 */
+.sr-only {
+  position: absolute;
+  width: var(--unit-xs);  /* 1px → 0.25rem */
+  height: var(--unit-xs); /* 1px → 0.25rem */
+  padding: 0;
+  margin: calc(var(--unit-xs) * -1); /* -1px → -0.25rem */
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* Primary-2 눌림 상태 */
-.button.primary-2:not([aria-disabled="true"]):active,
-.button.primary-2:not([aria-disabled="true"]).key-active {
-  color: var(--primary-2-contents-pre-sel);
+} /* @layer utilities 끝 */
+
+/* ==============================
+   컨테이너 쿼리 및 반응형 개선
+   ============================== */
+.palette-showcase-box {
+  container-type: inline-size;
+  container-name: button-container;
 }
 
-.button.primary-2:not([aria-disabled="true"]):active .button-background,
-.button.primary-2:not([aria-disabled="true"]).key-active .button-background {
-  background-color: var(--primary-2-background-color-active);
-  outline-color: var(--primary-2-border-color-active);
+@container button-container (width < 25rem) { /* 400px → 25rem */
+  .button {
+    --button-width: clamp(9.375rem, 40vw, 12.5rem);  /* 150px-200px → 9.375rem-12.5rem */
+    --button-height: clamp(9.375rem, 40vw, 12.5rem); /* 150px-200px → 9.375rem-12.5rem */
+    --font-size: clamp(1.75rem, 8vw, 2.25rem);       /* 28px-36px → 1.75rem-2.25rem */
+  }
 }
 
-/* Primary-2 호버 상태 */
-.button.primary-2:not([aria-disabled="true"]):hover {
-  outline-color: var(--primary-2-border-color-active);
-}
-
-/* Primary-2 선택 상태 */
-.button.primary-2:not([aria-disabled="true"]).selected {
-  color: var(--primary-2-contents-pre-sel);
-}
-
-.button.primary-2:not([aria-disabled="true"]).selected .button-background {
-  background-color: var(--primary-2-background-color-active);
-  outline-color: var(--primary-2-border-color-active);
-}
-
-/* Primary-2 비활성 상태 */
-.button.primary-2[aria-disabled="true"] {
-  color: var(--primary-2-contents-color-disabled);
-}
-
-.button.primary-2[aria-disabled="true"] .button-background {
-  background-color: var(--primary-2-background-color-disabled);
-  outline-color: var(--primary-2-border-color-disabled);
-}
-
-/* Primary-2 비활성 선택 상태 */
-.button.primary-2[aria-disabled="true"].selected {
-  color: var(--primary-2-contents-color-disabled-2);
-}
-
-.button.primary-2[aria-disabled="true"].selected .button-background {
-  background-color: var(--primary-2-background-color-disabled-2);
-  outline-color: var(--primary-2-border-color-disabled-2);
+@container button-container (width < 18.75rem) { /* 300px → 18.75rem */
+  .button {
+    --button-width: clamp(7.5rem, 35vw, 9.375rem);   /* 120px-150px → 7.5rem-9.375rem */
+    --button-height: clamp(7.5rem, 35vw, 9.375rem);  /* 120px-150px → 7.5rem-9.375rem */
+    --font-size: clamp(1.5rem, 6vw, 1.75rem);        /* 24px-28px → 1.5rem-1.75rem */
+  }
 }
 
 /* ==============================
-   Secondary-1 버튼 스타일
+   남은 기존 스타일들...
    ============================== */
 .button.secondary-1 {
   color: var(--secondary-1-contents-def);

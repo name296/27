@@ -1,22 +1,30 @@
 window.addEventListener("DOMContentLoaded", () => {
   // ==============================
-  // 고대비 모드 관리 시스템
+  // 테마 관리 시스템 🎨
   // ==============================
   
   /**
-   * 고대비 모드 상태 관리
+   * 테마 상태 관리 (Light ↔ Dark 전환)
+   * - Light 테마: 기본 브랜드 색상 중심
+   * - Dark 테마: 고대비 모드, 접근성 최적화
+   * - Static 요소: 테마 독립적 포커스/호버
    * - 로컬 스토리지 연동
    * - 시스템 설정 감지
-   * - 수동 토글 지원
    * - 키보드 단축키 (Ctrl+Alt+H)
    */
-  const HighContrastManager = {
+  const ThemeManager = {
+    // 테마 타입
+    THEMES: {
+      LIGHT: 'light',
+      DARK: 'dark'
+    },
+    
     // 설정 키
-    STORAGE_KEY: 'high-contrast-mode',
-    MANUAL_MODE_KEY: 'manual-contrast-mode',
+    STORAGE_KEY: 'theme-mode',
+    MANUAL_MODE_KEY: 'manual-theme-mode',
     
     // 현재 상태
-    isEnabled: false,
+    currentTheme: 'light',
     isManualMode: false,
     
     // 초기화
@@ -27,79 +35,83 @@ window.addEventListener("DOMContentLoaded", () => {
       this.syncToggleButton();
     },
     
-    // 로컬 스토리지에서 설정 로드
+    // 로컬 스토리지에서 테마 설정 로드
     loadSettings() {
-      const savedState = localStorage.getItem(this.STORAGE_KEY);
+      const savedTheme = localStorage.getItem(this.STORAGE_KEY);
       const savedManualMode = localStorage.getItem(this.MANUAL_MODE_KEY);
       
       this.isManualMode = savedManualMode === 'true';
       
       if (this.isManualMode) {
-        // 수동 모드: 저장된 설정 사용
-        this.isEnabled = savedState === 'enabled';
+        // 수동 모드: 저장된 테마 사용
+        this.currentTheme = savedTheme === this.THEMES.DARK ? this.THEMES.DARK : this.THEMES.LIGHT;
       } else {
-        // 자동 모드: 시스템 설정 감지
-        this.isEnabled = this.detectSystemHighContrast();
+        // 자동 모드: 시스템 설정에 따라 테마 결정
+        this.currentTheme = this.detectSystemPreference();
       }
       
-      console.log('🎨 고대비 모드 설정 로드:', {
-        enabled: this.isEnabled,
+      console.log('🎨 테마 설정 로드:', {
+        theme: this.currentTheme,
         manual: this.isManualMode,
-        system: this.detectSystemHighContrast()
+        systemPreference: this.detectSystemPreference()
       });
     },
     
-    // 시스템 고대비 모드 감지
-    detectSystemHighContrast() {
-      return window.matchMedia('(prefers-contrast: high)').matches ||
-             window.matchMedia('(prefers-contrast: more)').matches;
+    // 시스템 테마 선호도 감지 (고대비 = Dark 테마)
+    detectSystemPreference() {
+      const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches ||
+                                  window.matchMedia('(prefers-contrast: more)').matches;
+      return prefersHighContrast ? this.THEMES.DARK : this.THEMES.LIGHT;
     },
     
-    // 현재 상태를 DOM에 적용
+    // 현재 테마를 DOM에 적용
     applyCurrentState() {
       const html = document.documentElement;
       
-      if (this.isEnabled) {
+      // 테마 클래스 적용 (Dark 테마 = high-contrast 클래스)
+      if (this.currentTheme === this.THEMES.DARK) {
         html.classList.add('high-contrast');
       } else {
         html.classList.remove('high-contrast');
       }
       
+      // 수동 모드 표시
       if (this.isManualMode) {
-        html.classList.add('manual-contrast-mode');
+        html.classList.add('manual-theme-mode');
       } else {
-        html.classList.remove('manual-contrast-mode');
+        html.classList.remove('manual-theme-mode');
       }
     },
     
-    // 설정을 로컬 스토리지에 저장
+    // 테마 설정을 로컬 스토리지에 저장
     saveSettings() {
-      localStorage.setItem(this.STORAGE_KEY, this.isEnabled ? 'enabled' : 'disabled');
+      localStorage.setItem(this.STORAGE_KEY, this.currentTheme);
       localStorage.setItem(this.MANUAL_MODE_KEY, this.isManualMode.toString());
       
-      console.log('💾 고대비 모드 설정 저장:', {
-        enabled: this.isEnabled,
+      console.log('💾 테마 설정 저장:', {
+        theme: this.currentTheme,
         manual: this.isManualMode
       });
     },
     
-    // 토글 버튼 상태 동기화
+    // 테마 토글 버튼 상태 동기화
     syncToggleButton() {
-      const toggleButton = document.querySelector('.high-contrast-toggle');
+      const toggleButton = document.querySelector('.theme-toggle, .high-contrast-toggle');
       if (toggleButton) {
-        toggleButton.setAttribute('aria-pressed', this.isEnabled.toString());
+        const isDarkTheme = this.currentTheme === this.THEMES.DARK;
+        toggleButton.setAttribute('aria-pressed', isDarkTheme.toString());
         
         // 버튼 텍스트 업데이트
         const label = toggleButton.querySelector('.label');
         if (label) {
-          label.textContent = this.isEnabled ? '고대비\n해제' : '고대비\n모드';
+          label.innerHTML = isDarkTheme ? 'Light<br>테마' : 'Dark<br>테마';
         }
       }
     },
     
-    // 고대비 모드 토글
+    // 테마 토글 (Light ↔ Dark)
     toggle() {
-      this.isEnabled = !this.isEnabled;
+      this.currentTheme = this.currentTheme === this.THEMES.LIGHT ? this.THEMES.DARK : this.THEMES.LIGHT;
       this.isManualMode = true; // 수동 토글 시 수동 모드로 전환
       
       this.applyCurrentState();
@@ -109,21 +121,22 @@ window.addEventListener("DOMContentLoaded", () => {
       // 접근성 알림
       this.announceChange();
       
-      console.log('🔄 고대비 모드 토글:', {
-        enabled: this.isEnabled,
+      console.log('🔄 테마 토글:', {
+        theme: this.currentTheme,
         manual: this.isManualMode
       });
     },
     
     // 접근성 알림 (스크린 리더용)
     announceChange() {
-      const message = this.isEnabled ? '고대비 모드가 활성화되었습니다.' : '고대비 모드가 비활성화되었습니다.';
+      const themeLabel = this.currentTheme === this.THEMES.DARK ? 'Dark 테마' : 'Light 테마';
+      const message = `${themeLabel}로 전환되었습니다.`;
       
       // aria-live 영역에 메시지 추가
-      let liveRegion = document.getElementById('high-contrast-announcer');
+      let liveRegion = document.getElementById('theme-announcer');
       if (!liveRegion) {
         liveRegion = document.createElement('div');
-        liveRegion.id = 'high-contrast-announcer';
+        liveRegion.id = 'theme-announcer';
         liveRegion.setAttribute('aria-live', 'polite');
         liveRegion.setAttribute('aria-atomic', 'true');
         liveRegion.style.position = 'absolute';
@@ -139,15 +152,15 @@ window.addEventListener("DOMContentLoaded", () => {
     
     // 이벤트 리스너 설정
     setupEventListeners() {
-      // 토글 버튼 클릭
-      const toggleButton = document.querySelector('.high-contrast-toggle');
+      // 테마 토글 버튼 클릭
+      const toggleButton = document.querySelector('.theme-toggle, .high-contrast-toggle');
       if (toggleButton) {
         toggleButton.addEventListener('click', () => {
           this.toggle();
         });
       }
       
-      // 키보드 단축키: Ctrl+Alt+H
+      // 키보드 단축키: Ctrl+Alt+H (테마 전환)
       document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'h') {
           e.preventDefault(); // 기본 동작 방지
@@ -161,12 +174,12 @@ window.addEventListener("DOMContentLoaded", () => {
       
       const handleSystemChange = () => {
         if (!this.isManualMode) {
-          const newSystemState = this.detectSystemHighContrast();
-          if (newSystemState !== this.isEnabled) {
-            this.isEnabled = newSystemState;
+          const newSystemPreference = this.detectSystemPreference();
+          if (newSystemPreference !== this.currentTheme) {
+            this.currentTheme = newSystemPreference;
             this.applyCurrentState();
             this.syncToggleButton();
-            console.log('🖥️ 시스템 고대비 모드 변경 감지:', this.isEnabled);
+            console.log('🖥️ 시스템 테마 설정 변경 감지:', this.currentTheme);
           }
         }
       };
@@ -178,23 +191,23 @@ window.addEventListener("DOMContentLoaded", () => {
     // 자동 모드로 재설정
     resetToAuto() {
       this.isManualMode = false;
-      this.isEnabled = this.detectSystemHighContrast();
+      this.currentTheme = this.detectSystemPreference();
       this.applyCurrentState();
       this.saveSettings();
       this.syncToggleButton();
       
-      console.log('🔄 자동 모드로 재설정:', {
-        enabled: this.isEnabled,
-        system: this.detectSystemHighContrast()
+      console.log('🔄 자동 테마 모드로 재설정:', {
+        theme: this.currentTheme,
+        systemPreference: this.detectSystemPreference()
       });
     }
   };
   
-  // 고대비 모드 관리자 초기화
-  HighContrastManager.init();
+  // 테마 관리자 초기화
+  ThemeManager.init();
   
   // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
-  window.HighContrastManager = HighContrastManager;
+  window.ThemeManager = ThemeManager;
 
   // ==============================
   // 상수 (비율/스케일)
