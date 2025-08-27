@@ -307,12 +307,12 @@ window.addEventListener("DOMContentLoaded", () => {
      * 3️⃣ DOM 적용
      */
     applyCurrentState() {
-      const body = this._domCache.body;
+      const html = this._domCache.html;
       
       if (this.currentMode === this.MODES.LARGE) {
-        body.classList.add('large-text');
+        html.classList.add('large-text');
       } else {
-        body.classList.remove('large-text');
+        html.classList.remove('large-text');
       }
     },
     

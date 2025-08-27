@@ -213,7 +213,7 @@ button {
   }
 
 /* Dark 테마 */
-.high-contrast {
+.dark {
   /* Primary1 색위계 */
   --primary1-background-color-default: var(--yellow-300);
   --primary1-background-color-pressed: var(--yellow-100);
