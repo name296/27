@@ -433,8 +433,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const SizeControlManager = {
     
     // 상수 및 설정
-    DEFAULT_WIDTH: 150,
-    DEFAULT_HEIGHT: 75,
+    DEFAULT_WIDTH: 256, // 8px 단위 기본값
+    DEFAULT_HEIGHT: 256, // 8px 단위 기본값
     
     // DOM 캐시
     _domCache: {
@@ -447,8 +447,8 @@ window.addEventListener("DOMContentLoaded", () => {
     },
     
     // 상태 관리
-    currentWidth: 150,
-    currentHeight: 75,
+    currentWidth: 256, // 8px 단위 기본값
+    currentHeight: 256, // 8px 단위 기본값
     
     // 초기화 플로우
     init() {
