@@ -257,16 +257,17 @@ button {
   --font-size-base: 2.5rem;
   --font-size-scale: 1;
   --font-size: calc(var(--font-size-base) * var(--font-size-scale));
+  
+  --font-weight: 600;
+  --line-height-label: 1;
+
+  --icon-size: calc(var(--font-size-base) * var(--font-size-scale));
+  
   --font-size-xl: calc(var(--font-size) * 1.125);
   --font-size-lg: calc(var(--font-size) * 0.72);
   --font-size-md: calc(var(--font-size) * 0.52);
   --font-size-sm: calc(var(--font-size) * 0.44);
   --font-size-xs: calc(var(--font-size) * 0.36);
-  
-  --font-weight: 600;
-  --line-height-label: 1;
-
-  --icon-size: var(--font-size);
 
   /* 레이어 순서 */
   --z-index-button: 0;
