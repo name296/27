@@ -855,7 +855,7 @@ footer {
 
 /* 버튼 크기 조절 컨트롤 */
 .size-controls {
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0 auto;
   padding: 1rem;
   background: var(--page-bg-secondary);
   border-radius: 0.5rem;
