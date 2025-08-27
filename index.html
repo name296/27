@@ -1,64 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- ===== 기본 메타 정보 ===== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>버튼 컴포넌트 시스템 - 데모</title>
   
-  <!-- SEO 및 소셜 미디어 최적화 -->
+  <!-- ===== SEO 최적화 그룹 ===== -->
   <meta name="description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모">
   <meta name="keywords" content="버튼, 컴포넌트, 접근성, 반응형, 웹 개발">
   <meta name="author" content="개발팀">
   
-  <!-- Open Graph -->
+  <!-- ===== 소셜 미디어 최적화 그룹 ===== -->
   <meta property="og:title" content="버튼 컴포넌트 시스템">
   <meta property="og:description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템">
   <meta property="og:type" content="website">
   
-  <!-- 파비콘 -->
+  <!-- ===== 리소스 로딩 그룹 ===== -->
   <link rel="icon" type="image/svg+xml" href="favicon.ico">
-  
-  <!-- CSS 최적화 -->
   <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css">
-  
-  <title>버튼 컴포넌트 시스템 - 데모</title>
 </head>
 <body>
-  <!-- 메인 헤더 -->
+  <!-- ===== 페이지 헤더 그룹 ===== -->
   <header>
+    <!-- 제목 및 설명 -->
     <h1>버튼 컴포넌트 시스템</h1>
     <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
     
-    <!-- 테마 전환 버튼 (Light ↔ Dark) -->
-    <button 
-      type="button"
-      style="width: fit-content; height: fit-content;"
-      class="button theme-toggle high-contrast-toggle"
-      aria-label="테마 전환 (Light ↔ Dark) (단축키: Ctrl+Alt+H)"
-      aria-pressed="false"
-      title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
-      <div class="button-background">
-        <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
-        <span class="label">Dark<br>테마</span>
+    <!-- 테마 전환 컨트롤 그룹 -->
+    <div class="theme-control-group">
+      <!-- 테마 전환 버튼 -->
+      <button 
+        type="button"
+        style="width: fit-content; height: fit-content;"
+        class="button theme-toggle high-contrast-toggle"
+        aria-label="테마 전환 (Light ↔ Dark) (단축키: Ctrl+Alt+H)"
+        aria-pressed="false"
+        title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
+        <div class="button-background">
+          <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+          <span class="label">Dark<br>테마</span>
+        </div>
+      </button>
+      
+      <!-- 테마 시스템 도움말 -->
+      <div style="margin-top: 0.625rem; font-size: 0.9em; color: #666; max-width: 37.5rem;">
+        🎨 <strong>테마 시스템 사용법:</strong>
+        <ul style="margin: 0.3125rem 0; padding-left: 1.25rem;">
+          <li><strong>Light 테마:</strong> 기본 브랜드 색상 중심의 밝은 인터페이스</li>
+          <li><strong>Dark 테마:</strong> 고대비 모드, 접근성 최적화된 어두운 인터페이스</li>
+          <li><strong>Static 요소:</strong> 포커스/호버는 테마 독립적 핑크 색상</li>
+          <li>버튼 클릭 또는 <kbd>Ctrl+Alt+H</kbd> 단축키로 전환</li>
+          <li>설정이 자동으로 저장되어 다음 방문 시에도 유지됩니다</li>
+          <li>시스템 접근성 설정과 자동으로 연동됩니다</li>
+        </ul>
       </div>
-    </button>
-    
-    <!-- 테마 시스템 도움말 -->
-    <div style="margin-top: 0.625rem; font-size: 0.9em; color: #666; max-width: 37.5rem;">
-      🎨 <strong>테마 시스템 사용법:</strong>
-      <ul style="margin: 0.3125rem 0; padding-left: 1.25rem;">
-        <li><strong>Light 테마:</strong> 기본 브랜드 색상 중심의 밝은 인터페이스</li>
-        <li><strong>Dark 테마:</strong> 고대비 모드, 접근성 최적화된 어두운 인터페이스</li>
-        <li><strong>Static 요소:</strong> 포커스/호버는 테마 독립적 핑크 색상</li>
-        <li>버튼 클릭 또는 <kbd>Ctrl+Alt+H</kbd> 단축키로 전환</li>
-        <li>설정이 자동으로 저장되어 다음 방문 시에도 유지됩니다</li>
-        <li>시스템 접근성 설정과 자동으로 연동됩니다</li>
-      </ul>
     </div>
   </header>
 
-  <!-- 메인 콘텐츠 -->
+  <!-- ===== 메인 콘텐츠 그룹 ===== -->
   <main>
+    <!-- ===== 버튼 팔레트 데모 그룹 ===== -->
     
     <!-- Primary-1 팔레트 (Light 테마 기본) -->
     <section class="button-showcase" aria-labelledby="primary-1-palette-title">
@@ -66,6 +69,7 @@
       <p>Light 테마의 기본 브랜드 색상을 사용하는 버튼들입니다. Dark 테마에서는 고대비 색상으로 자동 전환됩니다.</p>
       <div class="palette-showcase">
 
+        <!-- === 기본 상태 버튼 그룹 === -->
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
           <button type="button" class="button" aria-label="Primary-1 기본 버튼">
@@ -75,7 +79,8 @@
             </div>
           </button>
         </div>
-          
+        
+        <!-- === 선택 상태 버튼 그룹 === -->
         <div class="palette-showcase-box">
           <span class="palette-label">토글 버튼</span>
           <button type="button" class="button selected" aria-label="Primary-1 토글 버튼" aria-pressed="true">
@@ -87,6 +92,7 @@
           </button>
         </div>
         
+        <!-- === 비활성 상태 버튼 그룹 === -->
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 버튼</span>
           <button type="button" class="button disabled" aria-label="Primary-1 비활성 버튼" aria-disabled="true">
@@ -252,12 +258,12 @@
     </section>
   </main>
 
-  <!-- 푸터 -->
+  <!-- ===== 페이지 푸터 그룹 ===== -->
   <footer>
     <p>&copy; 이강철 / 2025 / 버튼 컴포넌트 시스템 v1.0.0</p>
   </footer>
 
-  <!-- JavaScript 최적화 -->
+  <!-- ===== 스크립트 로딩 그룹 ===== -->
   <script src="script.js" defer></script>
 </body>
 </html>

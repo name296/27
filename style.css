@@ -165,9 +165,10 @@ button {
   --current-border-subtle: var(--theme-light-border-subtle);
   
   /* ==============================
-   컴포넌트 토큰 (테마 독립적 설계) 🔘
+   🔘 컴포넌트 토큰 (계층적 의존성 설계)
    ============================== */
-  /* 버튼 Primary */
+   
+  /* === 기본 버튼 토큰 그룹 === */
   --btn-primary-bg: var(--current-bg-primary);
   --btn-primary-bg-hover: var(--current-bg-hover);
   --btn-primary-bg-active: var(--current-bg-active);
@@ -175,17 +176,16 @@ button {
   --btn-primary-text-active: var(--color-light-400);
   --btn-primary-border: var(--current-border-primary);
   
-  /* 버튼 Secondary */
+  /* === Secondary 버튼 토큰 그룹 === */
   --btn-secondary-bg: var(--current-bg-surface);
   --btn-secondary-text: var(--current-text-on-surface);
   --btn-secondary-border: var(--current-border-subtle);
   
-  /* 버튼 Disabled */
+  /* === 특수 상태 토큰 그룹 === */
   --btn-disabled-bg: transparent;
   --btn-disabled-text: var(--current-text-secondary);
   --btn-disabled-border: var(--current-border-subtle);
   
-  /* Static 상태 (테마 독립적) */
   --btn-focus-border: var(--static-focus);
   --btn-hover-border: var(--static-hover);
   --btn-error-border: var(--static-error);
@@ -219,206 +219,59 @@ button {
 
 
   /* ==============================
-     Primary-1 팔레트 (Light 테마 기본)
-     버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
-     버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
+     🔘 컴포넌트 토큰 - 버튼별 색상 정의
      ============================== */
-  /* 배경 색상 - 기본 상태, 눌림 상태, 비활성 상태 */
-  --primary-1-background-color-default: var(--color-light-300);
-  --primary-1-background-color-active: var(--color-light-50);
-  --primary-1-background-color-disabled: none;
-  --primary-1-background-color-disabled-2: none;
   
-  /* 테두리 색상 - 기본 상태, 눌림 상태, 비활성 상태 */
-  --primary-1-border-color-default: var(--primary-1-background-color-default);
-  --primary-1-border-color-active: var(--color-light-200);
-  --primary-1-border-color-disabled: var(--color-light-200);
-  --primary-1-border-color-disabled-2: var(--color-light-100);
+  /* 기본 버튼 (Primary-1) */
+  --btn-primary-bg: var(--color-light-300);
+  --btn-primary-bg-hover: color-mix(in srgb, var(--color-light-300) 85%, white);
+  --btn-primary-bg-active: var(--color-light-50);
+  --btn-primary-text: var(--color-neutral-0);
+  --btn-primary-text-active: var(--color-light-200);
+  --btn-primary-border: var(--color-light-300);
   
-  /* 콘텐츠 색상 - 기본 상태, 눌림 상태, 비활성 상태 */
-  --primary-1-contents-color-default: var(--color-neutral-0);
-  --primary-1-contents-color-active: var(--color-light-200);
-  --primary-1-contents-color-disabled: var(--color-light-200);
-  --primary-1-contents-color-disabled-2: var(--color-light-100);
+  /* 포커스 & 호버 (Static) */
+  --btn-focus-border: var(--color-static-focus);
+  --btn-hover-border: var(--color-static-focus);
+  
+  /* 비활성 상태 */
+  --btn-disabled-bg: var(--color-neutral-200);
+  --btn-disabled-text: var(--color-neutral-500);
+  --btn-disabled-border: var(--color-neutral-500);
 
-  /* ==============================
-     Primary-2 팔레트 (Light 테마 변형)
-     버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
-     버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
-     ============================== */
-  --primary-2-background-color-default: var(--color-neutral-0);
-  --primary-2-background-color-default-2: var(--color-neutral-0);
-  --primary-2-background-color-active: var(--color-light-300);
-  --primary-2-background-color-active-2: var(--color-neutral-1000);
-  --primary-2-background-color-disabled: none;
-  
-  --primary-2-border-color-default: var(--color-neutral-500); /* def: 8C8C8C */
-  --primary-2-border-color-default-2: var(--color-neutral-500); /* def-2: 8C8C8C */
-  --primary-2-border-color-active: var(--color-light-200); /* pre-sel: 8C532C */
-  --primary-2-border-color-active-2: var(--color-dark-200); /* pre-sel-2: FFE100 */
-  --primary-2-border-color-disabled: var(--color-neutral-500); /* dis: 8C8C8C */
-  --primary-2-border-color-disabled-2: var(--color-neutral-500); /* dis-2: 8C8C8C */
-  
-  --primary-2-contents-color-default: var(--color-neutral-900); /* def: 252525 */
-  --primary-2-contents-color-default-2: var(--color-light-200); /* def-2: 8C532C */
-  --primary-2-contents-color-active: var(--color-neutral-0); /* pre-sel: FFFFFF */
-  --primary-2-contents-color-active-2: var(--color-dark-200); /* pre-sel-2: FFE100 */
-  --primary-2-contents-color-disabled: var(--color-neutral-400); /* dis: 737373 */
-  --primary-2-contents-color-disabled-2: var(--color-neutral-400); /* dis-2: 737373 */
+  /* Primary-2 버튼 (Light 테마 변형) */
+  --btn-primary2-bg: var(--color-neutral-0);
+  --btn-primary2-bg-hover: color-mix(in srgb, var(--color-neutral-0) 90%, var(--color-neutral-900));
+  --btn-primary2-bg-active: var(--color-light-300);
+  --btn-primary2-text: var(--color-neutral-900);
+  --btn-primary2-text-active: var(--color-neutral-0);
+  --btn-primary2-border: var(--color-neutral-500);
 
-  /* ==============================
-     Secondary-1 팔레트 (Neutral 기반)
-     버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
-     버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
-     ============================== */
-  --secondary-1-background-color-default: var(--color-neutral-400);
-  --secondary-1-background-color-active: var(--color-neutral-100);
-  --secondary-1-background-color-active-2: var(--color-neutral-900);
-  --secondary-1-background-color-disabled: var(--color-neutral-0);
-  --secondary-1-background-color-disabled-2: var(--color-neutral-1000);
-  
-  --secondary-1-border-color-default: var(--color-neutral-400); /* def: 757575 */
-  --secondary-1-border-color-active: var(--color-neutral-300); /* pre-sel: BFBFBF */
-  --secondary-1-border-color-active-2: var(--color-neutral-400); /* pre-sel-2: 757575 */
-  --secondary-1-border-color-disabled: var(--color-neutral-500); /* dis: 737373 */
-  --secondary-1-border-color-disabled-2: var(--color-neutral-500); /* dis-2: 8C8C8C */
-  
-  --secondary-1-contents-color-default: var(--color-neutral-0); /* def: FFFFFF */
-  --secondary-1-contents-color-default-2: var(--color-neutral-0); /* def-2: FFFFFF */
-  --secondary-1-contents-color-active: var(--color-neutral-900); /* pre-sel: 252525 */
-  --secondary-1-contents-color-active-2: var(--color-neutral-50); /* pre-sel-2: F2F2F2 */
-  --secondary-1-contents-color-disabled: var(--color-neutral-500); /* dis: 737373 */
-  --secondary-1-contents-color-disabled-2: var(--color-neutral-500); /* dis-2: 8C8C8C */
+  /* Secondary-1 버튼 (Neutral 기반) */
+  --btn-secondary1-bg: var(--color-neutral-400);
+  --btn-secondary1-bg-hover: color-mix(in srgb, var(--color-neutral-400) 85%, white);
+  --btn-secondary1-bg-active: var(--color-neutral-100);
+  --btn-secondary1-text: var(--color-neutral-0);
+  --btn-secondary1-text-active: var(--color-neutral-900);
+  --btn-secondary1-border: var(--color-neutral-400);
 
-  /* ==============================
-     Secondary-2 팔레트 (Neutral 변형)
-     버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
-     버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
-     ============================== */
-  --secondary-2-background-color-default: var(--color-neutral-100); /* def: E8E8E8 */
-  --secondary-2-background-color-default-2: var(--color-neutral-900); /* def-2: 252525 */
-  --secondary-2-background-color-active: var(--color-neutral-400); /* pre-sel: 757575 */
-  --secondary-2-background-color-active-2: var(--color-neutral-400); /* pre-sel-2: 757575 */
-  --secondary-2-background-color-disabled: var(--color-neutral-0); /* dis: FFFFFF */
-  --secondary-2-background-color-disabled-2: var(--color-neutral-1000); /* dis-2: 000000 */
-  
-  --secondary-2-border-color-default: var(--color-neutral-300); /* def: BFBFBF */
-  --secondary-2-border-color-default-2: var(--color-neutral-300); /* def-2: BFBFBF */
-  --secondary-2-border-color-active: var(--color-neutral-400); /* pre-sel: 757575 */
-  --secondary-2-border-color-active-2: var(--color-neutral-400); /* pre-sel-2: 757575 */
-  --secondary-2-border-color-disabled: var(--color-neutral-500); /* dis: 737373 */
-  --secondary-2-border-color-disabled-2: var(--color-neutral-500); /* dis-2: 737373 */
-  
-  --secondary-2-contents-color-default: var(--color-neutral-900); /* def: 252525 */
-  --secondary-2-contents-color-default-2: var(--color-neutral-50); /* def-2: F2F2F2 */
-  --secondary-2-contents-color-active: var(--color-neutral-0); /* pre-sel: FFFFFF */
-  --secondary-2-contents-color-active-2: var(--color-neutral-0); /* pre-sel-2: FFFFFF */
-  --secondary-2-contents-color-disabled: var(--color-neutral-500); /* dis: 737373 */
-  --secondary-2-contents-color-disabled-2: var(--color-neutral-500); /* dis-2: 737373 */
+  /* Secondary-2 버튼 (Neutral 변형) */
+  --btn-secondary2-bg: var(--color-neutral-100);
+  --btn-secondary2-bg-hover: color-mix(in srgb, var(--color-neutral-100) 90%, var(--color-neutral-900));
+  --btn-secondary2-bg-active: var(--color-neutral-400);
+  --btn-secondary2-text: var(--color-neutral-900);
+  --btn-secondary2-text-active: var(--color-neutral-0);
+  --btn-secondary2-border: var(--color-neutral-300);
 
-  /* ==============================
-   초점 상태 컬러 (모든 버튼에 복합 적용)
-   ============================== */
-  --static-focus-color: var(--color-static-focus);
 
-  /* ==============================
-   호버 상태 컬러 (모든 버튼에 복합 적용)
-   ============================== */
-  --static-hover-color: var(--color-static-focus);
 
-  /* ==============================
-   Dark 테마 - Primary-1 팔레트 (Light 기본)
-   ============================== */
-  --primary-1-high-contrast-background-color-default: var(--color-neutral-1000);
-  --primary-1-high-contrast-background-color-default-2: var(--color-dark-100);
-  --primary-1-high-contrast-background-color-active: var(--color-dark-100);
-  --primary-1-high-contrast-background-color-active-2: var(--color-neutral-1000);
-  --primary-1-high-contrast-background-color-disabled: var(--color-neutral-800);
-  --primary-1-high-contrast-background-color-disabled-2: var(--color-neutral-500);
-  
-  --primary-1-high-contrast-border-color-default: var(--color-neutral-0);
-  --primary-1-high-contrast-border-color-default-2: var(--color-neutral-1000);
-  --primary-1-high-contrast-border-color-active: var(--color-dark-100);
-  --primary-1-high-contrast-border-color-active-2: var(--color-neutral-0);
-  --primary-1-high-contrast-border-color-disabled: var(--color-neutral-500);
-  --primary-1-high-contrast-border-color-disabled-2: var(--color-neutral-500);
-  
-  --primary-1-high-contrast-contents-color-default: var(--color-neutral-0);
-  --primary-1-high-contrast-contents-color-default-2: var(--color-neutral-1000);
-  --primary-1-high-contrast-contents-color-active: var(--color-neutral-1000);
-  --primary-1-high-contrast-contents-color-active-2: var(--color-neutral-0);
-  --primary-1-high-contrast-contents-color-disabled: var(--color-neutral-500);
-  --primary-1-high-contrast-contents-color-disabled-2: var(--color-neutral-800);
 
-  /* ==============================
-   Dark 테마 - Primary-2 팔레트 (Light 변형)
-   ============================== */
-  --primary-2-high-contrast-background-color-default: var(--color-neutral-0);
-  --primary-2-high-contrast-background-color-default-2: var(--color-neutral-1000);
-  --primary-2-high-contrast-background-color-active: var(--color-neutral-1000);
-  --primary-2-high-contrast-background-color-active-2: var(--color-dark-100);
-  --primary-2-high-contrast-background-color-disabled: var(--color-neutral-500);
-  --primary-2-high-contrast-background-color-disabled-2: var(--color-neutral-800);
-  
-  --primary-2-high-contrast-border-color-default: var(--color-neutral-1000);
-  --primary-2-high-contrast-border-color-default-2: var(--color-neutral-0);
-  --primary-2-high-contrast-border-color-active: var(--color-neutral-0);
-  --primary-2-high-contrast-border-color-active-2: var(--color-neutral-1000);
-  --primary-2-high-contrast-border-color-disabled: var(--color-neutral-500);
-  --primary-2-high-contrast-border-color-disabled-2: var(--color-neutral-500);
-  
-  --primary-2-high-contrast-contents-color-default: var(--color-neutral-1000);
-  --primary-2-high-contrast-contents-color-default-2: var(--color-neutral-0);
-  --primary-2-high-contrast-contents-color-active: var(--color-neutral-0);
-  --primary-2-high-contrast-contents-color-active-2: var(--color-neutral-1000);
-  --primary-2-high-contrast-contents-color-disabled: var(--color-neutral-800);
-  --primary-2-high-contrast-contents-color-disabled-2: var(--color-neutral-500);
 
-  /* ==============================
-   Dark 테마 - Secondary-1 팔레트 (Neutral 기반)
-   ============================== */
-  --secondary-1-high-contrast-background-color-default: var(--color-neutral-500);
-  --secondary-1-high-contrast-background-color-active: var(--color-neutral-0);
-  --secondary-1-high-contrast-background-color-active-2: var(--color-neutral-1000);
-  --secondary-1-high-contrast-background-color-disabled: var(--color-neutral-800);
-  --secondary-1-high-contrast-background-color-disabled-2: var(--color-neutral-500);
-  
-  --secondary-1-high-contrast-border-color-default: var(--color-neutral-0);
-  --secondary-1-high-contrast-border-color-active: var(--color-neutral-1000);
-  --secondary-1-high-contrast-border-color-active-2: var(--color-neutral-0);
-  --secondary-1-high-contrast-border-color-disabled: var(--color-neutral-500);
-  --secondary-1-high-contrast-border-color-disabled-2: var(--color-neutral-500);
-  
-  --secondary-1-high-contrast-contents-color-default: var(--color-neutral-0);
-  --secondary-1-high-contrast-contents-color-default-2: var(--color-neutral-500);
-  --secondary-1-high-contrast-contents-color-active: var(--color-neutral-1000);
-  --secondary-1-high-contrast-contents-color-active-2: var(--color-neutral-0);
-  --secondary-1-high-contrast-contents-color-disabled: var(--color-neutral-500);
-  --secondary-1-high-contrast-contents-color-disabled-2: var(--color-neutral-500);
 
-  /* ==============================
-   Dark 테마 - Secondary-2 팔레트 (Neutral 변형)
-   ============================== */
-  --secondary-2-high-contrast-background-color-default: var(--color-neutral-500);
-  --secondary-2-high-contrast-background-color-default-2: var(--color-neutral-500);
-  --secondary-2-high-contrast-background-color-active: var(--color-neutral-500);
-  --secondary-2-high-contrast-background-color-active-2: var(--color-neutral-800);
-  --secondary-2-high-contrast-background-color-disabled: var(--color-neutral-500);
-  --secondary-2-high-contrast-background-color-disabled-2: var(--color-neutral-500);
-  
-  --secondary-2-high-contrast-border-color-default: var(--color-neutral-1000);
-  --secondary-2-high-contrast-border-color-default-2: var(--color-neutral-500);
-  --secondary-2-high-contrast-border-color-active: var(--color-neutral-0);
-  --secondary-2-high-contrast-border-color-active-2: var(--color-neutral-500);
-  --secondary-2-high-contrast-border-color-disabled: var(--color-neutral-500);
-  --secondary-2-high-contrast-border-color-disabled-2: var(--color-neutral-500);
-  
-  --secondary-2-high-contrast-contents-color-default: var(--color-neutral-1000);
-  --secondary-2-high-contrast-contents-color-default-2: var(--color-neutral-500);
-  --secondary-2-high-contrast-contents-color-active: var(--color-neutral-0);
-  --secondary-2-high-contrast-contents-color-active-2: var(--color-neutral-500);
-  --secondary-2-high-contrast-contents-color-disabled: var(--color-neutral-800);
-  --secondary-2-high-contrast-contents-color-disabled-2: var(--color-neutral-500);
+
+
+
+
 
   /* ==============================
      테두리 스타일
@@ -458,39 +311,36 @@ button {
 /* ==============================
    레이아웃 기본 설정
    ============================== */
+/* ==============================
+   🏠 페이지 레이아웃 그룹
+   ============================== */
 body {
-  margin: 0; /* 브라우저 기본 마진 제거 */
-  padding: var(--unit-md); /* 1rem = 16px */
-  gap: var(--unit-md);     /* 1rem = 16px */
-  background: var(--current-bg-body); /* 테마 기반 바디 배경 */
-  color: var(--current-text-primary); /* 테마 기반 주요 텍스트 */
+  margin: 0;
+  padding: var(--unit-md);
+  gap: var(--unit-md);
+  background: var(--current-bg-body);
+  color: var(--current-text-primary);
   font-family: var(--font-family);
   line-height: 1.0;
 }
 
-/* ==============================
-   헤더 스타일
-   ============================== */
 header {
   text-align: center;
-  background: var(--current-bg-body); /* 테마 기반 배경 */
-  border-bottom: var(--unit-xs) solid var(--current-border-subtle); /* 테마 기반 테두리 */
+  background: var(--current-bg-body);
+  border-bottom: var(--unit-xs) solid var(--current-border-subtle);
+  
+  & h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--color-neutral-0);
+  }
+  
+  & p {
+    width: fit-content;
+    color: var(--color-neutral-0);
+  }
 }
 
-header h1 {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: var(--color-neutral-0); /* body/text sec: FFFFFF */
-}
-
-header p {
-  width: fit-content;
-  color: var(--color-neutral-0); /* body/text sec: FFFFFF */
-}
-
-/* ==============================
-   메인 콘텐츠
-   ============================== */
 main {
   margin: 0;
   padding: 1rem;
@@ -500,35 +350,32 @@ main {
 }
 
 /* ==============================
-   버튼 쇼케이스 섹션
+   🎨 쇼케이스 컨테이너 그룹
    ============================== */
 .button-showcase {
-  background: #FFFFFF05; /* rgba(255, 255, 255, 0.02) → HEX */
-  border-radius: calc(var(--unit-xs) * 3); /* 12px → 0.75rem */
-  border: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
+  background: #FFFFFF05;
+  border-radius: calc(var(--unit-xs) * 3);
+  border: var(--unit-xs) solid #FFFFFF1A;
+  
+  & h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+  
+  & p {
+    color: #FFFFFFB3;
+    font-size: 1rem;
+  }
 }
 
-.button-showcase h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #FFFFFF;
-}
-
-.button-showcase p {
-  color: #FFFFFFB3; /* rgba(255, 255, 255, 0.7) → HEX */
-  font-size: 1rem;
-}
-
-/* ==============================
-   테이블 레이아웃
-   ============================== */
 .table {
   display: flex;
   flex-flow: column nowrap;
   width: fit-content;
   height: fit-content;
   align-items: center;
-  gap: var(--unit-md); /* 16px → 1rem */
+  gap: var(--unit-md);
 }
 
 .plain-text {
@@ -538,39 +385,31 @@ main {
   font-size: 1.1rem;
 }
 
-/* ==============================
-   버튼 설명
-   ============================== */
 .button-description {
   text-align: center;
-  color: #FFFFFF99; /* rgba(255, 255, 255, 0.6) → HEX */
+  color: #FFFFFF99;
   font-size: 0.9rem;
   max-width: 300px;
 }
 
-/* ==============================
-   팔레트 견본 스타일
-   ============================== */
 .palette-showcase {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
   gap: var(--unit-md);
   width: 100%;
-  max-width: 75rem; /* 1200px → 75rem */
+  max-width: 75rem;
   justify-items: center;
-}
-
-.palette-showcase-box {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  gap: var(--unit-xs);
-  min-width: 12.5rem; /* 200px → 12.5rem */
-  flex: 0 0 auto;
   
-  /* 컨테이너 쿼리를 위한 설정 */
-  container-type: inline-size;
-  container-name: button-container;
+  &-box {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: var(--unit-xs);
+    min-width: 12.5rem;
+    flex: 0 0 auto;
+    container-type: inline-size;
+    container-name: button-container;
+  }
 }
 
 .palette-label {
@@ -646,6 +485,14 @@ footer {
 /* ==============================
    버튼 컴포넌트 (CSS 중첩 구조)
    ============================== */
+/**
+ * 🔘 메인 버튼 컴포넌트
+ * HTML 구조: <button class="button [상태클래스]">
+ *   └── <div class="button-background">
+ *       ├── <span class="selected-icon"> (토글 버튼만)
+ *       ├── <span class="icon">
+ *       └── <span class="label">
+ */
 .button {
   position: relative;
   z-index: var(--z-index-button);
@@ -655,12 +502,12 @@ footer {
   box-sizing: border-box;
   width: var(--button-width);
   height: var(--button-height);
-  color: var(--btn-primary-text); /* 테마 기반 텍스트 */
+  color: var(--btn-primary-text);
   cursor: pointer;
   will-change: transform;
   contain: layout style;
   
-  /* 버튼 배경 */
+  /* 🎨 버튼 배경 컨테이너 (.button-background) */
   & .button-background {
     position: relative;
     z-index: var(--z-index-background);
@@ -671,9 +518,9 @@ footer {
     box-sizing: border-box;
   width: 100%;
   height: 100%;
-    background-color: var(--btn-primary-bg); /* 테마 기반 배경 */
+    background-color: var(--btn-primary-bg);
   outline-style: var(--border-style);
-    outline-color: var(--btn-primary-border); /* 테마 기반 테두리 */
+    outline-color: var(--btn-primary-border);
     will-change: background-color, outline;
     contain: layout style;
     
@@ -752,14 +599,16 @@ footer {
 }
   }
   
+  /* 🎯 버튼 상태별 스타일 그룹 */
+  
   /* 선택 상태 (토글 버튼) */
   &:not([aria-disabled="true"]).selected {
-    color: var(--primary-1-contents-color-active);
+    color: var(--btn-primary-text-active);
     
     & .button-background {
       outline-style: var(--border-style-active);
-      outline-color: var(--primary-1-border-color-active);
-      background-color: var(--primary-1-background-color-active);
+      outline-color: var(--btn-primary-border);
+      background-color: var(--btn-primary-bg-active);
     }
     
     & .selected-icon {
@@ -767,20 +616,36 @@ footer {
     }
   }
   
+  /* 호버 상태 */
+  &:not([aria-disabled="true"]):hover {
+    & .button-background {
+      background-color: var(--btn-primary-bg-hover);
+      outline-color: var(--btn-hover-border);
+    }
+  }
+  
+  /* 포커스 상태 (접근성) */
+  &:focus-visible {
+    & .button-background {
+      outline: 0.125rem solid var(--btn-focus-border);
+      outline-offset: 0.125rem;
+    }
+  }
+  
   /* 비활성 상태 */
   &[aria-disabled="true"] {
   cursor: not-allowed;
   pointer-events: none;
-    color: var(--primary-1-contents-color-disabled);
+    color: var(--btn-disabled-text);
 
     & * {
   pointer-events: none;
 }
 
     & .button-background {
-      background-color: var(--primary-1-background-color-disabled);
+      background-color: var(--btn-disabled-bg);
       outline-style: var(--border-style-disabled);
-      outline-color: var(--primary-1-border-color-disabled);
+      outline-color: var(--btn-disabled-border);
     }
     
     /* 비활성 상태에서의 상호작용 시각 효과 */
@@ -798,33 +663,120 @@ footer {
     
     /* 비활성화된 버튼의 선택 상태 */
     &.selected {
-      color: var(--primary-1-contents-color-disabled);
+      color: var(--btn-disabled-text);
       
       & .button-background {
   outline-style: var(--border-style-disabled);
-        outline-color: var(--primary-1-border-color-disabled);
-        background-color: var(--primary-1-background-color-disabled);
+        outline-color: var(--btn-disabled-border);
+        background-color: var(--btn-disabled-bg);
       }
     }
   }
   
-  /* 팔레트별 스타일 확장 */
-  &.primary-2 {
-    color: var(--primary-2-contents-def);
+  /* 🎨 Secondary 버튼 타입별 스타일 */
+  
+  /* Secondary-1 버튼 (Neutral 기반) */
+  &.secondary-1 {
+    color: var(--btn-secondary1-text);
     
     & .button-background {
-      background-color: var(--primary-2-background-color-default);
-      outline-color: var(--primary-2-border-color-default);
+      background-color: var(--btn-secondary1-bg);
+      outline-color: var(--btn-secondary1-border);
+    }
+    
+    /* 상태별 스타일 */
+    &:not([aria-disabled="true"]):hover {
+      & .button-background {
+        background-color: var(--btn-secondary1-bg-hover);
+      }
     }
     
     &:not([aria-disabled="true"]) {
       &:active,
-      &.key-active {
-        color: var(--primary-2-contents-pre-sel);
+      &.selected {
+        color: var(--btn-secondary1-text-active);
         
         & .button-background {
-          background-color: var(--primary-2-background-color-active);
-          outline-color: var(--primary-2-border-color-active);
+          background-color: var(--btn-secondary1-bg-active);
+          outline-color: var(--btn-secondary1-border);
+        }
+      }
+    }
+    
+    /* 비활성 상태 */
+    &[aria-disabled="true"] {
+      color: var(--btn-disabled-text);
+      
+      & .button-background {
+        background-color: var(--btn-disabled-bg);
+        outline-color: var(--btn-disabled-border);
+      }
+    }
+  }
+  
+  /* Secondary-2 버튼 (Neutral 변형) */
+  &.secondary-2 {
+    color: var(--btn-secondary2-text);
+    
+    & .button-background {
+      background-color: var(--btn-secondary2-bg);
+      outline-color: var(--btn-secondary2-border);
+    }
+    
+    /* 상태별 스타일 */
+    &:not([aria-disabled="true"]):hover {
+      & .button-background {
+        background-color: var(--btn-secondary2-bg-hover);
+      }
+    }
+    
+    &:not([aria-disabled="true"]) {
+      &:active,
+      &.selected {
+        color: var(--btn-secondary2-text-active);
+        
+        & .button-background {
+          background-color: var(--btn-secondary2-bg-active);
+          outline-color: var(--btn-secondary2-border);
+        }
+      }
+    }
+    
+    /* 비활성 상태 */
+    &[aria-disabled="true"] {
+      color: var(--btn-disabled-text);
+      
+      & .button-background {
+        background-color: var(--btn-disabled-bg);
+        outline-color: var(--btn-disabled-border);
+      }
+    }
+  }
+  
+  /* Primary-2 버튼 (Light 테마 변형) */
+  &.primary-2 {
+    color: var(--btn-primary2-text);
+    
+    & .button-background {
+      background-color: var(--btn-primary2-bg);
+      outline-color: var(--btn-primary2-border);
+    }
+    
+    /* 상태별 스타일 */
+    &:not([aria-disabled="true"]):hover {
+      & .button-background {
+        background-color: var(--btn-primary2-bg-hover);
+      }
+    }
+    
+    &:not([aria-disabled="true"]) {
+      &:active,
+      &.selected {
+        color: var(--btn-primary2-text-active);
+        
+        & .button-background {
+          background-color: var(--btn-primary2-bg-active);
+          outline-color: var(--btn-primary2-border);
         }
       }
       
@@ -869,24 +821,28 @@ footer {
 } /* @layer components 끝 */
 
 /* ==============================
-   상태별 오버라이드 (Dark 테마 등)
+   Dark 테마 상태 오버라이드 🌙
    ============================== */
 @layer states {
 
-/* Neutral 팔레트들 생략 - 동일한 패턴으로 중첩 가능 */
-
-/* ==============================
-   Dark 테마 상태
-   ============================== */
-/* Primary-1 팔레트 Dark 테마 */
-.high-contrast .button:not(.primary-2):not(.secondary-1):not(.secondary-2) {
-  --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
-  --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
-  --primary-1-border-color-default: var(--primary-1-high-contrast-border-color-default);
-  --primary-1-border-color-active: var(--primary-1-high-contrast-border-color-active);
-  --primary-1-contents-color-default: var(--primary-1-high-contrast-contents-color-default);
-  --primary-1-contents-color-active: var(--primary-1-high-contrast-contents-color-active);
-  /* 기타 Dark 테마 변수들... */
+/* Dark 테마에서는 --current-* 토큰들을 Dark 테마로 재정의 */
+.high-contrast {
+  --current-bg-primary: var(--theme-dark-bg-primary);
+  --current-bg-hover: var(--theme-dark-bg-hover);
+  --current-bg-active: var(--theme-dark-bg-active);
+  --current-bg-surface: var(--theme-dark-bg-surface);
+  --current-bg-body: var(--theme-dark-bg-body);
+  
+  --current-text-primary: var(--theme-dark-text-primary);
+  --current-text-secondary: var(--theme-dark-text-secondary);
+  --current-text-on-primary: var(--theme-dark-text-on-primary);
+  --current-text-on-surface: var(--theme-dark-text-on-surface);
+  
+  --current-border-primary: var(--theme-dark-border-primary);
+  --current-border-subtle: var(--theme-dark-border-subtle);
+  
+  /* 컴포넌트 토큰 업데이트 (Dark 테마 특수값) */
+  --btn-primary-text-active: var(--color-dark-200);
 }
 
 } /* @layer states 끝 */
@@ -912,12 +868,8 @@ footer {
 } /* @layer utilities 끝 */
 
 /* ==============================
-   컨테이너 쿼리 및 반응형 개선
+   📱 반응형 컨테이너 쿼리 그룹
    ============================== */
-.palette-showcase-box {
-  container-type: inline-size;
-  container-name: button-container;
-}
 
 @container button-container (width < 25rem) { /* 400px → 25rem */
   .button {
@@ -1219,114 +1171,41 @@ footer {
 }
 
 /* ==============================
-   시스템 고대비 설정 자동 감지 (Dark 테마 적용)
+   🖥️ 시스템 접근성 미디어 쿼리 그룹
    ============================== */
-/* 시스템에서 고대비 설정이 활성화되었을 때 Dark 테마 자동 적용 */
+
+/* 시스템 고대비 설정 자동 감지 → Dark 테마 적용 */
 @media (prefers-contrast: high) {
-  /* 수동으로 설정하지 않은 경우에만 시스템 설정 따름 */
   html:not(.manual-theme-mode) {
-    /* Primary-1 팔레트 Dark 테마 */
-    --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
-    --primary-1-background-color-default-2: var(--primary-1-high-contrast-background-color-default-2);
-    --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
-    --primary-1-background-color-active-2: var(--primary-1-high-contrast-background-color-active-2);
-    --primary-1-background-color-disabled: var(--primary-1-high-contrast-background-color-disabled);
-    --primary-1-background-color-disabled-2: var(--primary-1-high-contrast-background-color-disabled-2);
+    --current-bg-primary: var(--theme-dark-bg-primary);
+    --current-bg-hover: var(--theme-dark-bg-hover);
+    --current-bg-active: var(--theme-dark-bg-active);
+    --current-bg-surface: var(--theme-dark-bg-surface);
+    --current-bg-body: var(--theme-dark-bg-body);
     
-    --primary-1-border-color-default: var(--primary-1-high-contrast-border-color-default);
-    --primary-1-border-color-default-2: var(--primary-1-high-contrast-border-color-default-2);
-    --primary-1-border-color-active: var(--primary-1-high-contrast-border-color-active);
-    --primary-1-border-color-active-2: var(--primary-1-high-contrast-border-color-active-2);
-    --primary-1-border-color-disabled: var(--primary-1-high-contrast-border-color-disabled);
-    --primary-1-border-color-disabled-2: var(--primary-1-high-contrast-border-color-disabled-2);
+    --current-text-primary: var(--theme-dark-text-primary);
+    --current-text-secondary: var(--theme-dark-text-secondary);
+    --current-text-on-primary: var(--theme-dark-text-on-primary);
+    --current-text-on-surface: var(--theme-dark-text-on-surface);
     
-    --primary-1-contents-color-default: var(--primary-1-high-contrast-contents-color-default);
-    --primary-1-contents-color-default-2: var(--primary-1-high-contrast-contents-color-default-2);
-    --primary-1-contents-color-active: var(--primary-1-high-contrast-contents-color-active);
-    --primary-1-contents-color-active-2: var(--primary-1-high-contrast-contents-color-active-2);
-    --primary-1-contents-color-disabled: var(--primary-1-high-contrast-contents-color-disabled);
-    --primary-1-contents-color-disabled-2: var(--primary-1-high-contrast-contents-color-disabled-2);
-
-    /* Primary-2 팔레트 Dark 테마 */
-    --primary-2-background-color-default: var(--primary-2-high-contrast-background-color-default);
-    --primary-2-background-color-default-2: var(--primary-2-high-contrast-background-color-default-2);
-    --primary-2-background-color-active: var(--primary-2-high-contrast-background-color-active);
-    --primary-2-background-color-active-2: var(--primary-2-high-contrast-background-color-active-2);
-    --primary-2-background-color-disabled: var(--primary-2-high-contrast-background-color-disabled);
-    --primary-2-background-color-disabled-2: var(--primary-2-high-contrast-background-color-disabled-2);
+    --current-border-primary: var(--theme-dark-border-primary);
+    --current-border-subtle: var(--theme-dark-border-subtle);
     
-    --primary-2-border-color-default: var(--primary-2-high-contrast-border-color-default);
-    --primary-2-border-color-default-2: var(--primary-2-high-contrast-border-color-default-2);
-    --primary-2-border-color-active: var(--primary-2-high-contrast-border-color-active);
-    --primary-2-border-color-active-2: var(--primary-2-high-contrast-border-color-active-2);
-    --primary-2-border-color-disabled: var(--primary-2-high-contrast-border-color-disabled);
-    --primary-2-border-color-disabled-2: var(--primary-2-high-contrast-border-color-disabled-2);
-    
-    --primary-2-contents-color-default: var(--primary-2-high-contrast-contents-color-default);
-    --primary-2-contents-color-default-2: var(--primary-2-high-contrast-contents-color-default-2);
-    --primary-2-contents-color-active: var(--primary-2-high-contrast-contents-color-active);
-    --primary-2-contents-color-active-2: var(--primary-2-high-contrast-contents-color-active-2);
-    --primary-2-contents-color-disabled: var(--primary-2-high-contrast-contents-color-disabled);
-    --primary-2-contents-color-disabled-2: var(--primary-2-high-contrast-contents-color-disabled-2);
-
-    /* Secondary-1 팔레트 Dark 테마 */
-    --secondary-1-background-color-default: var(--secondary-1-high-contrast-background-color-default);
-    --secondary-1-background-color-default-2: var(--secondary-1-high-contrast-background-color-default-2);
-    --secondary-1-background-color-active: var(--secondary-1-high-contrast-background-color-active);
-    --secondary-1-background-color-active-2: var(--secondary-1-high-contrast-background-color-active-2);
-    --secondary-1-background-color-disabled: var(--secondary-1-high-contrast-background-color-disabled);
-    --secondary-1-background-color-disabled-2: var(--secondary-1-high-contrast-background-color-disabled-2);
-    
-    --secondary-1-border-color-default: var(--secondary-1-high-contrast-border-color-default);
-    --secondary-1-border-color-default-2: var(--secondary-1-high-contrast-border-color-default-2);
-    --secondary-1-border-color-active: var(--secondary-1-high-contrast-border-color-active);
-    --secondary-1-border-color-active-2: var(--secondary-1-high-contrast-border-color-active-2);
-    --secondary-1-border-color-disabled: var(--secondary-1-high-contrast-border-color-disabled);
-    --secondary-1-border-color-disabled-2: var(--secondary-1-high-contrast-border-color-disabled-2);
-    
-    --secondary-1-contents-color-default: var(--secondary-1-high-contrast-contents-color-default);
-    --secondary-1-contents-color-default-2: var(--secondary-1-high-contrast-contents-color-default-2);
-    --secondary-1-contents-color-active: var(--secondary-1-high-contrast-contents-color-active);
-    --secondary-1-contents-color-active-2: var(--secondary-1-high-contrast-contents-color-active-2);
-    --secondary-1-contents-color-disabled: var(--secondary-1-high-contrast-contents-color-disabled);
-    --secondary-1-contents-color-disabled-2: var(--secondary-1-high-contrast-contents-color-disabled-2);
-
-    /* Secondary-2 팔레트 Dark 테마 */
-    --secondary-2-background-color-default: var(--secondary-2-high-contrast-background-color-default);
-    --secondary-2-background-color-default-2: var(--secondary-2-high-contrast-background-color-default-2);
-    --secondary-2-background-color-active: var(--secondary-2-high-contrast-background-color-active);
-    --secondary-2-background-color-active-2: var(--secondary-2-high-contrast-background-color-active-2);
-    --secondary-2-background-color-disabled: var(--secondary-2-high-contrast-background-color-disabled);
-    --secondary-2-background-color-disabled-2: var(--secondary-2-high-contrast-background-color-disabled-2);
-    
-    --secondary-2-border-color-default: var(--secondary-2-high-contrast-border-color-default);
-    --secondary-2-border-color-default-2: var(--secondary-2-high-contrast-border-color-default-2);
-    --secondary-2-border-color-active: var(--secondary-2-high-contrast-border-color-active);
-    --secondary-2-border-color-active-2: var(--secondary-2-high-contrast-border-color-active-2);
-    --secondary-2-border-color-disabled: var(--secondary-2-high-contrast-border-color-disabled);
-    --secondary-2-border-color-disabled-2: var(--secondary-2-high-contrast-border-color-disabled-2);
-    
-    --secondary-2-contents-color-default: var(--secondary-2-high-contrast-contents-color-default);
-    --secondary-2-contents-color-default-2: var(--secondary-2-high-contrast-contents-color-default-2);
-    --secondary-2-contents-color-active: var(--secondary-2-high-contrast-contents-color-active);
-    --secondary-2-contents-color-active-2: var(--secondary-2-high-contrast-contents-color-active-2);
-    --secondary-2-contents-color-disabled: var(--secondary-2-high-contrast-contents-color-disabled);
-    --secondary-2-contents-color-disabled-2: var(--secondary-2-high-contrast-contents-color-disabled-2);
-
-    /* 초점 및 호버 색상 */
-    --static-focus-color: var(--high-contrast-focus-color);
-    --static-hover-color: var(--high-contrast-hover-color);
+    --btn-primary-text-active: var(--color-dark-200);
   }
 }
 
 /* 더 강한 대비를 요구하는 시스템 설정 */
 @media (prefers-contrast: more) {
   html:not(.manual-theme-mode) {
-    /* 더 강한 대비 색상 적용 */
-    --primary-1-background-color-default: var(--color-neutral-1000);
-    --primary-1-contents-color-default: var(--color-dark-100);
-    --primary-2-background-color-default: var(--color-neutral-0);
-    --primary-2-contents-color-default: var(--color-neutral-1000);
+    /* 매우 강한 대비 (순흑백 기준) */
+    --current-bg-primary: var(--color-neutral-1000);
+    --current-text-primary: var(--color-dark-100);
+    --current-bg-surface: var(--color-neutral-0);
+    --current-text-on-surface: var(--color-neutral-1000);
   }
-}
-}
+} /* 미디어 쿼리 그룹 끝 */
+
+/* ===============================================
+   🎨 버튼 컴포넌트 시스템 CSS - 완료
+   =============================================== */

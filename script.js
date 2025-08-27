@@ -1,41 +1,53 @@
+// ===============================================
+// 🎨 버튼 컴포넌트 시스템 - 메인 스크립트
+// ===============================================
+
 window.addEventListener("DOMContentLoaded", () => {
-  // ==============================
-  // 테마 관리 시스템 🎨
-  // ==============================
+  
+  // ===== 테마 관리 시스템 그룹 =====
   
   /**
-   * 테마 상태 관리 (Light ↔ Dark 전환)
-   * - Light 테마: 기본 브랜드 색상 중심
-   * - Dark 테마: 고대비 모드, 접근성 최적화
-   * - Static 요소: 테마 독립적 포커스/호버
-   * - 로컬 스토리지 연동
-   * - 시스템 설정 감지
-   * - 키보드 단축키 (Ctrl+Alt+H)
+   * 🎨 ThemeManager - 테마 상태 관리 (Light ↔ Dark 전환)
+   * 
+   * 기능:
+   * - Light 테마: 기본 브랜드 색상 중심의 밝은 인터페이스  
+   * - Dark 테마: 고대비 모드, 접근성 최적화된 어두운 인터페이스
+   * - Static 요소: 테마 독립적 포커스/호버 (핑크)
+   * - 로컬 스토리지 연동으로 설정 유지
+   * - 시스템 설정 자동 감지 (@media prefers-contrast)
+   * - 키보드 단축키 지원 (Ctrl+Alt+H)
    */
   const ThemeManager = {
-    // 테마 타입
+    
+    // ===== 상수 및 설정 그룹 =====
     THEMES: {
       LIGHT: 'light',
       DARK: 'dark'
     },
     
-    // 설정 키
     STORAGE_KEY: 'theme-mode',
     MANUAL_MODE_KEY: 'manual-theme-mode',
     
-    // 현재 상태
+    // ===== 상태 관리 그룹 =====
     currentTheme: 'light',
     isManualMode: false,
     
-    // 초기화
+    // ===== 초기화 플로우 그룹 =====
+    
+    /**
+     * 🚀 메인 초기화 메소드
+     * 호출 순서: loadSettings → setupEventListeners → applyCurrentState → syncToggleButton
+     */
     init() {
-      this.loadSettings();
-      this.setupEventListeners();
-      this.applyCurrentState();
-      this.syncToggleButton();
+      this.loadSettings();        // 1️⃣ 저장된 설정 불러오기
+      this.setupEventListeners(); // 2️⃣ 이벤트 리스너 등록
+      this.applyCurrentState();   // 3️⃣ DOM에 테마 적용
+      this.syncToggleButton();    // 4️⃣ UI 동기화
     },
     
-    // 로컬 스토리지에서 테마 설정 로드
+    /**
+     * 1️⃣ 설정 로드 (init에서 첫 번째 호출)
+     */
     loadSettings() {
       const savedTheme = localStorage.getItem(this.STORAGE_KEY);
       const savedManualMode = localStorage.getItem(this.MANUAL_MODE_KEY);
@@ -64,7 +76,12 @@ window.addEventListener("DOMContentLoaded", () => {
       return prefersHighContrast ? this.THEMES.DARK : this.THEMES.LIGHT;
     },
     
-    // 현재 테마를 DOM에 적용
+    // ===== DOM 조작 메소드 그룹 =====
+    
+    /**
+     * 3️⃣ DOM 적용 (init에서 세 번째 호출)
+     * 테마 클래스 추가/제거 + 수동 모드 표시
+     */
     applyCurrentState() {
       const html = document.documentElement;
       
@@ -109,6 +126,8 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     },
     
+    // ===== 사용자 상호작용 메소드 그룹 =====
+    
     // 테마 토글 (Light ↔ Dark)
     toggle() {
       this.currentTheme = this.currentTheme === this.THEMES.LIGHT ? this.THEMES.DARK : this.THEMES.LIGHT;
@@ -150,7 +169,8 @@ window.addEventListener("DOMContentLoaded", () => {
       liveRegion.textContent = message;
     },
     
-    // 이벤트 리스너 설정
+    // ===== 이벤트 설정 메소드 그룹 =====
+    
     setupEventListeners() {
       // 테마 토글 버튼 클릭
       const toggleButton = document.querySelector('.theme-toggle, .high-contrast-toggle');
