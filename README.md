@@ -195,23 +195,32 @@ if (!needsUpdate) continue;
 </button>
 ```
 
-### 팔레트 적용 예시
+### 🎨 테마별 팔레트 적용 예시
 ```html
-<!-- Primary-2 팔레트 버튼 -->
+<!-- Light 테마 변형 색상 버튼 -->
 <button type="button" class="button primary-2">
   <div class="button-background">
     <span class="icon"></span>
-    <span class="label">Primary-2</span>
+    <span class="label">Light 변형</span>
   </div>
 </button>
 
-<!-- Secondary-1 팔레트 토글 버튼 -->
+<!-- Neutral 기반 토글 버튼 -->
 <button type="button" class="button secondary-1 selected" 
         data-toggle-selected="true" aria-pressed="true">
   <div class="button-background">
     <span class="selected-icon"></span>
     <span class="icon"></span>
-    <span class="label">Secondary-1 선택</span>
+    <span class="label">Neutral 선택</span>
+  </div>
+</button>
+
+<!-- 테마 전환 버튼 -->
+<button type="button" class="button theme-toggle" 
+        aria-label="Light ↔ Dark 테마 전환">
+  <div class="button-background">
+    <span class="icon"></span>
+    <span class="label">Dark 테마</span>
   </div>
 </button>
 ```

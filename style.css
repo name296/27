@@ -196,7 +196,7 @@ button {
    테마 전환 시스템 🔄
    ============================== */
 
-/* 🌙 Dark 테마 (고대비 모드) 활성화 */
+/* 🌙 Dark 테마 (고대비 접근성 최적화) 활성화 */
 .high-contrast {
   /* 현재 활성 테마를 Dark로 전환 */
   --current-bg-primary: var(--theme-dark-bg-primary);
@@ -240,7 +240,7 @@ button {
   --primitive-color-static-04-FF4800: #FF4800;
 
   /* ==============================
-     Primary-1 팔레트 (Primary 기본)
+     Primary-1 팔레트 (Light 테마 기본)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
@@ -263,7 +263,7 @@ button {
   --primary-1-contents-color-disabled-2: var(--primitive-color-light-05-EB9B63);
 
   /* ==============================
-     Primary-2 팔레트 (Primary 변형)
+     Primary-2 팔레트 (Light 테마 변형)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
@@ -288,7 +288,7 @@ button {
   --primary-2-contents-color-disabled-2: var(--primitive-color-gray-06-737373); /* dis-2: 737373 */
 
   /* ==============================
-     Secondary-1 팔레트 (기본 Secondary)
+     Secondary-1 팔레트 (Neutral 기반)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
@@ -312,7 +312,7 @@ button {
   --secondary-1-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C); /* dis-2: 8C8C8C */
 
   /* ==============================
-     Secondary-2 팔레트 (Secondary 변형)
+     Secondary-2 팔레트 (Neutral 변형)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
@@ -348,7 +348,7 @@ button {
   --static-hover-color: var(--primitive-color-static-01-FF00E1);
 
   /* ==============================
-   하이 콘트라스트 모드 - Primary-1 팔레트
+   Dark 테마 - Primary-1 팔레트 (Light 기본)
    ============================== */
   --primary-1-high-contrast-background-color-default: var(--primitive-color-gray-01-000000);
   --primary-1-high-contrast-background-color-default-2: var(--primitive-color-high-contrast-03-FFE100);
@@ -372,7 +372,7 @@ button {
   --primary-1-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-04-4C4C4C);
 
   /* ==============================
-   하이 콘트라스트 모드 - Primary-2 팔레트
+   Dark 테마 - Primary-2 팔레트 (Light 변형)
    ============================== */
   --primary-2-high-contrast-background-color-default: var(--primitive-color-gray-14-FFFFFF);
   --primary-2-high-contrast-background-color-default-2: var(--primitive-color-gray-01-000000);
@@ -396,7 +396,7 @@ button {
   --primary-2-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
 
   /* ==============================
-   하이 콘트라스트 모드 - Secondary-1 팔레트
+   Dark 테마 - Secondary-1 팔레트 (Neutral 기반)
    ============================== */
   --secondary-1-high-contrast-background-color-default: var(--primitive-color-gray-08-8C8C8C);
   --secondary-1-high-contrast-background-color-active: var(--primitive-color-gray-14-FFFFFF);
@@ -418,7 +418,7 @@ button {
   --secondary-1-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
 
   /* ==============================
-   하이 콘트라스트 모드 - Secondary-2 팔레트
+   Dark 테마 - Secondary-2 팔레트 (Neutral 변형)
    ============================== */
   --secondary-2-high-contrast-background-color-default: var(--primitive-color-gray-08-8C8C8C);
   --secondary-2-high-contrast-background-color-default-2: var(--primitive-color-gray-08-8C8C8C);
@@ -887,16 +887,16 @@ footer {
 } /* @layer components 끝 */
 
 /* ==============================
-   상태별 오버라이드 (고대비 모드 등)
+   상태별 오버라이드 (Dark 테마 등)
    ============================== */
 @layer states {
 
-/* Secondary 팔레트들 생략 - 동일한 패턴으로 중첩 가능 */
+/* Neutral 팔레트들 생략 - 동일한 패턴으로 중첩 가능 */
 
 /* ==============================
-   하이 콘트라스트 모드 상태
+   Dark 테마 상태
    ============================== */
-/* Primary-1 팔레트 하이 콘트라스트 */
+/* Primary-1 팔레트 Dark 테마 */
 .high-contrast .button:not(.primary-2):not(.secondary-1):not(.secondary-2) {
   --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
   --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
@@ -904,7 +904,7 @@ footer {
   --primary-1-border-color-active: var(--primary-1-high-contrast-border-color-active);
   --primary-1-contents-color-default: var(--primary-1-high-contrast-contents-color-default);
   --primary-1-contents-color-active: var(--primary-1-high-contrast-contents-color-active);
-  /* 기타 하이콘트라스트 변수들... */
+  /* 기타 Dark 테마 변수들... */
 }
 
 } /* @layer states 끝 */
@@ -1072,10 +1072,10 @@ footer {
 }
 
 /* ==============================
-   하이 콘트라스트 모드 - 팔레트별 1:1 대응
+   Dark 테마 - 팔래트별 1:1 대응
    ============================== */
 
-/* Primary-1 팔레트 하이 콘트라스트 */
+/* Primary-1 팔레트 Dark 테마 */
 .high-contrast .button:not(.primary-2):not(.secondary-1):not(.secondary-2) {
   --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
   --primary-1-background-color-default-2: var(--primary-1-high-contrast-background-color-default-2);
@@ -1099,7 +1099,7 @@ footer {
   --primary-1-contents-color-disabled-2: var(--primary-1-high-contrast-contents-color-disabled-2);
 }
 
-/* Primary-2 팔레트 하이 콘트라스트 */
+/* Primary-2 팔레트 Dark 테마 */
 .high-contrast .button.primary-2 {
   --primary-2-background-color-default: var(--primary-2-high-contrast-background-color-default);
   --primary-2-background-color-default-2: var(--primary-2-high-contrast-background-color-default-2);
@@ -1123,7 +1123,7 @@ footer {
   --primary-2-contents-color-disabled-2: var(--primary-2-high-contrast-contents-color-disabled-2);
 }
 
-/* Secondary-1 팔레트 하이 콘트라스트 */
+/* Secondary-1 팔레트 Dark 테마 */
 .high-contrast .button.secondary-1 {
   --secondary-1-background-color-default: var(--secondary-1-high-contrast-background-color-default);
   --secondary-1-background-color-default-2: var(--secondary-1-high-contrast-background-color-default-2);
@@ -1147,7 +1147,7 @@ footer {
   --secondary-1-contents-color-disabled-2: var(--secondary-1-high-contrast-contents-color-disabled-2);
 }
 
-/* Secondary-2 팔레트 하이 콘트라스트 */
+/* Secondary-2 팔레트 Dark 테마 */
 .high-contrast .button.secondary-2 {
   --secondary-2-background-color-default: var(--secondary-2-high-contrast-background-color-default);
   --secondary-2-background-color-default-2: var(--secondary-2-high-contrast-background-color-default-2);
@@ -1171,16 +1171,16 @@ footer {
   --secondary-2-contents-color-disabled-2: var(--secondary-2-high-contrast-contents-color-disabled-2);
 }
 
-/* 공통 초점/호버 상태 하이 콘트라스트 */
+/* 공통 초점/호버 상태 Static 요소 */
 .high-contrast .button {
   --static-focus-color: var(--high-contrast-focus-color);
   --static-hover-color: var(--high-contrast-hover-color);
 }
 
-/* 하이 콘트라스트 모드에서 페이지 배경과 텍스트 색상 조정 */
+/* Dark 테마에서 페이지 배경과 텍스트 색상 조정 */
 .high-contrast body {
-  background: var(--primitive-color-gray-01); /* body/page bg: 000000 (하이 콘트라스트) */
-  color: var(--primitive-color-gray-14); /* body/text sec: FFFFFF (하이 콘트라스트) */
+  background: var(--primitive-color-gray-01); /* body/page bg: 000000 (Dark 테마) */
+  color: var(--primitive-color-gray-14); /* body/text sec: FFFFFF (Dark 테마) */
 }
 
 .high-contrast header {
@@ -1230,20 +1230,20 @@ footer {
 }
 
 /* ==============================
-   하이 콘트라스트 토글 버튼
+   Dark 테마 토글 버튼
    ============================== */
 .high-contrast-toggle {
-  /* 고대비 모드 토글 버튼 스타일은 기본 .button 스타일을 상속합니다 */
+  /* 테마 토글 버튼 스타일은 기본 .button 스타일을 상속합니다 */
 }
 
 /* ==============================
-   시스템 고대비 모드 자동 감지
+   시스템 고대비 설정 자동 감지 (Dark 테마 적용)
    ============================== */
-/* 시스템에서 고대비 모드가 활성화되었을 때 자동 적용 */
+/* 시스템에서 고대비 설정이 활성화되었을 때 Dark 테마 자동 적용 */
 @media (prefers-contrast: high) {
   /* 수동으로 설정하지 않은 경우에만 시스템 설정 따름 */
-  html:not(.manual-contrast-mode) {
-    /* Primary-1 팔레트 하이 콘트라스트 */
+  html:not(.manual-theme-mode) {
+    /* Primary-1 팔레트 Dark 테마 */
     --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
     --primary-1-background-color-default-2: var(--primary-1-high-contrast-background-color-default-2);
     --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
@@ -1265,7 +1265,7 @@ footer {
     --primary-1-contents-color-disabled: var(--primary-1-high-contrast-contents-color-disabled);
     --primary-1-contents-color-disabled-2: var(--primary-1-high-contrast-contents-color-disabled-2);
 
-    /* Primary-2 팔레트 하이 콘트라스트 */
+    /* Primary-2 팔레트 Dark 테마 */
     --primary-2-background-color-default: var(--primary-2-high-contrast-background-color-default);
     --primary-2-background-color-default-2: var(--primary-2-high-contrast-background-color-default-2);
     --primary-2-background-color-active: var(--primary-2-high-contrast-background-color-active);
@@ -1287,7 +1287,7 @@ footer {
     --primary-2-contents-color-disabled: var(--primary-2-high-contrast-contents-color-disabled);
     --primary-2-contents-color-disabled-2: var(--primary-2-high-contrast-contents-color-disabled-2);
 
-    /* Secondary-1 팔레트 하이 콘트라스트 */
+    /* Secondary-1 팔레트 Dark 테마 */
     --secondary-1-background-color-default: var(--secondary-1-high-contrast-background-color-default);
     --secondary-1-background-color-default-2: var(--secondary-1-high-contrast-background-color-default-2);
     --secondary-1-background-color-active: var(--secondary-1-high-contrast-background-color-active);
@@ -1309,7 +1309,7 @@ footer {
     --secondary-1-contents-color-disabled: var(--secondary-1-high-contrast-contents-color-disabled);
     --secondary-1-contents-color-disabled-2: var(--secondary-1-high-contrast-contents-color-disabled-2);
 
-    /* Secondary-2 팔레트 하이 콘트라스트 */
+    /* Secondary-2 팔레트 Dark 테마 */
     --secondary-2-background-color-default: var(--secondary-2-high-contrast-background-color-default);
     --secondary-2-background-color-default-2: var(--secondary-2-high-contrast-background-color-default-2);
     --secondary-2-background-color-active: var(--secondary-2-high-contrast-background-color-active);
@@ -1339,7 +1339,7 @@ footer {
 
 /* 더 강한 대비를 요구하는 시스템 설정 */
 @media (prefers-contrast: more) {
-  html:not(.manual-contrast-mode) {
+  html:not(.manual-theme-mode) {
     /* 더 강한 대비 색상 적용 */
     --primary-1-background-color-default: var(--primitive-color-gray-01-000000);
     --primary-1-contents-color-default: var(--primitive-color-high-contrast-03-FFE100);

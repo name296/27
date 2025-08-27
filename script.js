@@ -472,49 +472,4 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener('dragstart', blockPointerEvents, true);
 });
 
-// ==============================
-// 하이 콘트라스트 모드 토글 기능 (모든 버튼 타입과 상태에 적용)
-// ==============================
-/**
- * 하이 콘트라스트 모드를 토글하고 localStorage에 상태를 저장합니다.
- * 
- * 적용 범위:
- * - 모든 버튼 타입: 기본 버튼, 토글 버튼, 비활성 버튼
- * - 모든 버튼 상태: 기본, 눌림, 선택, 비활성, 초점, 호버
- * - 모든 팔레트: Primary-1, Primary-2, Secondary-1, Secondary-2
- * 
- * 고대비 색상으로 일관성 있게 오버라이드됩니다.
- */
-function initializeHighContrastToggle() {
-  const toggleButton = document.querySelector('.high-contrast-toggle');
-  const body = document.body;
-  
-  if (!toggleButton) return;
-  
-  // 로컬 스토리지에서 하이 콘트라스트 모드 상태 복원
-  const isHighContrast = localStorage.getItem('highContrastMode') === 'true';
-  if (isHighContrast) {
-    body.classList.add('high-contrast');
-    toggleButton.setAttribute('aria-pressed', 'true');
-  }
-  
-  // 하이 콘트라스트 모드 토글 이벤트
-  toggleButton.addEventListener('click', () => {
-    const isCurrentlyHighContrast = body.classList.contains('high-contrast');
-    
-    if (isCurrentlyHighContrast) {
-      // 일반 모드로 전환
-      body.classList.remove('high-contrast');
-      toggleButton.setAttribute('aria-pressed', 'false');
-      localStorage.setItem('highContrastMode', 'false');
-    } else {
-      // 하이 콘트라스트 모드로 전환
-      body.classList.add('high-contrast');
-      toggleButton.setAttribute('aria-pressed', 'true');
-      localStorage.setItem('highContrastMode', 'true');
-    }
-  });
-}
 
-// 하이 콘트라스트 모드 초기화
-initializeHighContrastToggle();
