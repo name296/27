@@ -215,15 +215,15 @@ button {
 /* Dark 테마 */
 .dark {
   /* 페이지 UI 색상 (Dark 테마) */
-  --page-bg-primary: #000000FF;
-  --page-bg-secondary: #FFFFFF05FF;
-  --page-bg-tertiary: #FFFFFF0DFF;
+  --page-bg-primary: #1F1F1FFF;
+  --page-bg-secondary: #252525FF;
+  --page-bg-tertiary: #4C4C4CFF;
   --page-text-primary: #FFFFFFFF;
-  --page-text-secondary: #FFFFFFB3FF;
-  --page-text-tertiary: #FFFFFF99FF;
-  --page-text-muted: #666666FF;
-  --page-border-primary: #FFFFFF1AFF;
-  --page-border-secondary: #FFFFFF33FF;
+  --page-text-secondary: #BFBFBFFF;
+  --page-text-tertiary: #8C8C8CFF;
+  --page-text-muted: #606060FF;
+  --page-border-primary: #4C4C4CFF;
+  --page-border-secondary: #606060FF;
   
   /* Primary1 색위계 */
   --primary1-background-color-default: var(--yellow-300);
@@ -442,7 +442,7 @@ main {
     padding: var(--unit-md);
     background: var(--page-bg-tertiary);
     border-radius: calc(var(--unit-xs) * 2);
-    border: 1px solid var(--page-border-secondary);
+    border: var(--unit-xs) solid var(--page-border-secondary);
   }
 }
 
@@ -456,7 +456,7 @@ main {
   padding: var(--unit-xs) var(--unit-sm);
   background: var(--page-bg-primary);
   border-radius: var(--unit-xs);
-  border: 1px solid var(--page-border-primary);
+  border: var(--unit-xs) solid var(--page-border-primary);
 }
 
 /* ==============================
@@ -835,7 +835,7 @@ footer {
 /* 컨트롤 버튼 그룹 */
 .control-buttons {
   display: flex;
-  gap: 1rem;
+  gap: var(--unit-md);
   align-items: center;
   justify-content: center;
 }
@@ -859,7 +859,7 @@ footer {
   padding: 1rem;
   background: var(--page-bg-secondary);
   border-radius: 0.5rem;
-  border: 1px solid var(--page-border-primary);
+  border: var(--unit-xs) solid var(--page-border-primary);
   max-width: 37.5rem;
 }
 
@@ -933,7 +933,7 @@ footer {
   padding: 0.5rem 1rem;
   background: var(--page-bg-tertiary);
   color: var(--page-text-secondary);
-  border: 1px solid var(--page-border-secondary);
+  border: var(--unit-xs) solid var(--page-border-secondary);
   border-radius: 0.25rem;
   font-size: 0.85rem;
   cursor: pointer;
