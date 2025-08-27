@@ -215,7 +215,6 @@ button {
   
   /* 컴포넌트 토큰 업데이트 (Dark 테마 특수값) */
   --btn-primary-text-active: var(--color-dark-200);
-}
 
   /* Gray theme 색상들 (기존 호환성) */
   --primitive-color-gray-01-000000: #000000;
@@ -238,6 +237,22 @@ button {
   --primitive-color-static-02-CC1D00: #CC1D00;
   --primitive-color-static-03-751200: #751200;
   --primitive-color-static-04-FF4800: #FF4800;
+
+  /* Light theme 색상들 */
+  --primitive-color-light-02-8C532C: #8C532C;
+  --primitive-color-light-03-A4693F: #A4693F;
+  --primitive-color-light-05-EB9B63: #EB9B63;
+  --primitive-color-light-06-EEDCD2: #EEDCD2;
+
+  /* High contrast theme 색상들 */
+  --primitive-color-high-contrast-02-807000: #807000;
+  --primitive-color-high-contrast-03-FFE100: #FFE100;
+
+  /* Missing primitive variables */
+  --primitive-1-contents-color-active: var(--primitive-color-light-02-8C532C);
+  --primitive-1-contents-color-disabled: var(--primitive-color-light-02-8C532C);
+  --primitive-1-contents-color-disabled-2: var(--primitive-color-light-05-EB9B63);
+  --primitive-color-gray-08: var(--primitive-color-gray-08-8C8C8C);
 
   /* ==============================
      Primary-1 팔레트 (Light 테마 기본)
@@ -469,8 +484,6 @@ button {
   --z-index-button: 0;
   --z-index-background: -1;
   --z-index-selected-icon: 1;
-}
-
 } /* @layer tokens 끝 */
 
 /* ==============================
@@ -1346,4 +1359,5 @@ footer {
     --primary-2-background-color-default: var(--primitive-color-gray-14-FFFFFF);
     --primary-2-contents-color-default: var(--primitive-color-gray-01-000000);
   }
+}
 }
