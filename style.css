@@ -299,37 +299,72 @@ button {
    ============================== */
 body {
   margin: 0;
-  padding: var(--unit-md);
-  gap: var(--unit-md);
+  padding: 0;
+  min-height: 100vh;
   background: var(--page-bg-primary);
   color: var(--page-text-primary);
   font-family: var(--font-family);
-  line-height: 1.0;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 접근성 스킵 링크 */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--page-accent-primary);
+  color: var(--page-bg-primary);
+  padding: var(--unit-xs) var(--unit-sm);
+  text-decoration: none;
+  border-radius: var(--unit-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  z-index: 1000;
+  
+  &:focus {
+    top: 6px;
+  }
 }
 
 header {
+  flex-shrink: 0;
   text-align: center;
   background: var(--page-bg-primary);
   border-bottom: var(--unit-xs) solid var(--page-border-primary);
+  padding: var(--unit-xl) var(--unit-lg);
   
   & h1 {
-    font-size: var(--font-size);
-    font-weight: 600;
+    font-size: var(--font-size-xl);
+    font-weight: 700;
     color: var(--page-text-primary);
+    margin: 0 0 var(--unit-md) 0;
   }
   
   & p {
-    width: fit-content;
-    color: var(--page-text-primary);
+    font-size: var(--font-size-md);
+    color: var(--page-text-secondary);
+    margin: 0 auto var(--unit-xl) auto;
+    max-width: 50rem;
+    line-height: 1.6;
   }
 }
 
+/* 테마 컨트롤 그룹 */
+.theme-control-group {
+  margin-top: var(--unit-lg);
+}
+
 main {
-  margin: 0;
-  padding: 1rem;
+  flex: 1;
+  padding: var(--unit-xl) var(--unit-lg);
   display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
+  flex-flow: column nowrap;
+  gap: var(--unit-2xl);
+  max-width: 90rem;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* 쇼케이스 컨테이너 */
@@ -337,16 +372,21 @@ main {
   background: var(--page-bg-secondary);
   border-radius: calc(var(--unit-xs) * 3);
   border: var(--unit-xs) solid var(--page-border-primary);
+  padding: var(--unit-lg);
+  margin-bottom: var(--unit-xl);
   
   & h2 {
     font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--page-text-primary);
+    margin-bottom: var(--unit-sm);
   }
   
   & p {
     color: var(--page-text-secondary);
     font-size: var(--font-size-md);
+    margin-bottom: var(--unit-lg);
+    line-height: 1.5;
   }
 }
 
@@ -375,29 +415,37 @@ main {
 
 .palette-showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
-  gap: var(--unit-md);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--unit-lg);
   width: 100%;
-  max-width: 75rem;
   justify-items: center;
+  align-items: start;
   
   &-box {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    gap: var(--unit-xs);
-    min-width: 12.5rem;
-    flex: 0 0 auto;
+    gap: var(--unit-md);
+    width: 100%;
+    max-width: 20rem;
+    padding: var(--unit-md);
+    background: var(--page-bg-tertiary);
+    border-radius: calc(var(--unit-xs) * 2);
+    border: 1px solid var(--page-border-secondary);
   }
 }
 
 .palette-label {
-  width: fit-content;
-  height: fit-content;
+  width: 100%;
   text-align: center;
   color: var(--page-text-primary);
-  font-weight: 500;
-  font-size: var(--font-size-md);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--unit-xs);
+  padding: var(--unit-xs) var(--unit-sm);
+  background: var(--page-bg-primary);
+  border-radius: var(--unit-xs);
+  border: 1px solid var(--page-border-primary);
 }
 
 /* ==============================
@@ -444,13 +492,14 @@ main {
    푸터
    ============================== */
 footer {
+  flex-shrink: 0;
   text-align: center;
-  background: var(--page-bg-tertiary);
+  background: var(--page-bg-secondary);
   border-top: var(--unit-xs) solid var(--page-border-primary);
-  border-bottom: var(--unit-xs) solid var(--page-border-primary);
   color: var(--page-text-tertiary);
   font-size: var(--font-size-xs);
-  padding: var(--unit-sm);
+  padding: var(--unit-lg);
+  margin-top: auto;
 }
 
 /* ==============================
