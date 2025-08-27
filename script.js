@@ -1,5 +1,202 @@
 window.addEventListener("DOMContentLoaded", () => {
   // ==============================
+  // 고대비 모드 관리 시스템
+  // ==============================
+  
+  /**
+   * 고대비 모드 상태 관리
+   * - 로컬 스토리지 연동
+   * - 시스템 설정 감지
+   * - 수동 토글 지원
+   * - 키보드 단축키 (Ctrl+Alt+H)
+   */
+  const HighContrastManager = {
+    // 설정 키
+    STORAGE_KEY: 'high-contrast-mode',
+    MANUAL_MODE_KEY: 'manual-contrast-mode',
+    
+    // 현재 상태
+    isEnabled: false,
+    isManualMode: false,
+    
+    // 초기화
+    init() {
+      this.loadSettings();
+      this.setupEventListeners();
+      this.applyCurrentState();
+      this.syncToggleButton();
+    },
+    
+    // 로컬 스토리지에서 설정 로드
+    loadSettings() {
+      const savedState = localStorage.getItem(this.STORAGE_KEY);
+      const savedManualMode = localStorage.getItem(this.MANUAL_MODE_KEY);
+      
+      this.isManualMode = savedManualMode === 'true';
+      
+      if (this.isManualMode) {
+        // 수동 모드: 저장된 설정 사용
+        this.isEnabled = savedState === 'enabled';
+      } else {
+        // 자동 모드: 시스템 설정 감지
+        this.isEnabled = this.detectSystemHighContrast();
+      }
+      
+      console.log('🎨 고대비 모드 설정 로드:', {
+        enabled: this.isEnabled,
+        manual: this.isManualMode,
+        system: this.detectSystemHighContrast()
+      });
+    },
+    
+    // 시스템 고대비 모드 감지
+    detectSystemHighContrast() {
+      return window.matchMedia('(prefers-contrast: high)').matches ||
+             window.matchMedia('(prefers-contrast: more)').matches;
+    },
+    
+    // 현재 상태를 DOM에 적용
+    applyCurrentState() {
+      const html = document.documentElement;
+      
+      if (this.isEnabled) {
+        html.classList.add('high-contrast');
+      } else {
+        html.classList.remove('high-contrast');
+      }
+      
+      if (this.isManualMode) {
+        html.classList.add('manual-contrast-mode');
+      } else {
+        html.classList.remove('manual-contrast-mode');
+      }
+    },
+    
+    // 설정을 로컬 스토리지에 저장
+    saveSettings() {
+      localStorage.setItem(this.STORAGE_KEY, this.isEnabled ? 'enabled' : 'disabled');
+      localStorage.setItem(this.MANUAL_MODE_KEY, this.isManualMode.toString());
+      
+      console.log('💾 고대비 모드 설정 저장:', {
+        enabled: this.isEnabled,
+        manual: this.isManualMode
+      });
+    },
+    
+    // 토글 버튼 상태 동기화
+    syncToggleButton() {
+      const toggleButton = document.querySelector('.high-contrast-toggle');
+      if (toggleButton) {
+        toggleButton.setAttribute('aria-pressed', this.isEnabled.toString());
+        
+        // 버튼 텍스트 업데이트
+        const label = toggleButton.querySelector('.label');
+        if (label) {
+          label.textContent = this.isEnabled ? '고대비\n해제' : '고대비\n모드';
+        }
+      }
+    },
+    
+    // 고대비 모드 토글
+    toggle() {
+      this.isEnabled = !this.isEnabled;
+      this.isManualMode = true; // 수동 토글 시 수동 모드로 전환
+      
+      this.applyCurrentState();
+      this.saveSettings();
+      this.syncToggleButton();
+      
+      // 접근성 알림
+      this.announceChange();
+      
+      console.log('🔄 고대비 모드 토글:', {
+        enabled: this.isEnabled,
+        manual: this.isManualMode
+      });
+    },
+    
+    // 접근성 알림 (스크린 리더용)
+    announceChange() {
+      const message = this.isEnabled ? '고대비 모드가 활성화되었습니다.' : '고대비 모드가 비활성화되었습니다.';
+      
+      // aria-live 영역에 메시지 추가
+      let liveRegion = document.getElementById('high-contrast-announcer');
+      if (!liveRegion) {
+        liveRegion = document.createElement('div');
+        liveRegion.id = 'high-contrast-announcer';
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.position = 'absolute';
+        liveRegion.style.left = '-10000px';
+        liveRegion.style.width = '1px';
+        liveRegion.style.height = '1px';
+        liveRegion.style.overflow = 'hidden';
+        document.body.appendChild(liveRegion);
+      }
+      
+      liveRegion.textContent = message;
+    },
+    
+    // 이벤트 리스너 설정
+    setupEventListeners() {
+      // 토글 버튼 클릭
+      const toggleButton = document.querySelector('.high-contrast-toggle');
+      if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+          this.toggle();
+        });
+      }
+      
+      // 키보드 단축키: Ctrl+Alt+H
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'h') {
+          e.preventDefault(); // 기본 동작 방지
+          this.toggle();
+        }
+      });
+      
+      // 시스템 설정 변경 감지 (자동 모드일 때만)
+      const contrastQuery = window.matchMedia('(prefers-contrast: high)');
+      const moreContrastQuery = window.matchMedia('(prefers-contrast: more)');
+      
+      const handleSystemChange = () => {
+        if (!this.isManualMode) {
+          const newSystemState = this.detectSystemHighContrast();
+          if (newSystemState !== this.isEnabled) {
+            this.isEnabled = newSystemState;
+            this.applyCurrentState();
+            this.syncToggleButton();
+            console.log('🖥️ 시스템 고대비 모드 변경 감지:', this.isEnabled);
+          }
+        }
+      };
+      
+      contrastQuery.addEventListener('change', handleSystemChange);
+      moreContrastQuery.addEventListener('change', handleSystemChange);
+    },
+    
+    // 자동 모드로 재설정
+    resetToAuto() {
+      this.isManualMode = false;
+      this.isEnabled = this.detectSystemHighContrast();
+      this.applyCurrentState();
+      this.saveSettings();
+      this.syncToggleButton();
+      
+      console.log('🔄 자동 모드로 재설정:', {
+        enabled: this.isEnabled,
+        system: this.detectSystemHighContrast()
+      });
+    }
+  };
+  
+  // 고대비 모드 관리자 초기화
+  HighContrastManager.init();
+  
+  // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
+  window.HighContrastManager = HighContrastManager;
+
+  // ==============================
   // 상수 (비율/스케일)
   // ==============================
   const BASE = 0.03125;

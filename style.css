@@ -27,7 +27,7 @@ html {
   /* ==============================
    Primitive 색상 변수
    ============================== */
-  /* Light Primary 색상들 */
+  /* Light theme 색상들 */
   --primitive-color-light-01-4C3F37: #4C3F37;
   --primitive-color-light-02-8C532C: #8C532C;
   --primitive-color-light-03-A4693F: #A4693F;
@@ -35,13 +35,13 @@ html {
   --primitive-color-light-05-EB9B63: #EB9B63;
   --primitive-color-light-06-EEDCD2: #EEDCD2;
 
-  /* High Contrast 색상들 */
-    --primitive-color-high-contrast-01-241F00: #241F00;
+  /* High Contrast theme 색상들 */
+  --primitive-color-high-contrast-01-241F00: #241F00;
   --primitive-color-high-contrast-02-807000: #807000;
   --primitive-color-high-contrast-03-FFE100: #FFE100;
   --primitive-color-high-contrast-04-FFEF80: #FFEF80;
 
-  /* Gray 색상들 */
+  /* Gray theme 색상들 */
   --primitive-color-gray-01-000000: #000000;
   --primitive-color-gray-02-1F1F1F: #1F1F1F;
   --primitive-color-gray-03-252525: #252525;
@@ -57,7 +57,7 @@ html {
   --primitive-color-gray-13-FAFAFA: #FAFAFA;
   --primitive-color-gray-14-FFFFFF: #FFFFFF;
 
-  /* Static 색상들 */
+  /* Static theme 색상들 */
   --primitive-color-static-01-FF00E1: #FF00E1;
   --primitive-color-static-02-CC1D00: #CC1D00;
   --primitive-color-static-03-751200: #751200;
@@ -123,7 +123,6 @@ html {
   --secondary-1-background-color-disabled-2: var(--primitive-color-gray-01-000000);
   
   --secondary-1-border-color-default: var(--primitive-color-gray-07-757575); /* def: 757575 */
-  --secondary-1-border-color-default-2: var(--primitive-color-gray-07-757575); /* def-2: 757575 */
   --secondary-1-border-color-active: var(--primitive-color-gray-09-BFBFBF); /* pre-sel: BFBFBF */
   --secondary-1-border-color-active-2: var(--primitive-color-gray-07-757575); /* pre-sel-2: 757575 */
   --secondary-1-border-color-disabled: var(--primitive-color-gray-06-737373); /* dis: 737373 */
@@ -224,14 +223,12 @@ html {
    하이 콘트라스트 모드 - Secondary-1 팔레트
    ============================== */
   --secondary-1-high-contrast-background-color-default: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-1-high-contrast-background-color-default-2: var(--primitive-color-gray-04-4C4C4C);
   --secondary-1-high-contrast-background-color-active: var(--primitive-color-gray-14-FFFFFF);
   --secondary-1-high-contrast-background-color-active-2: var(--primitive-color-gray-01-000000);
   --secondary-1-high-contrast-background-color-disabled: var(--primitive-color-gray-04-4C4C4C);
   --secondary-1-high-contrast-background-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
   
   --secondary-1-high-contrast-border-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-high-contrast-border-color-default-2: var(--primitive-color-gray-08-8C8C8C);
   --secondary-1-high-contrast-border-color-active: var(--primitive-color-gray-01-000000);
   --secondary-1-high-contrast-border-color-active-2: var(--primitive-color-gray-14-FFFFFF);
   --secondary-1-high-contrast-border-color-disabled: var(--primitive-color-gray-08-8C8C8C);
@@ -267,12 +264,6 @@ html {
   --secondary-2-high-contrast-contents-color-active-2: var(--primitive-color-gray-08-8C8C8C);
   --secondary-2-high-contrast-contents-color-disabled: var(--primitive-color-gray-04-4C4C4C);
   --secondary-2-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
-
-  /* ==============================
-   하이 콘트라스트 모드 - 공통 상태
-   ============================== */
-  --high-contrast-focus-color: var(--primitive-color-static-focus-color);
-  --high-contrast-hover-color: var(--high-contrast-focus-color);
 
   /* ==============================
      테두리 스타일
@@ -430,9 +421,9 @@ main {
    사용법 안내
    ============================== */
 .usage-guide {
-  background: #FFFFFF05; /* rgba(255, 255, 255, 0.02) → HEX */
+  background: #FFFFFF05;
   border-radius: 12px;
-  border: 1px solid #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
+  border: 1px solid #FFFFFF1A;
 }
 
 .usage-guide h2 {
@@ -1009,4 +1000,117 @@ button {
    하이 콘트라스트 토글 버튼
    ============================== */
 .high-contrast-toggle {
+  /* 고대비 모드 토글 버튼 스타일은 기본 .button 스타일을 상속합니다 */
+}
+
+/* ==============================
+   시스템 고대비 모드 자동 감지
+   ============================== */
+/* 시스템에서 고대비 모드가 활성화되었을 때 자동 적용 */
+@media (prefers-contrast: high) {
+  /* 수동으로 설정하지 않은 경우에만 시스템 설정 따름 */
+  html:not(.manual-contrast-mode) {
+    /* Primary-1 팔레트 하이 콘트라스트 */
+    --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
+    --primary-1-background-color-default-2: var(--primary-1-high-contrast-background-color-default-2);
+    --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
+    --primary-1-background-color-active-2: var(--primary-1-high-contrast-background-color-active-2);
+    --primary-1-background-color-disabled: var(--primary-1-high-contrast-background-color-disabled);
+    --primary-1-background-color-disabled-2: var(--primary-1-high-contrast-background-color-disabled-2);
+    
+    --primary-1-border-color-default: var(--primary-1-high-contrast-border-color-default);
+    --primary-1-border-color-default-2: var(--primary-1-high-contrast-border-color-default-2);
+    --primary-1-border-color-active: var(--primary-1-high-contrast-border-color-active);
+    --primary-1-border-color-active-2: var(--primary-1-high-contrast-border-color-active-2);
+    --primary-1-border-color-disabled: var(--primary-1-high-contrast-border-color-disabled);
+    --primary-1-border-color-disabled-2: var(--primary-1-high-contrast-border-color-disabled-2);
+    
+    --primary-1-contents-color-default: var(--primary-1-high-contrast-contents-color-default);
+    --primary-1-contents-color-default-2: var(--primary-1-high-contrast-contents-color-default-2);
+    --primary-1-contents-color-active: var(--primary-1-high-contrast-contents-color-active);
+    --primary-1-contents-color-active-2: var(--primary-1-high-contrast-contents-color-active-2);
+    --primary-1-contents-color-disabled: var(--primary-1-high-contrast-contents-color-disabled);
+    --primary-1-contents-color-disabled-2: var(--primary-1-high-contrast-contents-color-disabled-2);
+
+    /* Primary-2 팔레트 하이 콘트라스트 */
+    --primary-2-background-color-default: var(--primary-2-high-contrast-background-color-default);
+    --primary-2-background-color-default-2: var(--primary-2-high-contrast-background-color-default-2);
+    --primary-2-background-color-active: var(--primary-2-high-contrast-background-color-active);
+    --primary-2-background-color-active-2: var(--primary-2-high-contrast-background-color-active-2);
+    --primary-2-background-color-disabled: var(--primary-2-high-contrast-background-color-disabled);
+    --primary-2-background-color-disabled-2: var(--primary-2-high-contrast-background-color-disabled-2);
+    
+    --primary-2-border-color-default: var(--primary-2-high-contrast-border-color-default);
+    --primary-2-border-color-default-2: var(--primary-2-high-contrast-border-color-default-2);
+    --primary-2-border-color-active: var(--primary-2-high-contrast-border-color-active);
+    --primary-2-border-color-active-2: var(--primary-2-high-contrast-border-color-active-2);
+    --primary-2-border-color-disabled: var(--primary-2-high-contrast-border-color-disabled);
+    --primary-2-border-color-disabled-2: var(--primary-2-high-contrast-border-color-disabled-2);
+    
+    --primary-2-contents-color-default: var(--primary-2-high-contrast-contents-color-default);
+    --primary-2-contents-color-default-2: var(--primary-2-high-contrast-contents-color-default-2);
+    --primary-2-contents-color-active: var(--primary-2-high-contrast-contents-color-active);
+    --primary-2-contents-color-active-2: var(--primary-2-high-contrast-contents-color-active-2);
+    --primary-2-contents-color-disabled: var(--primary-2-high-contrast-contents-color-disabled);
+    --primary-2-contents-color-disabled-2: var(--primary-2-high-contrast-contents-color-disabled-2);
+
+    /* Secondary-1 팔레트 하이 콘트라스트 */
+    --secondary-1-background-color-default: var(--secondary-1-high-contrast-background-color-default);
+    --secondary-1-background-color-default-2: var(--secondary-1-high-contrast-background-color-default-2);
+    --secondary-1-background-color-active: var(--secondary-1-high-contrast-background-color-active);
+    --secondary-1-background-color-active-2: var(--secondary-1-high-contrast-background-color-active-2);
+    --secondary-1-background-color-disabled: var(--secondary-1-high-contrast-background-color-disabled);
+    --secondary-1-background-color-disabled-2: var(--secondary-1-high-contrast-background-color-disabled-2);
+    
+    --secondary-1-border-color-default: var(--secondary-1-high-contrast-border-color-default);
+    --secondary-1-border-color-default-2: var(--secondary-1-high-contrast-border-color-default-2);
+    --secondary-1-border-color-active: var(--secondary-1-high-contrast-border-color-active);
+    --secondary-1-border-color-active-2: var(--secondary-1-high-contrast-border-color-active-2);
+    --secondary-1-border-color-disabled: var(--secondary-1-high-contrast-border-color-disabled);
+    --secondary-1-border-color-disabled-2: var(--secondary-1-high-contrast-border-color-disabled-2);
+    
+    --secondary-1-contents-color-default: var(--secondary-1-high-contrast-contents-color-default);
+    --secondary-1-contents-color-default-2: var(--secondary-1-high-contrast-contents-color-default-2);
+    --secondary-1-contents-color-active: var(--secondary-1-high-contrast-contents-color-active);
+    --secondary-1-contents-color-active-2: var(--secondary-1-high-contrast-contents-color-active-2);
+    --secondary-1-contents-color-disabled: var(--secondary-1-high-contrast-contents-color-disabled);
+    --secondary-1-contents-color-disabled-2: var(--secondary-1-high-contrast-contents-color-disabled-2);
+
+    /* Secondary-2 팔레트 하이 콘트라스트 */
+    --secondary-2-background-color-default: var(--secondary-2-high-contrast-background-color-default);
+    --secondary-2-background-color-default-2: var(--secondary-2-high-contrast-background-color-default-2);
+    --secondary-2-background-color-active: var(--secondary-2-high-contrast-background-color-active);
+    --secondary-2-background-color-active-2: var(--secondary-2-high-contrast-background-color-active-2);
+    --secondary-2-background-color-disabled: var(--secondary-2-high-contrast-background-color-disabled);
+    --secondary-2-background-color-disabled-2: var(--secondary-2-high-contrast-background-color-disabled-2);
+    
+    --secondary-2-border-color-default: var(--secondary-2-high-contrast-border-color-default);
+    --secondary-2-border-color-default-2: var(--secondary-2-high-contrast-border-color-default-2);
+    --secondary-2-border-color-active: var(--secondary-2-high-contrast-border-color-active);
+    --secondary-2-border-color-active-2: var(--secondary-2-high-contrast-border-color-active-2);
+    --secondary-2-border-color-disabled: var(--secondary-2-high-contrast-border-color-disabled);
+    --secondary-2-border-color-disabled-2: var(--secondary-2-high-contrast-border-color-disabled-2);
+    
+    --secondary-2-contents-color-default: var(--secondary-2-high-contrast-contents-color-default);
+    --secondary-2-contents-color-default-2: var(--secondary-2-high-contrast-contents-color-default-2);
+    --secondary-2-contents-color-active: var(--secondary-2-high-contrast-contents-color-active);
+    --secondary-2-contents-color-active-2: var(--secondary-2-high-contrast-contents-color-active-2);
+    --secondary-2-contents-color-disabled: var(--secondary-2-high-contrast-contents-color-disabled);
+    --secondary-2-contents-color-disabled-2: var(--secondary-2-high-contrast-contents-color-disabled-2);
+
+    /* 초점 및 호버 색상 */
+    --static-focus-color: var(--high-contrast-focus-color);
+    --static-hover-color: var(--high-contrast-hover-color);
+  }
+}
+
+/* 더 강한 대비를 요구하는 시스템 설정 */
+@media (prefers-contrast: more) {
+  html:not(.manual-contrast-mode) {
+    /* 더 강한 대비 색상 적용 */
+    --primary-1-background-color-default: var(--primitive-color-gray-01-000000);
+    --primary-1-contents-color-default: var(--primitive-color-high-contrast-03-FFE100);
+    --primary-2-background-color-default: var(--primitive-color-gray-14-FFFFFF);
+    --primary-2-contents-color-default: var(--primitive-color-gray-01-000000);
+  }
 }
