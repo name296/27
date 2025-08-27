@@ -89,8 +89,8 @@ button {
   --color-neutral-200: #E8E8E8;  
   --color-neutral-300: #DBDBDB;  
   --color-neutral-400: #BFBFBF;  
-  --color-neutral-500: #8C8C8C;  /* 중간 그레이 */
-  --color-neutral-600: #757575;  
+  --color-neutral-500: #8C8C8C;  
+  --color-neutral-600: #757575;  /* 중간 그레이 */
   --color-neutral-700: #737373;  
   --color-neutral-800: #606060;  
   --color-neutral-850: #4C4C4C;  
@@ -553,19 +553,25 @@ main {
    ============================== */
 .palette-showcase {
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  align-items: center;
-  width: fit-content;
-  height: fit-content;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--unit-md);
+  width: 100%;
+  max-width: 75rem; /* 1200px → 75rem */
 }
 
 .palette-showcase-box {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  width: fit-content;
-  height: fit-content;
+  gap: var(--unit-xs);
+  min-width: 12.5rem; /* 200px → 12.5rem */
+  flex: 0 0 auto;
+  
+  /* 컨테이너 쿼리를 위한 설정 */
+  container-type: inline-size;
+  container-name: button-container;
 }
 
 .palette-label {
