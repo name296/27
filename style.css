@@ -755,6 +755,104 @@ footer {
   padding-left: 1.25rem;
 }
 
+/* 버튼 크기 조절 컨트롤 */
+.size-controls {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--page-bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--page-border-primary);
+  max-width: 37.5rem;
+}
+
+.size-controls h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--page-text-primary);
+}
+
+.size-control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.size-control-group label {
+  min-width: 5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--page-text-secondary);
+}
+
+.size-control-group input[type="range"] {
+  flex: 1;
+  height: 0.375rem;
+  background: var(--page-bg-tertiary);
+  border-radius: 0.1875rem;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.size-control-group input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  background: var(--page-accent-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--page-bg-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.size-control-group input[type="range"]::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  background: var(--page-accent-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--page-bg-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.size-control-group input[type="range"]:focus {
+  outline: 2px solid var(--system-focus);
+  outline-offset: 2px;
+}
+
+.size-value {
+  min-width: 3.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--page-accent-primary);
+  text-align: right;
+}
+
+.reset-size-btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--page-bg-tertiary);
+  color: var(--page-text-secondary);
+  border: 1px solid var(--page-border-secondary);
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-size-btn:hover {
+  background: var(--page-accent-secondary);
+  color: var(--page-text-primary);
+  border-color: var(--page-accent-secondary);
+}
+
+.reset-size-btn:focus {
+  outline: 2px solid var(--system-focus);
+  outline-offset: 2px;
+}
+
 .sr-only {
   position: absolute;
   width: var(--unit-xs);

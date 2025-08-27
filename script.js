@@ -442,6 +442,138 @@ window.addEventListener("DOMContentLoaded", () => {
   // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
   window.LargeTextManager = LargeTextManager;
 
+  // ===== 버튼 크기 조절 시스템 그룹 =====
+  
+  /**
+   * 📏 SizeControlManager - 버튼 크기 실시간 조절 (데모용)
+   * 
+   * 기능:
+   * - 가로/세로 크기 슬라이더로 실시간 조절
+   * - 모든 데모 버튼에 동시 적용
+   * - 기본값 재설정 기능
+   * - 값 표시 및 접근성 지원
+   */
+  const SizeControlManager = {
+    
+    // 상수 및 설정
+    DEFAULT_WIDTH: 150,
+    DEFAULT_HEIGHT: 75,
+    
+    // DOM 캐시
+    _domCache: {
+      widthSlider: null,
+      heightSlider: null,
+      widthValue: null,
+      heightValue: null,
+      resetButton: null,
+      allButtons: null
+    },
+    
+    // 상태 관리
+    currentWidth: 150,
+    currentHeight: 75,
+    
+    // 초기화 플로우
+    init() {
+      this._initDOMCache();
+      this.setupEventListeners();
+      this.updateDisplay();
+    },
+    
+    // DOM 캐시 초기화
+    _initDOMCache() {
+      this._domCache.widthSlider = document.getElementById('button-width');
+      this._domCache.heightSlider = document.getElementById('button-height');
+      this._domCache.widthValue = document.getElementById('width-value');
+      this._domCache.heightValue = document.getElementById('height-value');
+      this._domCache.resetButton = document.querySelector('.reset-size-btn');
+      this._domCache.allButtons = document.querySelectorAll('.button');
+    },
+    
+    // 이벤트 리스너 설정
+    setupEventListeners() {
+      // 가로 크기 슬라이더
+      if (this._domCache.widthSlider) {
+        this._domCache.widthSlider.addEventListener('input', (e) => {
+          this.currentWidth = parseInt(e.target.value);
+          this.updateButtonSizes();
+          this.updateDisplay();
+        });
+      }
+      
+      // 세로 크기 슬라이더
+      if (this._domCache.heightSlider) {
+        this._domCache.heightSlider.addEventListener('input', (e) => {
+          this.currentHeight = parseInt(e.target.value);
+          this.updateButtonSizes();
+          this.updateDisplay();
+        });
+      }
+      
+      // 재설정 버튼
+      if (this._domCache.resetButton) {
+        this._domCache.resetButton.addEventListener('click', () => {
+          this.resetToDefault();
+        });
+      }
+    },
+    
+    // 버튼 크기 업데이트
+    updateButtonSizes() {
+      this._domCache.allButtons.forEach(button => {
+        button.style.width = `${this.currentWidth}px`;
+        button.style.height = `${this.currentHeight}px`;
+      });
+      
+      // 동적 스타일링 함수 호출 (아이콘 크기 재조정)
+      if (typeof applyButtonStyles === 'function') {
+        requestAnimationFrame(() => {
+          applyButtonStyles();
+        });
+      }
+    },
+    
+    // 표시값 업데이트
+    updateDisplay() {
+      if (this._domCache.widthValue) {
+        this._domCache.widthValue.textContent = `${this.currentWidth}px`;
+      }
+      if (this._domCache.heightValue) {
+        this._domCache.heightValue.textContent = `${this.currentHeight}px`;
+      }
+    },
+    
+    // 기본값으로 재설정
+    resetToDefault() {
+      this.currentWidth = this.DEFAULT_WIDTH;
+      this.currentHeight = this.DEFAULT_HEIGHT;
+      
+      // 슬라이더 값 업데이트
+      if (this._domCache.widthSlider) {
+        this._domCache.widthSlider.value = this.currentWidth;
+      }
+      if (this._domCache.heightSlider) {
+        this._domCache.heightSlider.value = this.currentHeight;
+      }
+      
+      this.updateButtonSizes();
+      this.updateDisplay();
+      
+      console.log('🔄 버튼 크기 기본값으로 재설정:', {
+        width: this.currentWidth,
+        height: this.currentHeight
+      });
+    }
+  };
+  
+  // 크기 조절 관리자 초기화
+  console.log('🚀 SizeControlManager 초기화 시작...');
+  SizeControlManager.init();
+  console.log('✅ SizeControlManager 초기화 완료!', SizeControlManager);
+  
+  // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
+  window.SizeControlManager = SizeControlManager;
+
   // ==============================
   // 상수 (비율/스케일)
   // ==============================

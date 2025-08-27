@@ -111,6 +111,40 @@
           <li>시스템 접근성 설정과 자동으로 연동됩니다</li>
         </ul>
       </div>
+      
+      <!-- 버튼 크기 조절 컨트롤 -->
+      <div class="size-controls">
+        <h3>🎛️ 버튼 크기 조절 (데모용)</h3>
+        <div class="size-control-group">
+          <label for="button-width">가로 크기:</label>
+          <input 
+            type="range" 
+            id="button-width" 
+            min="80" 
+            max="300" 
+            value="150" 
+            step="10"
+            aria-label="버튼 가로 크기 조절 (80px ~ 300px)">
+          <span class="size-value" id="width-value">150px</span>
+        </div>
+        
+        <div class="size-control-group">
+          <label for="button-height">세로 크기:</label>
+          <input 
+            type="range" 
+            id="button-height" 
+            min="40" 
+            max="150" 
+            value="75" 
+            step="5"
+            aria-label="버튼 세로 크기 조절 (40px ~ 150px)">
+          <span class="size-value" id="height-value">75px</span>
+        </div>
+        
+        <button type="button" class="reset-size-btn" aria-label="버튼 크기를 기본값으로 재설정">
+          기본 크기로 재설정
+        </button>
+      </div>
     </div>
   </header>
 
