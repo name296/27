@@ -271,7 +271,7 @@ button {
   /* 레이어 순서 */
   --z-index-button: 0;
   --z-index-background: -1;
-  --z-index-selected-icon: 1;
+  --z-index-icon-selected: 1;
 }
 
 /* 큰글씨 모드 */
@@ -459,7 +459,7 @@ footer {
  * 🔘 메인 버튼 컴포넌트
  * HTML 구조: <button class="button [상태클래스]">
  *   └── <div class="button-background">
- *       ├── <span class="selected-icon"> (토글 버튼만)
+ *       ├── <span class="icon-selected"> (토글 버튼만)
  *       ├── <span class="icon">
  *       └── <span class="label">
  */
@@ -479,20 +479,20 @@ footer {
   
   /* 🎨 버튼 배경 컨테이너 (.button-background) */
   & .button-background {
-  position: relative;
-  z-index: var(--z-index-background);
+    position: relative;
+    z-index: var(--z-index-background);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box;
+    box-sizing: border-box;
   width: 100%;
   height: 100%;
   background-color: var(--primary1-background-color-default);
   outline-style: var(--border-style);
   outline-color: var(--primary1-border-color-default);
-  will-change: background-color, outline;
-  contain: layout style;
+    will-change: background-color, outline;
+    contain: layout style;
     
     /* 아이콘 */
     & .icon {
@@ -503,7 +503,7 @@ footer {
       justify-content: center;
       
       & svg {
-        width: 100%;
+        width: 100%;                
         height: 100%;
         fill: currentColor;
         display: block;
@@ -556,16 +556,16 @@ footer {
   }
   
   /* 선택 상태 아이콘 */
-  & .selected-icon {
+  & .icon-selected {
     position: absolute;
-    z-index: var(--z-index-selected-icon);
+    z-index: var(--z-index-icon-selected);
     display: none;
-    width: fit-content;
-    height: fit-content;
+    width: var(--icon-size);
+    height: var(--icon-size);
     
     & svg {
-      width: var(--icon-size);
-      height: var(--icon-size);
+      width: 100%;
+      height: 100%;
       fill: currentColor;
       display: block;
     }
@@ -583,7 +583,7 @@ footer {
       background-color: var(--primary1-background-color-pressed);
     }
     
-    & .selected-icon {
+    & .icon-selected {
       display: flex;
     }
   }
@@ -715,13 +715,13 @@ footer {
         }
       }
       
-
-    }
-    
+        
+      }
+      
     &[aria-disabled="true"] {
       color: var(--primary2-contents-color-disabled);
-      
-      & .button-background {
+        
+        & .button-background {
         background-color: var(--primary2-background-color-disabled);
         outline-color: var(--primary2-border-color-disabled);
       }

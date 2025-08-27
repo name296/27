@@ -624,14 +624,14 @@ window.addEventListener("DOMContentLoaded", () => {
       background.style.outlineWidth = `${backgroundOutlineWidth}px`;
 
       // 선택 상태 아이콘 스타일 적용
-      const selectedIconSvg = button.querySelector('.selected-icon svg');
+      const selectedIconSvg = button.querySelector('.icon-selected svg');
       if (selectedIconSvg) {
         selectedIconSvg.style.width = `${selectedIconSize}px`;
         selectedIconSvg.style.height = `${selectedIconSize}px`;
       }
 
       // 선택 상태 아이콘을 패딩 오프셋만큼 우상단에 배치
-      const selectedIcon = button.querySelector('.selected-icon');
+      const selectedIcon = button.querySelector('.icon-selected');
       if (selectedIcon) {
         selectedIcon.style.top = `${buttonPadding}px`;
         selectedIcon.style.right = `${buttonPadding}px`;
@@ -657,7 +657,7 @@ window.addEventListener("DOMContentLoaded", () => {
    * - 비활성 버튼: 기본 아이콘만 주입 (상호작용 불가)
    * - 모든 팔레트에 동일한 아이콘 적용
    * 
-   * 누락된 selected-icon 컨테이너가 있다면 생성합니다.
+   * 누락된 icon-selected 컨테이너가 있다면 생성합니다.
    */
   function loadSvg(path, selector) {
     return fetch(path)
@@ -670,18 +670,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // 두 아이콘 타입을 동시에 로드
   const iconPromise = loadSvg('icon.svg', '.icon');
-  const selectedIconPromise = loadSvg('selected.svg', '.selected-icon')
+  const selectedIconPromise = loadSvg('selected.svg', '.icon-selected')
     .then(svg => { selectedSvgContent = svg; });
 
   Promise.all([iconPromise, selectedIconPromise])
     .then(() => {
-      // 누락된 selected-icon 컨테이너를 생성하고 SVG 주입
+      // 누락된 icon-selected 컨테이너를 생성하고 SVG 주입
       for (const button of buttonElements) {
         const background = button.querySelector('.button-background');
         if (!background) continue;
-        if (!background.querySelector('.selected-icon')) {
+        if (!background.querySelector('.icon-selected')) {
           const selectedIconSpan = document.createElement('span');
-          selectedIconSpan.className = 'selected-icon';
+          selectedIconSpan.className = 'icon-selected';
           if (selectedSvgContent) selectedIconSpan.innerHTML = selectedSvgContent;
           const iconEl = background.querySelector('.icon');
           if (iconEl && iconEl.parentNode) background.insertBefore(selectedIconSpan, iconEl);
