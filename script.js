@@ -623,16 +623,11 @@ window.addEventListener("DOMContentLoaded", () => {
       background.style.borderRadius = `${backgroundBorderRadius}px`;
       background.style.outlineWidth = `${backgroundOutlineWidth}px`;
 
-      // 선택 상태 아이콘 스타일 적용
-      const selectedIconSvg = button.querySelector('.icon-selected svg');
-      if (selectedIconSvg) {
-        selectedIconSvg.style.width = `${selectedIconSize}px`;
-        selectedIconSvg.style.height = `${selectedIconSize}px`;
-      }
-
-      // 선택 상태 아이콘을 패딩 오프셋만큼 우상단에 배치
+      // 선택 상태 아이콘 스타일 적용 (min-side 기준)
       const selectedIcon = button.querySelector('.icon-selected');
       if (selectedIcon) {
+        selectedIcon.style.width = `${selectedIconSize}px`;
+        selectedIcon.style.height = `${selectedIconSize}px`;
         selectedIcon.style.top = `${buttonPadding}px`;
         selectedIcon.style.right = `${buttonPadding}px`;
       }
