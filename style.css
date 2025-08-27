@@ -15,7 +15,7 @@
 }
 
 html {
-  font-size: clamp(14px, 2.5vw, 18px);
+  font-size: 1rem;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   @media (prefers-reduced-motion: no-preference) {
