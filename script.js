@@ -310,9 +310,9 @@ window.addEventListener("DOMContentLoaded", () => {
       const html = this._domCache.html;
       
       if (this.currentMode === this.MODES.LARGE) {
-        html.classList.add('large-text');
+        html.classList.add('large');
       } else {
-        html.classList.remove('large-text');
+        html.classList.remove('large');
       }
     },
     

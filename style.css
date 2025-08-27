@@ -280,7 +280,7 @@ button {
 }
 
 /* 큰글씨 모드 */
-.large-text {
+.large {
   --font-size-scale: 1.2;
 }
 
