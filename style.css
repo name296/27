@@ -130,15 +130,15 @@ button {
   --system-success: #00A86BFF;
 
   /* 페이지 UI 전용 색상 그룹 */
-  --page-bg-primary: #000000FF;
-  --page-bg-secondary: #FFFFFF05FF;
-  --page-bg-tertiary: #FFFFFF0DFF;
-  --page-text-primary: #FFFFFFFF;
-  --page-text-secondary: #FFFFFFB3FF;
-  --page-text-tertiary: #FFFFFF99FF;
-  --page-text-muted: #666666FF;
-  --page-border-primary: #FFFFFF1AFF;
-  --page-border-secondary: #FFFFFF33FF;
+  --page-bg-primary: #FAFAFAFF;
+  --page-bg-secondary: #FFFFFFFF;
+  --page-bg-tertiary: #E8E8E8FF;
+  --page-text-primary: #252525FF;
+  --page-text-secondary: #606060FF;
+  --page-text-tertiary: #8C8C8CFF;
+  --page-text-muted: #BFBFBFFF;
+  --page-border-primary: #DBDBDBFF;
+  --page-border-secondary: #E8E8E8FF;
   --page-accent-primary: #FF00E1FF;
   --page-accent-secondary: #A4693FFF;
   
@@ -214,6 +214,17 @@ button {
 
 /* Dark 테마 */
 .dark {
+  /* 페이지 UI 색상 (Dark 테마) */
+  --page-bg-primary: #000000FF;
+  --page-bg-secondary: #FFFFFF05FF;
+  --page-bg-tertiary: #FFFFFF0DFF;
+  --page-text-primary: #FFFFFFFF;
+  --page-text-secondary: #FFFFFFB3FF;
+  --page-text-tertiary: #FFFFFF99FF;
+  --page-text-muted: #666666FF;
+  --page-border-primary: #FFFFFF1AFF;
+  --page-border-secondary: #FFFFFF33FF;
+  
   /* Primary1 색위계 */
   --primary1-background-color-default: var(--yellow-300);
   --primary1-background-color-pressed: var(--yellow-100);
