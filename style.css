@@ -261,11 +261,11 @@ button {
   --font-weight: 600;
   --line-height-label: 1;
 
-  --font-size-xl: calc(var(--font-size) * 1.125);
-  --font-size-lg: calc(var(--font-size) * 0.72);
-  --font-size-md: calc(var(--font-size) * 0.52);
-  --font-size-sm: calc(var(--font-size) * 0.44);
-  --font-size-xs: calc(var(--font-size) * 0.36);
+  --font-size-xl: calc(var(--font-size-base) * var(--font-size-scale) * 1.125);
+  --font-size-lg: calc(var(--font-size-base) * var(--font-size-scale) * 0.72);
+  --font-size-md: calc(var(--font-size-base) * var(--font-size-scale) * 0.52);
+  --font-size-sm: calc(var(--font-size-base) * var(--font-size-scale) * 0.44);
+  --font-size-xs: calc(var(--font-size-base) * var(--font-size-scale) * 0.36);
 
   --icon-size: calc(var(--font-size-base) * var(--font-size-scale));
 
