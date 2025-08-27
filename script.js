@@ -154,10 +154,16 @@ window.addEventListener("DOMContentLoaded", () => {
     setupEventListeners() {
       // 테마 토글 버튼 클릭
       const toggleButton = document.querySelector('.theme-toggle, .high-contrast-toggle');
+      console.log('🔍 테마 토글 버튼 찾기:', toggleButton);
+      
       if (toggleButton) {
+        console.log('✅ 버튼 발견! 이벤트 리스너 추가 중...');
         toggleButton.addEventListener('click', () => {
+          console.log('🖱️ 테마 토글 버튼 클릭됨!');
           this.toggle();
         });
+      } else {
+        console.error('❌ 테마 토글 버튼을 찾을 수 없습니다!');
       }
       
       // 키보드 단축키: Ctrl+Alt+H (테마 전환)
@@ -204,7 +210,9 @@ window.addEventListener("DOMContentLoaded", () => {
   };
   
   // 테마 관리자 초기화
+  console.log('🚀 ThemeManager 초기화 시작...');
   ThemeManager.init();
+  console.log('✅ ThemeManager 초기화 완료!', ThemeManager);
   
   // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
   window.ThemeManager = ThemeManager;
