@@ -47,7 +47,8 @@
 - **현대 CSS 기능**: Nesting, CSS 변수, calc() 함수
 - **CSS 계층**: @layer를 통한 구조화된 스타일 관리
 - **디자인 토큰**: CSS 변수 기반 일관된 디자인 시스템
-- **반응형 그리드**: CSS Grid와 Flexbox 조합
+- **패딩 + 갭 방식**: 마진 대신 패딩과 gap으로 간격 제어
+- **Space-Evenly 레이아웃**: justify-content로 균등한 요소 분배
 
 ### JavaScript
 - **모듈화 설계**: 기능별 Manager 클래스 분리
@@ -73,6 +74,28 @@
 - **호버**: 마우스 오버 시 호버 상태 표시
 
 ## 🏗️ 아키텍처
+
+### 레이아웃 시스템
+현대적인 **패딩 + 갭 + Space-Evenly** 방식을 사용합니다:
+
+```css
+/* Body: 플로팅 박스 영역 확보 */
+body {
+  padding-left: 26rem;  /* 24rem 박스 + 2rem 여백 */
+  gap: 0;  /* 섹션 간 경계 없음 */
+}
+
+/* Header & Main: 순수 Space-Evenly */
+header, main {
+  justify-content: space-evenly;  /* 균등 분배 */
+  /* 패딩, 마진, max-width 없음 */
+}
+
+/* 쇼케이스: 통합된 컨테이너 */
+.showcase {
+  /* 헤더와 버튼 쇼케이스 공통 스타일 */
+}
+```
 
 ### CSS 변수 시스템
 ```css
@@ -173,16 +196,14 @@ const SizeControlManager = {
 ## 🌐 브라우저 지원
 
 ### 주요 지원 브라우저
-- **Chrome**: 최신 버전 (권장)
-- **Firefox**: 최신 버전
-- **Safari**: 최신 버전
-- **Edge**: 최신 버전
+- **Chrome**: 최신 버전 (권장 및 프로젝트 타겟)
 
 ### 사용된 현대 CSS 기능
 - **CSS Nesting**: 중첩된 선택자
 - **CSS 변수**: 동적 테마 시스템
-- **CSS Grid**: 반응형 레이아웃
+- **Flexbox**: Space-Evenly 레이아웃 시스템
 - **CSS calc()**: 동적 계산
+- **CSS @layer**: 스타일 계층 관리
 
 ## 📁 파일 구조
 

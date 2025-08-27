@@ -306,11 +306,14 @@ button {
    레이아웃 기본 설정
    ============================== */
 /* ==============================
-   🏠 페이지 레이아웃 그룹
+   🏠 페이지 레이아웃 그룹 (패딩 + Space-Evenly 방식)
    ============================== */
 body {
   margin: 0;
-  padding: 0;
+  padding-left: 26rem;  /* 플로팅 박스 영역 확보 (24rem + 2rem 여백) */
+  padding-top: 0;
+  padding-right: 1rem;  /* 우측 여백 추가 */
+  padding-bottom: 0;
   min-height: 100vh;
   background: var(--page-bg-primary);
   color: var(--page-text-primary);
@@ -318,6 +321,7 @@ body {
   line-height: 1.4;
   display: flex;
   flex-direction: column;
+  gap: 1rem;  /* 헤더, 메인, 푸터 사이 1rem 간격 */
 }
 
 /* 접근성 스킵 링크 */
@@ -339,12 +343,59 @@ body {
   }
 }
 
+/* 헤더 컨테이너 - 패딩 없이 순수 Space-Evenly 방식 */
 header {
   flex-shrink: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;  /* 내부 요소 균등 분배 */
+  width: 100%;
+  min-height: 16rem;
   text-align: center;
   background: var(--page-bg-primary);
-  border-bottom: var(--unit-xs) solid var(--page-border-primary);
-  padding: var(--unit-xl) var(--unit-lg);
+  align-items: center;
+}
+
+/* 플로팅 컨트롤 박스 - 테마 & 크기 조절 & 사용법 통합 */
+.theme-control-group {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  padding: 0.5rem;  /* 0.75rem → 0.5rem */
+  background: var(--page-bg-secondary);
+  border-radius: 0.5rem;
+  border: var(--unit-xs) solid var(--page-border-primary);
+  width: 24rem;  /* 고정 폭 (body padding-left: 26rem과 연동) */
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;  /* var(--unit-lg) → 0.75rem */
+}
+
+
+
+
+
+/* 메인 컨테이너 - Gap + Space-Evenly 조합 방식 */
+main {
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;  /* 쇼케이스들 균등 분배 */
+  gap: 1rem;  /* 쇼케이스들 사이 1rem 간격 */
+  width: 100%;  /* 전체 폭 사용 */
+  min-height: 80vh;  /* 충분한 높이 확보 */
+}
+
+/* 공통 쇼케이스 컨테이너 */
+.showcase {
+  background: var(--page-bg-secondary);
+  border-radius: calc(var(--unit-xs) * 3);
+  border: var(--unit-xs) solid var(--page-border-primary);
+  padding: var(--unit-lg);
   
   & h1 {
     font-size: var(--font-size-xl);
@@ -352,39 +403,6 @@ header {
     color: var(--page-text-primary);
     margin: 0 0 var(--unit-md) 0;
   }
-  
-  & p {
-    font-size: var(--font-size-md);
-    color: var(--page-text-secondary);
-    margin: 0 auto var(--unit-xl) auto;
-    max-width: 50rem;
-    line-height: 1.6;
-  }
-}
-
-/* 테마 컨트롤 그룹 */
-.theme-control-group {
-  margin-top: var(--unit-lg);
-}
-
-main {
-  flex: 1;
-  padding: var(--unit-xl) var(--unit-lg);
-  display: flex;
-  flex-flow: column nowrap;
-  gap: var(--unit-2xl);
-  max-width: 90rem;
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* 쇼케이스 컨테이너 */
-.button-showcase {
-  background: var(--page-bg-secondary);
-  border-radius: calc(var(--unit-xs) * 3);
-  border: var(--unit-xs) solid var(--page-border-primary);
-  padding: var(--unit-lg);
-  margin-bottom: var(--unit-xl);
   
   & h2 {
     font-size: var(--font-size-lg);
@@ -396,9 +414,108 @@ main {
   & p {
     color: var(--page-text-secondary);
     font-size: var(--font-size-md);
-    margin-bottom: var(--unit-lg);
     line-height: 1.5;
+    margin: 0;
   }
+  
+  & kbd {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8em;
+    padding: 0.1rem 0.2rem;
+    background: var(--page-bg-tertiary);
+    border: var(--unit-xs) solid var(--page-border-secondary);
+    border-radius: var(--unit-xs);
+    color: var(--page-text-primary);
+  }
+  
+  & strong {
+    color: var(--page-text-primary);
+    font-weight: 600;
+  }
+}
+
+/* 플로팅 박스 전용 쇼케이스 */
+.theme-control-group .showcase {
+  /* 컨테이너 스타일 */
+  background: var(--page-bg-secondary);
+  border-radius: calc(var(--unit-xs) * 3);
+  border: var(--unit-xs) solid var(--page-border-primary);
+  padding: 0.5rem;
+  
+  /* 레이아웃 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 0.5rem;
+  
+  /* 타이포그래피 기본값 */
+  font-size: 1.1em;
+  line-height: 1.3;
+  text-align: center;
+  
+  /* 제목 스타일 */
+  & h3 {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--page-text-primary);
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  & h4 {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--page-text-primary);
+    margin: 0;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  /* 리스트 스타일 */
+  & ul {
+    margin: 0;
+    padding-left: 1rem;
+    font-size: 0.8em;
+    text-align: left;
+    
+    & li {
+      margin: 0;
+      text-align: left;
+      line-height: 1.6;
+    }
+  }
+  
+  /* 인라인 요소 스타일 */
+  & kbd {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8em;
+    padding: 0;
+    margin: 0;
+    background: var(--page-bg-tertiary);
+    border: 0.125rem solid var(--page-border-secondary);
+    border-radius: var(--unit-xs);
+    color: var(--page-text-primary);
+    text-align: center;
+  }
+  
+  & strong {
+    color: var(--page-text-primary);
+    font-weight: 600;
+  }
+}
+
+/* 사용법 안내 컨텐츠 컨테이너 */
+.usage-content {
+  width: 100%;
+}
+
+/* 버튼 크기 조절 컨트롤 컨테이너 */
+.size-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .table {
@@ -446,68 +563,26 @@ main {
   }
 }
 
+.palette-showcase-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--unit-2xl);
+}
+
 .palette-label {
   width: 100%;
   text-align: center;
   color: var(--page-text-primary);
   font-weight: 600;
   font-size: var(--font-size-sm);
-  margin-bottom: var(--unit-xs);
   padding: var(--unit-xs) var(--unit-sm);
   background: var(--page-bg-primary);
   border-radius: var(--unit-xs);
   border: var(--unit-xs) solid var(--page-border-primary);
 }
 
-/* ==============================
-   사용법 안내
-   ============================== */
-.usage-guide {
-  background: var(--page-bg-secondary);
-  border-radius: calc(var(--unit-xs) * 3);
-  border: var(--unit-xs) solid var(--page-border-primary);
-  padding: 0;
-}
 
-.usage-guide h2 {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--page-text-primary);
-  margin: 0;
-  padding: var(--unit-md) var(--unit-lg);
-  background: var(--page-bg-tertiary);
-  border-bottom: 1px solid var(--page-border-primary);
-}
-
-.usage-guide h3 {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--page-text-primary);
-  margin: 0;
-  padding: var(--unit-sm) var(--unit-md);
-}
-
-.usage-guide ul {
-  color: var(--page-text-secondary);
-  margin: 0;
-  padding: 0 var(--unit-md) var(--unit-sm) var(--unit-xl);
-}
-
-/* li 스타일은 상위 ul에서 상속받습니다 */
-
-.usage-guide kbd {
-  background: var(--page-bg-primary);
-  border: var(--unit-xs) solid var(--page-border-secondary);
-  border-radius: var(--unit-xs);
-  font-family: monospace;
-  font-size: var(--font-size-xs);
-  padding: calc(var(--unit-xs) / 2) var(--unit-xs);
-}
-
-.usage-guide strong {
-  color: var(--page-text-primary);
-  font-weight: 600;
-}
 
 /* ==============================
    푸터
@@ -520,7 +595,9 @@ footer {
   color: var(--page-text-tertiary);
   font-size: var(--font-size-xs);
   padding: var(--unit-lg);
-  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--unit-md);
   
   /* 푸터 내 모든 목록 글머리기호 제거 */
   & ul {
@@ -838,50 +915,45 @@ footer {
   gap: var(--unit-md);
   align-items: center;
   justify-content: center;
+  margin: 0;  /* margin-bottom 제거하여 위아래 여백 균등화 */
+}
+
+/* 모드 버튼들 고정 크기 */
+.control-buttons .button {
+  width: 10rem !important;
+  height: 10rem !important;
+  min-width: 10rem !important;
+  min-height: 10rem !important;
+  max-width: 10rem !important;
+  max-height: 10rem !important;
 }
 
 /* 테마 시스템 도움말 */
 .theme-help {
-  margin-top: 0.625rem;
-  font-size: 0.9em;
-  color: #666;
-  max-width: 37.5rem;
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--page-text-secondary);
+  line-height: 1.4;
 }
 
 .theme-help ul {
-  margin: 0.3125rem 0;
+  margin: 0;
   padding-left: 1.25rem;
-}
-
-/* 버튼 크기 조절 컨트롤 */
-.size-controls {
-  margin: 1.5rem auto 0 auto;
-  padding: 1rem;
-  background: var(--page-bg-secondary);
-  border-radius: 0.5rem;
-  border: var(--unit-xs) solid var(--page-border-primary);
-  max-width: 37.5rem;
-}
-
-.size-controls h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--page-text-primary);
 }
 
 .size-control-group {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  gap: 0.5rem;  /* 0.75rem → 0.5rem */
+  margin: 0;
 }
 
 .size-control-group label {
-  min-width: 5rem;
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--page-text-secondary);
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .size-control-group input[type="range"] {
@@ -921,16 +993,15 @@ footer {
 }
 
 .size-value {
-  min-width: 3.5rem;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--page-accent-primary);
-  text-align: right;
+  text-align: center;
 }
 
 .reset-size-btn {
-  margin-top: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0;
+  margin: 0;
   background: var(--page-bg-tertiary);
   color: var(--page-text-secondary);
   border: var(--unit-xs) solid var(--page-border-secondary);
