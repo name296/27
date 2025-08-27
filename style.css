@@ -216,43 +216,7 @@ button {
   /* 컴포넌트 토큰 업데이트 (Dark 테마 특수값) */
   --btn-primary-text-active: var(--color-dark-200);
 
-  /* Gray theme 색상들 (기존 호환성) */
-  --primitive-color-gray-01-000000: #000000;
-  --primitive-color-gray-02-1F1F1F: #1F1F1F;
-  --primitive-color-gray-03-252525: #252525;
-  --primitive-color-gray-04-4C4C4C: #4C4C4C;
-  --primitive-color-gray-05-606060: #606060;
-  --primitive-color-gray-06-737373: #737373;
-  --primitive-color-gray-07-757575: #757575;
-  --primitive-color-gray-08-8C8C8C: #8C8C8C;
-  --primitive-color-gray-09-BFBFBF: #BFBFBF;
-  --primitive-color-gray-10-DBDBDB: #DBDBDB;
-  --primitive-color-gray-11-E8E8E8: #E8E8E8;
-  --primitive-color-gray-12-F2F2F2: #F2F2F2;
-  --primitive-color-gray-13-FAFAFA: #FAFAFA;
-  --primitive-color-gray-14-FFFFFF: #FFFFFF;
 
-  /* Static theme 색상들 */
-  --primitive-color-static-01-FF00E1: #FF00E1;
-  --primitive-color-static-02-CC1D00: #CC1D00;
-  --primitive-color-static-03-751200: #751200;
-  --primitive-color-static-04-FF4800: #FF4800;
-
-  /* Light theme 색상들 */
-  --primitive-color-light-02-8C532C: #8C532C;
-  --primitive-color-light-03-A4693F: #A4693F;
-  --primitive-color-light-05-EB9B63: #EB9B63;
-  --primitive-color-light-06-EEDCD2: #EEDCD2;
-
-  /* High contrast theme 색상들 */
-  --primitive-color-high-contrast-02-807000: #807000;
-  --primitive-color-high-contrast-03-FFE100: #FFE100;
-
-  /* Missing primitive variables */
-  --primitive-1-contents-color-active: var(--primitive-color-light-02-8C532C);
-  --primitive-1-contents-color-disabled: var(--primitive-color-light-02-8C532C);
-  --primitive-1-contents-color-disabled-2: var(--primitive-color-light-05-EB9B63);
-  --primitive-color-gray-08: var(--primitive-color-gray-08-8C8C8C);
 
   /* ==============================
      Primary-1 팔레트 (Light 테마 기본)
@@ -260,201 +224,201 @@ button {
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
   /* 배경 색상 - 기본 상태, 눌림 상태, 비활성 상태 */
-  --primary-1-background-color-default: var(--primitive-color-light-03-A4693F);
-  --primary-1-background-color-active: var(--primitive-color-light-06-EEDCD2);
+  --primary-1-background-color-default: var(--color-light-300);
+  --primary-1-background-color-active: var(--color-light-50);
   --primary-1-background-color-disabled: none;
   --primary-1-background-color-disabled-2: none;
   
   /* 테두리 색상 - 기본 상태, 눌림 상태, 비활성 상태 */
   --primary-1-border-color-default: var(--primary-1-background-color-default);
-  --primary-1-border-color-active: var(--primitive-1-contents-color-active);
-  --primary-1-border-color-disabled: var(--primitive-1-contents-color-disabled);
-  --primary-1-border-color-disabled-2: var(--primitive-1-contents-color-disabled-2);
+  --primary-1-border-color-active: var(--color-light-200);
+  --primary-1-border-color-disabled: var(--color-light-200);
+  --primary-1-border-color-disabled-2: var(--color-light-100);
   
   /* 콘텐츠 색상 - 기본 상태, 눌림 상태, 비활성 상태 */
-  --primary-1-contents-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --primary-1-contents-color-active: var(--primitive-color-light-02-8C532C);
-  --primary-1-contents-color-disabled: var(--primitive-color-light-02-8C532C);
-  --primary-1-contents-color-disabled-2: var(--primitive-color-light-05-EB9B63);
+  --primary-1-contents-color-default: var(--color-neutral-0);
+  --primary-1-contents-color-active: var(--color-light-200);
+  --primary-1-contents-color-disabled: var(--color-light-200);
+  --primary-1-contents-color-disabled-2: var(--color-light-100);
 
   /* ==============================
      Primary-2 팔레트 (Light 테마 변형)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
-  --primary-2-background-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-background-color-default-2: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-background-color-active: var(--primitive-color-light-03-A4693F);
-  --primary-2-background-color-active-2: var(--primitive-color-gray-01-000000);
+  --primary-2-background-color-default: var(--color-neutral-0);
+  --primary-2-background-color-default-2: var(--color-neutral-0);
+  --primary-2-background-color-active: var(--color-light-300);
+  --primary-2-background-color-active-2: var(--color-neutral-1000);
   --primary-2-background-color-disabled: none;
   
-  --primary-2-border-color-default: var(--primitive-color-gray-08-8C8C8C); /* def: 8C8C8C (8F8F8F와 가장 가까운 primitive) */
-  --primary-2-border-color-default-2: var(--primitive-color-gray-08-8C8C8C); /* def-2: 8C8C8C */
-  --primary-2-border-color-active: var(--primitive-color-light-02-8C532C); /* pre-sel: 8C532C */
-  --primary-2-border-color-active-2: var(--primitive-color-high-contrast-02-807000); /* pre-sel-2: FFE100 */
-  --primary-2-border-color-disabled: var(--primitive-color-gray-08); /* dis: 8C8C8C */
-  --primary-2-border-color-disabled-2: var(--primitive-color-gray-08); /* dis-2: 8C8C8C */
+  --primary-2-border-color-default: var(--color-neutral-500); /* def: 8C8C8C */
+  --primary-2-border-color-default-2: var(--color-neutral-500); /* def-2: 8C8C8C */
+  --primary-2-border-color-active: var(--color-light-200); /* pre-sel: 8C532C */
+  --primary-2-border-color-active-2: var(--color-dark-200); /* pre-sel-2: FFE100 */
+  --primary-2-border-color-disabled: var(--color-neutral-500); /* dis: 8C8C8C */
+  --primary-2-border-color-disabled-2: var(--color-neutral-500); /* dis-2: 8C8C8C */
   
-  --primary-2-contents-color-default: var(--primitive-color-gray-03-252525); /* def: 252525 */
-  --primary-2-contents-color-default-2: var(--primitive-color-light-02-8C532C); /* def-2: 8C532C */
-  --primary-2-contents-color-active: var(--primitive-color-gray-14-FFFFFF); /* pre-sel: FFFFFF */
-  --primary-2-contents-color-active-2: var(--primitive-color-high-contrast-02-807000); /* pre-sel-2: FFE100 */
-  --primary-2-contents-color-disabled: var(--primitive-color-gray-06-737373); /* dis: 737373 */
-  --primary-2-contents-color-disabled-2: var(--primitive-color-gray-06-737373); /* dis-2: 737373 */
+  --primary-2-contents-color-default: var(--color-neutral-900); /* def: 252525 */
+  --primary-2-contents-color-default-2: var(--color-light-200); /* def-2: 8C532C */
+  --primary-2-contents-color-active: var(--color-neutral-0); /* pre-sel: FFFFFF */
+  --primary-2-contents-color-active-2: var(--color-dark-200); /* pre-sel-2: FFE100 */
+  --primary-2-contents-color-disabled: var(--color-neutral-400); /* dis: 737373 */
+  --primary-2-contents-color-disabled-2: var(--color-neutral-400); /* dis-2: 737373 */
 
   /* ==============================
      Secondary-1 팔레트 (Neutral 기반)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
-  --secondary-1-background-color-default: var(--primitive-color-gray-07-757575);
-  --secondary-1-background-color-active: var(--primitive-color-gray-11-E8E8E8);
-  --secondary-1-background-color-active-2: var(--primitive-color-gray-03-252525);
-  --secondary-1-background-color-disabled: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-background-color-disabled-2: var(--primitive-color-gray-01-000000);
+  --secondary-1-background-color-default: var(--color-neutral-400);
+  --secondary-1-background-color-active: var(--color-neutral-100);
+  --secondary-1-background-color-active-2: var(--color-neutral-900);
+  --secondary-1-background-color-disabled: var(--color-neutral-0);
+  --secondary-1-background-color-disabled-2: var(--color-neutral-1000);
   
-  --secondary-1-border-color-default: var(--primitive-color-gray-07-757575); /* def: 757575 */
-  --secondary-1-border-color-active: var(--primitive-color-gray-09-BFBFBF); /* pre-sel: BFBFBF */
-  --secondary-1-border-color-active-2: var(--primitive-color-gray-07-757575); /* pre-sel-2: 757575 */
-  --secondary-1-border-color-disabled: var(--primitive-color-gray-06-737373); /* dis: 737373 */
-  --secondary-1-border-color-disabled-2: var(--primitive-color-gray-08-8C8C8C); /* dis-2: 8C8C8C */
+  --secondary-1-border-color-default: var(--color-neutral-400); /* def: 757575 */
+  --secondary-1-border-color-active: var(--color-neutral-300); /* pre-sel: BFBFBF */
+  --secondary-1-border-color-active-2: var(--color-neutral-400); /* pre-sel-2: 757575 */
+  --secondary-1-border-color-disabled: var(--color-neutral-500); /* dis: 737373 */
+  --secondary-1-border-color-disabled-2: var(--color-neutral-500); /* dis-2: 8C8C8C */
   
-  --secondary-1-contents-color-default: var(--primitive-color-gray-14-FFFFFF); /* def: FFFFFF */
-  --secondary-1-contents-color-default-2: var(--primitive-color-gray-14-FFFFFF); /* def-2: FFFFFF */
-  --secondary-1-contents-color-active: var(--primitive-color-gray-03-252525); /* pre-sel: 252525 */
-  --secondary-1-contents-color-active-2: var(--primitive-color-gray-12-F2F2F2); /* pre-sel-2: F2F2F2 */
-  --secondary-1-contents-color-disabled: var(--primitive-color-gray-06-737373); /* dis: 737373 */
-  --secondary-1-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C); /* dis-2: 8C8C8C */
+  --secondary-1-contents-color-default: var(--color-neutral-0); /* def: FFFFFF */
+  --secondary-1-contents-color-default-2: var(--color-neutral-0); /* def-2: FFFFFF */
+  --secondary-1-contents-color-active: var(--color-neutral-900); /* pre-sel: 252525 */
+  --secondary-1-contents-color-active-2: var(--color-neutral-50); /* pre-sel-2: F2F2F2 */
+  --secondary-1-contents-color-disabled: var(--color-neutral-500); /* dis: 737373 */
+  --secondary-1-contents-color-disabled-2: var(--color-neutral-500); /* dis-2: 8C8C8C */
 
   /* ==============================
      Secondary-2 팔레트 (Neutral 변형)
      버튼 타입: 기본 버튼(기본↔눌림), 토글 버튼(기본↔선택), 비활성 버튼(비활성)
      버튼 상태: 기본, 눌림(active), 선택(selected), 비활성, 초점, 호버
      ============================== */
-  --secondary-2-background-color-default: var(--primitive-color-gray-11-E8E8E8); /* def: E8E8E8 */
-  --secondary-2-background-color-default-2: var(--primitive-color-gray-03-252525); /* def-2: 252525 */
-  --secondary-2-background-color-active: var(--primitive-color-gray-07-757575); /* pre-sel: 757575 */
-  --secondary-2-background-color-active-2: var(--primitive-color-gray-07-757575); /* pre-sel-2: 757575 */
-  --secondary-2-background-color-disabled: var(--primitive-color-gray-14-FFFFFF); /* dis: FFFFFF */
-  --secondary-2-background-color-disabled-2: var(--primitive-color-gray-01-000000); /* dis-2: 000000 */
+  --secondary-2-background-color-default: var(--color-neutral-100); /* def: E8E8E8 */
+  --secondary-2-background-color-default-2: var(--color-neutral-900); /* def-2: 252525 */
+  --secondary-2-background-color-active: var(--color-neutral-400); /* pre-sel: 757575 */
+  --secondary-2-background-color-active-2: var(--color-neutral-400); /* pre-sel-2: 757575 */
+  --secondary-2-background-color-disabled: var(--color-neutral-0); /* dis: FFFFFF */
+  --secondary-2-background-color-disabled-2: var(--color-neutral-1000); /* dis-2: 000000 */
   
-  --secondary-2-border-color-default: var(--primitive-color-gray-09-BFBFBF); /* def: BFBFBF */
-  --secondary-2-border-color-default-2: var(--primitive-color-gray-09-BFBFBF); /* def-2: BFBFBF */
-  --secondary-2-border-color-active: var(--primitive-color-gray-07-757575); /* pre-sel: 757575 */
-  --secondary-2-border-color-active-2: var(--primitive-color-gray-07-757575); /* pre-sel-2: 757575 */
-  --secondary-2-border-color-disabled: var(--primitive-color-gray-06-737373); /* dis: 737373 */
-  --secondary-2-border-color-disabled-2: var(--primitive-color-gray-06-737373); /* dis-2: 737373 */
+  --secondary-2-border-color-default: var(--color-neutral-300); /* def: BFBFBF */
+  --secondary-2-border-color-default-2: var(--color-neutral-300); /* def-2: BFBFBF */
+  --secondary-2-border-color-active: var(--color-neutral-400); /* pre-sel: 757575 */
+  --secondary-2-border-color-active-2: var(--color-neutral-400); /* pre-sel-2: 757575 */
+  --secondary-2-border-color-disabled: var(--color-neutral-500); /* dis: 737373 */
+  --secondary-2-border-color-disabled-2: var(--color-neutral-500); /* dis-2: 737373 */
   
-  --secondary-2-contents-color-default: var(--primitive-color-gray-03-252525); /* def: 252525 */
-  --secondary-2-contents-color-default-2: var(--primitive-color-gray-12-F2F2F2); /* def-2: F2F2F2 */
-  --secondary-2-contents-color-active: var(--primitive-color-gray-14-FFFFFF); /* pre-sel: FFFFFF */
-  --secondary-2-contents-color-active-2: var(--primitive-color-gray-14-FFFFFF); /* pre-sel-2: FFFFFF */
-  --secondary-2-contents-color-disabled: var(--primitive-color-gray-06-737373); /* dis: 737373 */
-  --secondary-2-contents-color-disabled-2: var(--primitive-color-gray-06-737373); /* dis-2: 737373 */
+  --secondary-2-contents-color-default: var(--color-neutral-900); /* def: 252525 */
+  --secondary-2-contents-color-default-2: var(--color-neutral-50); /* def-2: F2F2F2 */
+  --secondary-2-contents-color-active: var(--color-neutral-0); /* pre-sel: FFFFFF */
+  --secondary-2-contents-color-active-2: var(--color-neutral-0); /* pre-sel-2: FFFFFF */
+  --secondary-2-contents-color-disabled: var(--color-neutral-500); /* dis: 737373 */
+  --secondary-2-contents-color-disabled-2: var(--color-neutral-500); /* dis-2: 737373 */
 
   /* ==============================
    초점 상태 컬러 (모든 버튼에 복합 적용)
    ============================== */
-  --static-focus-color: var(--primitive-color-static-01-FF00E1);
+  --static-focus-color: var(--color-static-focus);
 
   /* ==============================
    호버 상태 컬러 (모든 버튼에 복합 적용)
    ============================== */
-  --static-hover-color: var(--primitive-color-static-01-FF00E1);
+  --static-hover-color: var(--color-static-focus);
 
   /* ==============================
    Dark 테마 - Primary-1 팔레트 (Light 기본)
    ============================== */
-  --primary-1-high-contrast-background-color-default: var(--primitive-color-gray-01-000000);
-  --primary-1-high-contrast-background-color-default-2: var(--primitive-color-high-contrast-03-FFE100);
-  --primary-1-high-contrast-background-color-active: var(--primitive-color-high-contrast-03-FFE100);
-  --primary-1-high-contrast-background-color-active-2: var(--primitive-color-gray-01-000000);
-  --primary-1-high-contrast-background-color-disabled: var(--primitive-color-gray-04-4C4C4C);
-  --primary-1-high-contrast-background-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --primary-1-high-contrast-background-color-default: var(--color-neutral-1000);
+  --primary-1-high-contrast-background-color-default-2: var(--color-dark-100);
+  --primary-1-high-contrast-background-color-active: var(--color-dark-100);
+  --primary-1-high-contrast-background-color-active-2: var(--color-neutral-1000);
+  --primary-1-high-contrast-background-color-disabled: var(--color-neutral-800);
+  --primary-1-high-contrast-background-color-disabled-2: var(--color-neutral-500);
   
-  --primary-1-high-contrast-border-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --primary-1-high-contrast-border-color-default-2: var(--primitive-color-gray-01-000000);
-  --primary-1-high-contrast-border-color-active: var(--primitive-color-high-contrast-03-FFE100);
-  --primary-1-high-contrast-border-color-active-2: var(--primitive-color-gray-14-FFFFFF);
-  --primary-1-high-contrast-border-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --primary-1-high-contrast-border-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --primary-1-high-contrast-border-color-default: var(--color-neutral-0);
+  --primary-1-high-contrast-border-color-default-2: var(--color-neutral-1000);
+  --primary-1-high-contrast-border-color-active: var(--color-dark-100);
+  --primary-1-high-contrast-border-color-active-2: var(--color-neutral-0);
+  --primary-1-high-contrast-border-color-disabled: var(--color-neutral-500);
+  --primary-1-high-contrast-border-color-disabled-2: var(--color-neutral-500);
   
-  --primary-1-high-contrast-contents-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --primary-1-high-contrast-contents-color-default-2: var(--primitive-color-gray-01-000000);
-  --primary-1-high-contrast-contents-color-active: var(--primitive-color-gray-01-000000);
-  --primary-1-high-contrast-contents-color-active-2: var(--primitive-color-gray-14-FFFFFF);
-  --primary-1-high-contrast-contents-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --primary-1-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-04-4C4C4C);
+  --primary-1-high-contrast-contents-color-default: var(--color-neutral-0);
+  --primary-1-high-contrast-contents-color-default-2: var(--color-neutral-1000);
+  --primary-1-high-contrast-contents-color-active: var(--color-neutral-1000);
+  --primary-1-high-contrast-contents-color-active-2: var(--color-neutral-0);
+  --primary-1-high-contrast-contents-color-disabled: var(--color-neutral-500);
+  --primary-1-high-contrast-contents-color-disabled-2: var(--color-neutral-800);
 
   /* ==============================
    Dark 테마 - Primary-2 팔레트 (Light 변형)
    ============================== */
-  --primary-2-high-contrast-background-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-high-contrast-background-color-default-2: var(--primitive-color-gray-01-000000);
-  --primary-2-high-contrast-background-color-active: var(--primitive-color-gray-01-000000);
-  --primary-2-high-contrast-background-color-active-2: var(--primitive-color-high-contrast-03-FFE100);
-  --primary-2-high-contrast-background-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --primary-2-high-contrast-background-color-disabled-2: var(--primitive-color-gray-04-4C4C4C);
+  --primary-2-high-contrast-background-color-default: var(--color-neutral-0);
+  --primary-2-high-contrast-background-color-default-2: var(--color-neutral-1000);
+  --primary-2-high-contrast-background-color-active: var(--color-neutral-1000);
+  --primary-2-high-contrast-background-color-active-2: var(--color-dark-100);
+  --primary-2-high-contrast-background-color-disabled: var(--color-neutral-500);
+  --primary-2-high-contrast-background-color-disabled-2: var(--color-neutral-800);
   
-  --primary-2-high-contrast-border-color-default: var(--primitive-color-gray-01-000000);
-  --primary-2-high-contrast-border-color-default-2: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-high-contrast-border-color-active: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-high-contrast-border-color-active-2: var(--primitive-color-gray-01-000000);
-  --primary-2-high-contrast-border-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --primary-2-high-contrast-border-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --primary-2-high-contrast-border-color-default: var(--color-neutral-1000);
+  --primary-2-high-contrast-border-color-default-2: var(--color-neutral-0);
+  --primary-2-high-contrast-border-color-active: var(--color-neutral-0);
+  --primary-2-high-contrast-border-color-active-2: var(--color-neutral-1000);
+  --primary-2-high-contrast-border-color-disabled: var(--color-neutral-500);
+  --primary-2-high-contrast-border-color-disabled-2: var(--color-neutral-500);
   
-  --primary-2-high-contrast-contents-color-default: var(--primitive-color-gray-01-000000);
-  --primary-2-high-contrast-contents-color-default-2: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-high-contrast-contents-color-active: var(--primitive-color-gray-14-FFFFFF);
-  --primary-2-high-contrast-contents-color-active-2: var(--primitive-color-gray-01-000000);
-  --primary-2-high-contrast-contents-color-disabled: var(--primitive-color-gray-04-4C4C4C);
-  --primary-2-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --primary-2-high-contrast-contents-color-default: var(--color-neutral-1000);
+  --primary-2-high-contrast-contents-color-default-2: var(--color-neutral-0);
+  --primary-2-high-contrast-contents-color-active: var(--color-neutral-0);
+  --primary-2-high-contrast-contents-color-active-2: var(--color-neutral-1000);
+  --primary-2-high-contrast-contents-color-disabled: var(--color-neutral-800);
+  --primary-2-high-contrast-contents-color-disabled-2: var(--color-neutral-500);
 
   /* ==============================
    Dark 테마 - Secondary-1 팔레트 (Neutral 기반)
    ============================== */
-  --secondary-1-high-contrast-background-color-default: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-1-high-contrast-background-color-active: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-high-contrast-background-color-active-2: var(--primitive-color-gray-01-000000);
-  --secondary-1-high-contrast-background-color-disabled: var(--primitive-color-gray-04-4C4C4C);
-  --secondary-1-high-contrast-background-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --secondary-1-high-contrast-background-color-default: var(--color-neutral-500);
+  --secondary-1-high-contrast-background-color-active: var(--color-neutral-0);
+  --secondary-1-high-contrast-background-color-active-2: var(--color-neutral-1000);
+  --secondary-1-high-contrast-background-color-disabled: var(--color-neutral-800);
+  --secondary-1-high-contrast-background-color-disabled-2: var(--color-neutral-500);
   
-  --secondary-1-high-contrast-border-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-high-contrast-border-color-active: var(--primitive-color-gray-01-000000);
-  --secondary-1-high-contrast-border-color-active-2: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-high-contrast-border-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-1-high-contrast-border-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --secondary-1-high-contrast-border-color-default: var(--color-neutral-0);
+  --secondary-1-high-contrast-border-color-active: var(--color-neutral-1000);
+  --secondary-1-high-contrast-border-color-active-2: var(--color-neutral-0);
+  --secondary-1-high-contrast-border-color-disabled: var(--color-neutral-500);
+  --secondary-1-high-contrast-border-color-disabled-2: var(--color-neutral-500);
   
-  --secondary-1-high-contrast-contents-color-default: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-high-contrast-contents-color-default-2: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-1-high-contrast-contents-color-active: var(--primitive-color-gray-01-000000);
-  --secondary-1-high-contrast-contents-color-active-2: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-1-high-contrast-contents-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-1-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --secondary-1-high-contrast-contents-color-default: var(--color-neutral-0);
+  --secondary-1-high-contrast-contents-color-default-2: var(--color-neutral-500);
+  --secondary-1-high-contrast-contents-color-active: var(--color-neutral-1000);
+  --secondary-1-high-contrast-contents-color-active-2: var(--color-neutral-0);
+  --secondary-1-high-contrast-contents-color-disabled: var(--color-neutral-500);
+  --secondary-1-high-contrast-contents-color-disabled-2: var(--color-neutral-500);
 
   /* ==============================
    Dark 테마 - Secondary-2 팔레트 (Neutral 변형)
    ============================== */
-  --secondary-2-high-contrast-background-color-default: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-background-color-default-2: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-background-color-active: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-background-color-active-2: var(--primitive-color-gray-04-4C4C4C);
-  --secondary-2-high-contrast-background-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-background-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --secondary-2-high-contrast-background-color-default: var(--color-neutral-500);
+  --secondary-2-high-contrast-background-color-default-2: var(--color-neutral-500);
+  --secondary-2-high-contrast-background-color-active: var(--color-neutral-500);
+  --secondary-2-high-contrast-background-color-active-2: var(--color-neutral-800);
+  --secondary-2-high-contrast-background-color-disabled: var(--color-neutral-500);
+  --secondary-2-high-contrast-background-color-disabled-2: var(--color-neutral-500);
   
-  --secondary-2-high-contrast-border-color-default: var(--primitive-color-gray-01-000000);
-  --secondary-2-high-contrast-border-color-default-2: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-border-color-active: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-2-high-contrast-border-color-active-2: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-border-color-disabled: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-border-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --secondary-2-high-contrast-border-color-default: var(--color-neutral-1000);
+  --secondary-2-high-contrast-border-color-default-2: var(--color-neutral-500);
+  --secondary-2-high-contrast-border-color-active: var(--color-neutral-0);
+  --secondary-2-high-contrast-border-color-active-2: var(--color-neutral-500);
+  --secondary-2-high-contrast-border-color-disabled: var(--color-neutral-500);
+  --secondary-2-high-contrast-border-color-disabled-2: var(--color-neutral-500);
   
-  --secondary-2-high-contrast-contents-color-default: var(--primitive-color-gray-01-000000);
-  --secondary-2-high-contrast-contents-color-default-2: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-contents-color-active: var(--primitive-color-gray-14-FFFFFF);
-  --secondary-2-high-contrast-contents-color-active-2: var(--primitive-color-gray-08-8C8C8C);
-  --secondary-2-high-contrast-contents-color-disabled: var(--primitive-color-gray-04-4C4C4C);
-  --secondary-2-high-contrast-contents-color-disabled-2: var(--primitive-color-gray-08-8C8C8C);
+  --secondary-2-high-contrast-contents-color-default: var(--color-neutral-1000);
+  --secondary-2-high-contrast-contents-color-default-2: var(--color-neutral-500);
+  --secondary-2-high-contrast-contents-color-active: var(--color-neutral-0);
+  --secondary-2-high-contrast-contents-color-active-2: var(--color-neutral-500);
+  --secondary-2-high-contrast-contents-color-disabled: var(--color-neutral-800);
+  --secondary-2-high-contrast-contents-color-disabled-2: var(--color-neutral-500);
 
   /* ==============================
      테두리 스타일
@@ -516,12 +480,12 @@ header {
 header h1 {
   font-size: 2.5rem;
   font-weight: 600;
-  color: var(--primitive-color-gray-14-FFFFFF); /* body/text sec: FFFFFF */
+  color: var(--color-neutral-0); /* body/text sec: FFFFFF */
 }
 
 header p {
   width: fit-content;
-  color: var(--primitive-color-gray-14-FFFFFF); /* body/text sec: FFFFFF */
+  color: var(--color-neutral-0); /* body/text sec: FFFFFF */
 }
 
 /* ==============================
@@ -1192,12 +1156,12 @@ footer {
 
 /* Dark 테마에서 페이지 배경과 텍스트 색상 조정 */
 .high-contrast body {
-  background: var(--primitive-color-gray-01); /* body/page bg: 000000 (Dark 테마) */
+  background: var(--color-neutral-1000); /* body/page bg: 000000 (Dark 테마) */
   color: var(--primitive-color-gray-14); /* body/text sec: FFFFFF (Dark 테마) */
 }
 
 .high-contrast header {
-  background: var(--primitive-color-gray-01); /* body/page bg: 000000 */
+  background: var(--color-neutral-1000); /* body/page bg: 000000 */
   border-bottom-color: var(--primitive-color-gray-14); /* body/page bor: FFFFFF */
 }
 
@@ -1354,10 +1318,10 @@ footer {
 @media (prefers-contrast: more) {
   html:not(.manual-theme-mode) {
     /* 더 강한 대비 색상 적용 */
-    --primary-1-background-color-default: var(--primitive-color-gray-01-000000);
-    --primary-1-contents-color-default: var(--primitive-color-high-contrast-03-FFE100);
-    --primary-2-background-color-default: var(--primitive-color-gray-14-FFFFFF);
-    --primary-2-contents-color-default: var(--primitive-color-gray-01-000000);
+    --primary-1-background-color-default: var(--color-neutral-1000);
+    --primary-1-contents-color-default: var(--color-dark-100);
+    --primary-2-background-color-default: var(--color-neutral-0);
+    --primary-2-contents-color-default: var(--color-neutral-1000);
   }
 }
 }
