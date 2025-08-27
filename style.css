@@ -249,8 +249,8 @@ button {
   --border-style: solid;
   --border-style-pressed: solid;
   --border-style-disabled: dashed;
-  --border-style-hover: var(--border-style-focus);
   --border-style-focus: dashed;
+  --border-style-hover: dashed;
 
   /* 타이포그래피 */
   --font-family: 'Pretendard GOV', sans-serif;
