@@ -1,11 +1,7 @@
-/* ==============================
-   현대 CSS 계층 구조 정의
-   ============================== */
+/* 현대 CSS 계층 구조 정의 */
 @layer reset, tokens, components, states, utilities;
 
-/* ==============================
-   CSS Reset - 브라우저 기본 스타일 제거
-   ============================== */
+/* CSS Reset */
 @layer reset {
 * {
   margin: 0;
@@ -19,12 +15,9 @@
 }
 
 html {
-  /* 반응형 기준 폰트 사이즈 설정 */
-  font-size: clamp(14px, 2.5vw, 18px); /* 모바일 14px ~ 데스크톱 18px */
-  line-height: 1.15; /* iOS에서 줄 높이 정규화 */
-  -webkit-text-size-adjust: 100%; /* iOS Safari에서 텍스트 크기 조정 방지 */
-  
-  /* 접근성: 사용자가 브라우저에서 폰트 크기를 조정한 경우 반영 */
+  font-size: clamp(14px, 2.5vw, 18px);
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
   @media (prefers-reduced-motion: no-preference) {
     scroll-behavior: smooth;
   }
@@ -34,11 +27,9 @@ button {
   all: unset;
 }
 
-} /* @layer reset 끝 */
+}
 
-/* ==============================
-   디자인 토큰 (CSS 변수)
-   ============================== */
+/* 디자인 토큰 */
 @layer tokens {
 
 :root {
@@ -68,240 +59,226 @@ button {
    테마 기반 색상 시스템 🎨
    ============================== */
   
-  /* ☀️ Light 테마 색상 */
-  --color-light-50: #EEDCD2;     /* 가장 밝음 */
-  --color-light-100: #EB9B63;    
-  --color-light-200: #C4895F;    
-  --color-light-300: #A4693F;    /* 메인 색상 */
-  --color-light-400: #8C532C;    
-  --color-light-500: #4C3F37;    /* 가장 어두움 */
+  /* 색상 그룹 */
   
-  /* 🌙 Dark 테마 색상 (고대비) */
-  --color-dark-50: #FFEF80;      /* 가장 밝음 */
-  --color-dark-100: #FFE100;     /* 메인 색상 */
-  --color-dark-200: #807000;     
-  --color-dark-300: #241F00;     /* 가장 어두움 */
+  /* 브라운 계열 */
+  --brown-50: #EEDCD2FF;
+  --brown-100: #EB9B63FF;
+  --brown-200: #C4895FFF;
+  --brown-300: #A4693FFF;
+  --brown-400: #8C532CFF;
+  --brown-500: #4C3F37FF;
   
-  /* ⚪ Neutral 색상 (테마 독립적 그레이스케일) */
-  --color-neutral-0: #FFFFFF;    /* 순백 */
-  --color-neutral-50: #FAFAFA;   
-  --color-neutral-100: #F2F2F2;  
-  --color-neutral-200: #E8E8E8;  
-  --color-neutral-300: #DBDBDB;  
-  --color-neutral-400: #BFBFBF;  
-  --color-neutral-500: #8C8C8C;  
-  --color-neutral-600: #757575;  /* 중간 그레이 */
-  --color-neutral-700: #737373;  
-  --color-neutral-800: #606060;  
-  --color-neutral-850: #4C4C4C;  
-  --color-neutral-900: #252525;  
-  --color-neutral-950: #1F1F1F;  
-  --color-neutral-1000: #000000; /* 순흑 */
+  /* 옐로우 계열 */
+  --yellow-50: #FFEF80FF;
+  --yellow-100: #FFE100FF;
+  --yellow-200: #807000FF;
+  --yellow-300: #241F00FF;
   
-  /* 🎯 Static 색상 (테마에 독립적) */
-  --color-static-focus: #FF00E1;     /* 포커스 핑크 */
-  --color-static-hover: #FF00E1;     /* 호버 핑크 */
-  --color-static-error: #CC1D00;     /* 에러 빨강 */
-  --color-static-warning: #FF4800;   /* 경고 오렌지 */
-  --color-static-success: #00A86B;   /* 성공 녹색 */
+  /* 그레이 계열 */
+  --gray-0: #FFFFFFFF;
+  --gray-50: #FAFAFAFF;   
+  --gray-100: #F2F2F2FF;  
+  --gray-200: #E8E8E8FF;  
+  --gray-300: #DBDBDBFF;  
+  --gray-400: #BFBFBFFF;  
+  --gray-500: #8C8C8CFF;  
+  --gray-600: #757575FF;
+  --gray-700: #737373FF;  
+  --gray-800: #606060FF;  
+  --gray-850: #4C4C4CFF;  
+  --gray-900: #252525FF;  
+  --gray-950: #1F1F1FFF;  
+  --gray-1000: #000000FF;
   
-  /* ==============================
-   테마별 의미적 토큰 🎯
-   ============================== */
-   
-  /* ☀️ Light 테마 토큰 */
-  --theme-light-bg-primary: var(--color-light-300);      /* 메인 배경 */
-  --theme-light-bg-hover: var(--color-light-50);         /* 호버 배경 */
-  --theme-light-bg-active: var(--color-light-50);        /* 활성 배경 */
-  --theme-light-bg-surface: var(--color-neutral-0);      /* 표면 배경 */
-  --theme-light-bg-body: var(--color-neutral-1000);      /* 바디 배경 */
-  
-  --theme-light-text-primary: var(--color-neutral-0);    /* 주요 텍스트 */
-  --theme-light-text-secondary: var(--color-neutral-400);/* 보조 텍스트 */
-  --theme-light-text-on-primary: var(--color-neutral-0); /* 프라이머리 위 텍스트 */
-  --theme-light-text-on-surface: var(--color-neutral-1000); /* 표면 위 텍스트 */
-  
-  --theme-light-border-primary: var(--color-light-300);  /* 메인 테두리 */
-  --theme-light-border-subtle: var(--color-neutral-400); /* 서브틀 테두리 */
-  
-  /* 🌙 Dark 테마 토큰 (고대비) */
-  --theme-dark-bg-primary: var(--color-dark-300);        /* 메인 배경 */
-  --theme-dark-bg-hover: var(--color-dark-100);          /* 호버 배경 */
-  --theme-dark-bg-active: var(--color-dark-100);         /* 활성 배경 */
-  --theme-dark-bg-surface: var(--color-neutral-1000);    /* 표면 배경 */
-  --theme-dark-bg-body: var(--color-neutral-1000);       /* 바디 배경 */
-  
-  --theme-dark-text-primary: var(--color-dark-100);      /* 주요 텍스트 */
-  --theme-dark-text-secondary: var(--color-neutral-500); /* 보조 텍스트 */
-  --theme-dark-text-on-primary: var(--color-dark-100);   /* 프라이머리 위 텍스트 */
-  --theme-dark-text-on-surface: var(--color-dark-100);   /* 표면 위 텍스트 */
-  
-  --theme-dark-border-primary: var(--color-dark-100);    /* 메인 테두리 */
-  --theme-dark-border-subtle: var(--color-neutral-600);  /* 서브틀 테두리 */
-  
-  /* 🎯 Static 토큰 (테마 독립적) */
-  --static-focus: var(--color-static-focus);             /* 포커스 */
-  --static-hover: var(--color-static-hover);             /* 호버 */
-  --static-error: var(--color-static-error);             /* 에러 */
-  --static-warning: var(--color-static-warning);         /* 경고 */
-  --static-success: var(--color-static-success);         /* 성공 */
-  
-  /* ==============================
-   현재 활성 테마 토큰 🎨
-   ============================== */
-  /* 기본값은 Light 테마 */
-  --current-bg-primary: var(--theme-light-bg-primary);
-  --current-bg-hover: var(--theme-light-bg-hover);
-  --current-bg-active: var(--theme-light-bg-active);
-  --current-bg-surface: var(--theme-light-bg-surface);
-  --current-bg-body: var(--theme-light-bg-body);
-  
-  --current-text-primary: var(--theme-light-text-primary);
-  --current-text-secondary: var(--theme-light-text-secondary);
-  --current-text-on-primary: var(--theme-light-text-on-primary);
-  --current-text-on-surface: var(--theme-light-text-on-surface);
-  
-  --current-border-primary: var(--theme-light-border-primary);
-  --current-border-subtle: var(--theme-light-border-subtle);
-  
-  /* ==============================
-   🔘 컴포넌트 토큰 (계층적 의존성 설계)
-   ============================== */
-   
-  /* === 기본 버튼 토큰 그룹 === */
-  --btn-primary-bg: var(--current-bg-primary);
-  --btn-primary-bg-hover: var(--current-bg-hover);
-  --btn-primary-bg-active: var(--current-bg-active);
-  --btn-primary-text: var(--current-text-on-primary);
-  --btn-primary-text-active: var(--color-light-400);
-  --btn-primary-border: var(--current-border-primary);
-  
-  /* === Secondary 버튼 토큰 그룹 === */
-  --btn-secondary-bg: var(--current-bg-surface);
-  --btn-secondary-text: var(--current-text-on-surface);
-  --btn-secondary-border: var(--current-border-subtle);
-  
-  /* === 특수 상태 토큰 그룹 === */
-  --btn-disabled-bg: transparent;
-  --btn-disabled-text: var(--current-text-secondary);
-  --btn-disabled-border: var(--current-border-subtle);
-  
-  --btn-focus-border: var(--static-focus);
-  --btn-hover-border: var(--static-hover);
-  --btn-error-border: var(--static-error);
+  /* 시스템 계열 */
+  --system-focus: #FF00E1FF;
+  --system-hover: #FF00E1FF;
+  --system-error: #CC1D00FF;
+  --system-warning: #FF4800FF;
+  --system-success: #00A86BFF;
 
-} /* :root 끝 */
+  /* 페이지 UI 전용 색상 그룹 */
+  --page-bg-primary: #000000FF;
+  --page-bg-secondary: #FFFFFF05FF;
+  --page-bg-tertiary: #FFFFFF0DFF;
+  --page-text-primary: #FFFFFFFF;
+  --page-text-secondary: #FFFFFFB3FF;
+  --page-text-tertiary: #FFFFFF99FF;
+  --page-text-muted: #666666FF;
+  --page-border-primary: #FFFFFF1AFF;
+  --page-border-secondary: #FFFFFF33FF;
+  --page-accent-primary: #FF00E1FF;
+  --page-accent-secondary: #A4693FFF;
+  
+  /* Light 테마 토큰 */
+  
+  /* Primary1 색위계 */
+  --primary1-background-color-default: var(--brown-300);
+  --primary1-background-color-pressed: var(--brown-50);
+  --primary1-background-color-disabled: #00000000;
+  --primary1-background-color-hover: var(--brown-300);
+  
+  --primary1-contents-color-default: var(--gray-0);
+  --primary1-contents-color-pressed: var(--brown-200);
+  --primary1-contents-color-disabled: var(--gray-500);
+  
+  --primary1-border-color-default: var(--brown-300);
+  --primary1-border-color-pressed: var(--brown-300);
+  --primary1-border-color-disabled: var(--gray-400);
+  --primary1-border-color-focus: var(--system-focus);
+  --primary1-border-color-hover: var(--system-hover);
+  
+  /* Primary2 색위계 */
+  --primary2-background-color-default: var(--gray-0);
+  --primary2-background-color-pressed: var(--brown-300);
+  --primary2-background-color-disabled: var(--gray-200);
+  --primary2-background-color-hover: var(--gray-0);
+  
+  --primary2-contents-color-default: var(--gray-900);
+  --primary2-contents-color-pressed: var(--gray-0);
+  --primary2-contents-color-disabled: var(--gray-500);
+  
+  --primary2-border-color-default: var(--gray-500);
+  --primary2-border-color-pressed: var(--brown-300);
+  --primary2-border-color-disabled: var(--gray-400);
+  --primary2-border-color-focus: var(--system-focus);
+  --primary2-border-color-hover: var(--system-hover);
+  
+  /* Secondary1 색위계 */
+  --secondary1-background-color-default: var(--gray-400);
+  --secondary1-background-color-pressed: var(--gray-100);
+  --secondary1-background-color-disabled: #00000000;
+  --secondary1-background-color-hover: var(--gray-400);
+  
+  --secondary1-contents-color-default: var(--gray-0);
+  --secondary1-contents-color-pressed: var(--gray-900);
+  --secondary1-contents-color-disabled: var(--gray-500);
+  
+  --secondary1-border-color-default: var(--gray-400);
+  --secondary1-border-color-pressed: var(--gray-400);
+  --secondary1-border-color-disabled: var(--gray-400);
+  --secondary1-border-color-focus: var(--system-focus);
+  --secondary1-border-color-hover: var(--system-hover);
+  
+  /* Secondary2 색위계 */
+  --secondary2-background-color-default: var(--gray-100);
+  --secondary2-background-color-pressed: var(--gray-400);
+  --secondary2-background-color-disabled: #00000000;
+  --secondary2-background-color-hover: var(--gray-100);
+  
+  --secondary2-contents-color-default: var(--gray-900);
+  --secondary2-contents-color-pressed: var(--gray-0);
+  --secondary2-contents-color-disabled: var(--gray-500);
+  
+  --secondary2-border-color-default: var(--gray-300);
+  --secondary2-border-color-pressed: var(--gray-400);
+  --secondary2-border-color-disabled: var(--gray-400);
+  --secondary2-border-color-focus: var(--system-focus);
+  --secondary2-border-color-hover: var(--system-hover);
+  
+  }
 
-/* ==============================
-   테마 전환 시스템 🔄
-   ============================== */
-
-/* 🌙 Dark 테마 (고대비 접근성 최적화) 활성화 */
+/* Dark 테마 */
 .high-contrast {
-  /* 현재 활성 테마를 Dark로 전환 */
-  --current-bg-primary: var(--theme-dark-bg-primary);
-  --current-bg-hover: var(--theme-dark-bg-hover);
-  --current-bg-active: var(--theme-dark-bg-active);
-  --current-bg-surface: var(--theme-dark-bg-surface);
-  --current-bg-body: var(--theme-dark-bg-body);
+  /* Primary1 색위계 */
+  --primary1-background-color-default: var(--yellow-300);
+  --primary1-background-color-pressed: var(--yellow-100);
+  --primary1-background-color-disabled: #00000000;
+  --primary1-background-color-hover: var(--yellow-300);
   
-  --current-text-primary: var(--theme-dark-text-primary);
-  --current-text-secondary: var(--theme-dark-text-secondary);
-  --current-text-on-primary: var(--theme-dark-text-on-primary);
-  --current-text-on-surface: var(--theme-dark-text-on-surface);
+  --primary1-contents-color-default: var(--yellow-100);
+  --primary1-contents-color-pressed: var(--yellow-200);
+  --primary1-contents-color-disabled: var(--gray-500);
   
-  --current-border-primary: var(--theme-dark-border-primary);
-  --current-border-subtle: var(--theme-dark-border-subtle);
+  --primary1-border-color-default: var(--yellow-100);
+  --primary1-border-color-pressed: var(--yellow-100);
+  --primary1-border-color-disabled: var(--gray-600);
+  --primary1-border-color-focus: var(--system-focus);
+  --primary1-border-color-hover: var(--system-hover);
   
-  /* 컴포넌트 토큰 업데이트 (Dark 테마 특수값) */
-  --btn-primary-text-active: var(--color-dark-200);
-
-
-
-  /* ==============================
-     🔘 컴포넌트 토큰 - 버튼별 색상 정의
-     ============================== */
+  /* Primary2 색위계 */
+  --primary2-background-color-default: var(--gray-1000);
+  --primary2-background-color-pressed: var(--yellow-300);
+  --primary2-background-color-disabled: var(--gray-800);
+  --primary2-background-color-hover: var(--gray-1000);
   
-  /* 기본 버튼 (Primary-1) */
-  --btn-primary-bg: var(--color-light-300);
-  --btn-primary-bg-hover: color-mix(in srgb, var(--color-light-300) 85%, white);
-  --btn-primary-bg-active: var(--color-light-50);
-  --btn-primary-text: var(--color-neutral-0);
-  --btn-primary-text-active: var(--color-light-200);
-  --btn-primary-border: var(--color-light-300);
+  --primary2-contents-color-default: var(--yellow-100);
+  --primary2-contents-color-pressed: var(--yellow-100);
+  --primary2-contents-color-disabled: var(--gray-500);
   
-  /* 포커스 & 호버 (Static) */
-  --btn-focus-border: var(--color-static-focus);
-  --btn-hover-border: var(--color-static-focus);
+  --primary2-border-color-default: var(--gray-600);
+  --primary2-border-color-pressed: var(--yellow-100);
+  --primary2-border-color-disabled: var(--gray-600);
+  --primary2-border-color-focus: var(--system-focus);
+  --primary2-border-color-hover: var(--system-hover);
   
-  /* 비활성 상태 */
-  --btn-disabled-bg: var(--color-neutral-200);
-  --btn-disabled-text: var(--color-neutral-500);
-  --btn-disabled-border: var(--color-neutral-500);
-
-  /* Primary-2 버튼 (Light 테마 변형) */
-  --btn-primary2-bg: var(--color-neutral-0);
-  --btn-primary2-bg-hover: color-mix(in srgb, var(--color-neutral-0) 90%, var(--color-neutral-900));
-  --btn-primary2-bg-active: var(--color-light-300);
-  --btn-primary2-text: var(--color-neutral-900);
-  --btn-primary2-text-active: var(--color-neutral-0);
-  --btn-primary2-border: var(--color-neutral-500);
-
-  /* Secondary-1 버튼 (Neutral 기반) */
-  --btn-secondary1-bg: var(--color-neutral-400);
-  --btn-secondary1-bg-hover: color-mix(in srgb, var(--color-neutral-400) 85%, white);
-  --btn-secondary1-bg-active: var(--color-neutral-100);
-  --btn-secondary1-text: var(--color-neutral-0);
-  --btn-secondary1-text-active: var(--color-neutral-900);
-  --btn-secondary1-border: var(--color-neutral-400);
-
-  /* Secondary-2 버튼 (Neutral 변형) */
-  --btn-secondary2-bg: var(--color-neutral-100);
-  --btn-secondary2-bg-hover: color-mix(in srgb, var(--color-neutral-100) 90%, var(--color-neutral-900));
-  --btn-secondary2-bg-active: var(--color-neutral-400);
-  --btn-secondary2-text: var(--color-neutral-900);
-  --btn-secondary2-text-active: var(--color-neutral-0);
-  --btn-secondary2-border: var(--color-neutral-300);
-
-
-
-
-
-
-
-
-
-
-
-  /* ==============================
-     테두리 스타일
-     ============================== */
+  /* Secondary1 색위계 */
+  --secondary1-background-color-default: var(--gray-600);
+  --secondary1-background-color-pressed: var(--gray-850);
+  --secondary1-background-color-disabled: #00000000;
+  --secondary1-background-color-hover: var(--gray-600);
+  
+  --secondary1-contents-color-default: var(--gray-100);
+  --secondary1-contents-color-pressed: var(--gray-100);
+  --secondary1-contents-color-disabled: var(--gray-500);
+  
+  --secondary1-border-color-default: var(--gray-600);
+  --secondary1-border-color-pressed: var(--gray-600);
+  --secondary1-border-color-disabled: var(--gray-600);
+  --secondary1-border-color-focus: var(--system-focus);
+  --secondary1-border-color-hover: var(--system-hover);
+  
+  /* Secondary2 색위계 */
+  --secondary2-background-color-default: var(--gray-850);
+  --secondary2-background-color-pressed: var(--gray-600);
+  --secondary2-background-color-disabled: #00000000;
+  --secondary2-background-color-hover: var(--gray-850);
+  
+  --secondary2-contents-color-default: var(--gray-100);
+  --secondary2-contents-color-pressed: var(--gray-100);
+  --secondary2-contents-color-disabled: var(--gray-500);
+  
+  --secondary2-border-color-default: var(--gray-700);
+  --secondary2-border-color-pressed: var(--gray-600);
+  --secondary2-border-color-disabled: var(--gray-600);
+  --secondary2-border-color-focus: var(--system-focus);
+  --secondary2-border-color-hover: var(--system-hover);
+  /* 테두리 스타일 */
   --border-style: solid;
-  --border-style-active: solid;
+  --border-style-pressed: solid;
   --border-style-disabled: dashed;
   --border-style-hover: var(--border-style-focus);
   --border-style-focus: dashed;
 
-  /* ==============================
-     타이포그래피 (rem 기반)
-     ============================== */
+  /* 타이포그래피 */
   --font-family: 'Pretendard GOV', sans-serif;
-  --font-size: var(--unit-2xl);    /* 48px → 3rem */
+  --font-size-base: 2.5rem;
+  --font-size-scale: 1;
+  --font-size: calc(var(--font-size-base) * var(--font-size-scale));
+  --font-size-xl: calc(var(--font-size) * 1.125);
+  --font-size-lg: calc(var(--font-size) * 0.72);
+  --font-size-md: calc(var(--font-size) * 0.52);
+  --font-size-sm: calc(var(--font-size) * 0.44);
+  --font-size-xs: calc(var(--font-size) * 0.36);
+  
   --font-weight: 600;
   --line-height-label: 1;
 
-  /* ==============================
-     아이콘 크기 (rem 기반)
-     ============================== */
-  --icon-size: var(--font-size);   /* 폰트 사이즈와 동일 */
+  --icon-size: var(--font-size);
 
-  /* ==============================
-     레이어 순서
-     ============================== */
+  /* 레이어 순서 */
   --z-index-button: 0;
   --z-index-background: -1;
   --z-index-selected-icon: 1;
-} /* @layer tokens 끝 */
+}
+
+/* 큰글씨 모드 */
+.large-text {
+  --font-size-scale: 1.2;
+}
+
+}
 
 /* ==============================
    컴포넌트 스타일
@@ -318,26 +295,26 @@ body {
   margin: 0;
   padding: var(--unit-md);
   gap: var(--unit-md);
-  background: var(--current-bg-body);
-  color: var(--current-text-primary);
+  background: var(--page-bg-primary);
+  color: var(--page-text-primary);
   font-family: var(--font-family);
   line-height: 1.0;
 }
 
 header {
   text-align: center;
-  background: var(--current-bg-body);
-  border-bottom: var(--unit-xs) solid var(--current-border-subtle);
+  background: var(--page-bg-primary);
+  border-bottom: var(--unit-xs) solid var(--page-border-primary);
   
   & h1 {
-    font-size: 2.5rem;
+    font-size: var(--font-size);
     font-weight: 600;
-    color: var(--color-neutral-0);
+    color: var(--page-text-primary);
   }
   
   & p {
     width: fit-content;
-    color: var(--color-neutral-0);
+    color: var(--page-text-primary);
   }
 }
 
@@ -349,23 +326,21 @@ main {
   align-items: center;
 }
 
-/* ==============================
-   🎨 쇼케이스 컨테이너 그룹
-   ============================== */
+/* 쇼케이스 컨테이너 */
 .button-showcase {
-  background: #FFFFFF05;
+  background: var(--page-bg-secondary);
   border-radius: calc(var(--unit-xs) * 3);
-  border: var(--unit-xs) solid #FFFFFF1A;
+  border: var(--unit-xs) solid var(--page-border-primary);
   
   & h2 {
-    font-size: 1.8rem;
+    font-size: var(--font-size-lg);
     font-weight: 600;
-    color: #FFFFFF;
+    color: var(--page-text-primary);
   }
   
   & p {
-    color: #FFFFFFB3;
-    font-size: 1rem;
+    color: var(--page-text-secondary);
+    font-size: var(--font-size-md);
   }
 }
 
@@ -380,15 +355,15 @@ main {
 
 .plain-text {
   text-align: center;
-  color: #FFFFFF;
+  color: var(--page-text-primary);
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: var(--font-size-md);
 }
 
 .button-description {
   text-align: center;
-  color: #FFFFFF99;
-  font-size: 0.9rem;
+  color: var(--page-text-tertiary);
+  font-size: var(--font-size-xs);
   max-width: 300px;
 }
 
@@ -407,8 +382,6 @@ main {
     gap: var(--unit-xs);
     min-width: 12.5rem;
     flex: 0 0 auto;
-    container-type: inline-size;
-    container-name: button-container;
   }
 }
 
@@ -416,50 +389,48 @@ main {
   width: fit-content;
   height: fit-content;
   text-align: center;
-  color: #FFFFFF;
+  color: var(--page-text-primary);
   font-weight: 500;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
 }
 
 /* ==============================
    사용법 안내
    ============================== */
 .usage-guide {
-  background: #FFFFFF05;
-  border-radius: calc(var(--unit-xs) * 3); /* 12px → 0.75rem */
-  border: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
+  background: var(--page-bg-secondary);
+  border-radius: calc(var(--unit-xs) * 3);
+  border: var(--unit-xs) solid var(--page-border-primary);
 }
 
 .usage-guide h2 {
-  font-size: 1.8rem;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--page-text-primary);
 }
 
 .usage-guide h3 {
-  font-size: 1.3rem;
+  font-size: var(--font-size-sm);
   font-weight: 500;
-  color: #FFFFFF;
+  color: var(--page-text-primary);
 }
 
 .usage-guide ul {
-  color: #FFFFFFB3; /* rgba(255, 255, 255, 0.7) → HEX */
+  color: var(--page-text-secondary);
 }
 
-.usage-guide li {
-  /* li 스타일은 상위 ul에서 상속받습니다 */
-}
+/* li 스타일은 상위 ul에서 상속받습니다 */
 
 .usage-guide kbd {
-  background: #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
-  border: var(--unit-xs) solid #FFFFFF33; /* 1px → 0.25rem */
-  border-radius: var(--unit-xs); /* 4px → 0.25rem */
+  background: var(--page-bg-secondary);
+  border: var(--unit-xs) solid var(--page-border-secondary);
+  border-radius: var(--unit-xs);
   font-family: monospace;
-  font-size: 0.9rem;
+  font-size: var(--font-size-xs);
 }
 
 .usage-guide strong {
-  color: #FFFFFF;
+  color: var(--page-text-primary);
   font-weight: 600;
 }
 
@@ -468,15 +439,13 @@ main {
    ============================== */
 footer {
   text-align: center;
-  background: #FFFFFF0D; /* rgba(255, 255, 255, 0.05) → HEX */
-  border-top: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
-  border-bottom: var(--unit-xs) solid #FFFFFF1A; /* 1px → 0.25rem */
-  color: #FFFFFF99; /* rgba(255, 255, 255, 0.6) → HEX */
-  font-size: 0.9rem;
-  padding: var(--unit-sm); /* 0.5rem = 8px */
+  background: var(--page-bg-tertiary);
+  border-top: var(--unit-xs) solid var(--page-border-primary);
+  border-bottom: var(--unit-xs) solid var(--page-border-primary);
+  color: var(--page-text-tertiary);
+  font-size: var(--font-size-xs);
+  padding: var(--unit-sm);
 }
-
-/* 중복 제거됨 - @layer reset에서 이미 정의 */
 
 /* ==============================
    상호작용 상태 (기본, 눌림, 선택, 비활성, 포커스, 호버)
@@ -502,27 +471,27 @@ footer {
   box-sizing: border-box;
   width: var(--button-width);
   height: var(--button-height);
-  color: var(--btn-primary-text);
+  color: var(--primary1-contents-color-default);
   cursor: pointer;
   will-change: transform;
   contain: layout style;
   
   /* 🎨 버튼 배경 컨테이너 (.button-background) */
   & .button-background {
-    position: relative;
-    z-index: var(--z-index-background);
+  position: relative;
+  z-index: var(--z-index-background);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-    box-sizing: border-box;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
-    background-color: var(--btn-primary-bg);
+  background-color: var(--primary1-background-color-default);
   outline-style: var(--border-style);
-    outline-color: var(--btn-primary-border);
-    will-change: background-color, outline;
-    contain: layout style;
+  outline-color: var(--primary1-border-color-default);
+  will-change: background-color, outline;
+  contain: layout style;
     
     /* 아이콘 */
     & .icon {
@@ -556,24 +525,24 @@ footer {
   &:not([aria-disabled="true"]) {
     /* 눌림 상태 (클릭/키보드) */
     &:active,
-    &.key-active {
-      color: var(--btn-primary-text-active); /* 테마 기반 활성 텍스트 */
+    &.pressed {
+      color: var(--primary1-contents-color-pressed); /* 테마 기반 눌림 텍스트 */
       
       & .button-background {
-  outline-style: var(--border-style-active);
-        outline-color: var(--btn-primary-border); /* 테마 기반 테두리 */
-        background-color: var(--btn-primary-bg-active); /* 테마 기반 활성 배경 */
+  outline-style: var(--border-style-pressed);
+        outline-color: var(--primary1-border-color-pressed); /* 테마 기반 테두리 */
+        background-color: var(--primary1-background-color-pressed); /* 테마 기반 눌림 배경 */
       }
     }
     
     /* 호버 상태 */
     &:hover {
       outline-style: var(--border-style-hover);
-      outline-color: var(--btn-hover-border); /* Static 테마 호버 */
+      outline-color: var(--primary1-border-color-hover); /* Static 테마 호버 */
       
       & .button-background {
         /* 테마 기반 호버 색상 + color-mix() 동적 계산 */
-        background-color: var(--btn-primary-bg-hover);
+        background-color: var(--primary1-background-color-hover);
       }
     }
   }
@@ -581,7 +550,7 @@ footer {
   /* 포커스 상태 (모든 버튼에 적용) */
   &:focus-visible {
     outline-style: var(--border-style-focus);
-    outline-color: var(--btn-focus-border); /* Static 테마 포커스 */
+    outline-color: var(--primary1-border-color-focus); /* Static 테마 포커스 */
   }
   
   /* 선택 상태 아이콘 */
@@ -603,12 +572,12 @@ footer {
   
   /* 선택 상태 (토글 버튼) */
   &:not([aria-disabled="true"]).selected {
-    color: var(--btn-primary-text-active);
+    color: var(--primary1-contents-color-pressed);
     
     & .button-background {
-      outline-style: var(--border-style-active);
-      outline-color: var(--btn-primary-border);
-      background-color: var(--btn-primary-bg-active);
+      outline-style: var(--border-style-pressed);
+      outline-color: var(--primary1-border-color-pressed);
+      background-color: var(--primary1-background-color-pressed);
     }
     
     & .selected-icon {
@@ -616,596 +585,163 @@ footer {
     }
   }
   
-  /* 호버 상태 */
-  &:not([aria-disabled="true"]):hover {
-    & .button-background {
-      background-color: var(--btn-primary-bg-hover);
-      outline-color: var(--btn-hover-border);
-    }
-  }
-  
-  /* 포커스 상태 (접근성) */
-  &:focus-visible {
-    & .button-background {
-      outline: 0.125rem solid var(--btn-focus-border);
-      outline-offset: 0.125rem;
-    }
-  }
+
   
   /* 비활성 상태 */
   &[aria-disabled="true"] {
   cursor: not-allowed;
   pointer-events: none;
-    color: var(--btn-disabled-text);
+    color: var(--primary1-contents-color-disabled);
 
     & * {
   pointer-events: none;
 }
 
     & .button-background {
-      background-color: var(--btn-disabled-bg);
+      background-color: var(--primary1-background-color-disabled);
       outline-style: var(--border-style-disabled);
-      outline-color: var(--btn-disabled-border);
+      outline-color: var(--primary1-border-color-disabled);
     }
     
-    /* 비활성 상태에서의 상호작용 시각 효과 */
-    &:hover,
-    &:active,
-    &:focus-visible {
-  outline-style: var(--border-style-focus);
-      outline-color: var(--static-focus-color);
-      
-      & .button-background {
-        outline-style: var(--border-style-disabled);
-        outline-color: var(--primary-1-border-color-disabled);
-      }
-    }
-    
-    /* 비활성화된 버튼의 선택 상태 */
-    &.selected {
-      color: var(--btn-disabled-text);
-      
-      & .button-background {
-  outline-style: var(--border-style-disabled);
-        outline-color: var(--btn-disabled-border);
-        background-color: var(--btn-disabled-bg);
-      }
-    }
   }
   
-  /* 🎨 Secondary 버튼 타입별 스타일 */
+  /* Secondary 버튼 타입별 스타일 */
   
-  /* Secondary-1 버튼 (Neutral 기반) */
+  /* Secondary-1 버튼 */
   &.secondary-1 {
-    color: var(--btn-secondary1-text);
+    color: var(--secondary1-contents-color-default);
     
     & .button-background {
-      background-color: var(--btn-secondary1-bg);
-      outline-color: var(--btn-secondary1-border);
+      background-color: var(--secondary1-background-color-default);
+      outline-color: var(--secondary1-border-color-default);
     }
     
     /* 상태별 스타일 */
     &:not([aria-disabled="true"]):hover {
       & .button-background {
-        background-color: var(--btn-secondary1-bg-hover);
+        background-color: var(--secondary1-background-color-hover);
       }
     }
     
     &:not([aria-disabled="true"]) {
       &:active,
-      &.selected {
-        color: var(--btn-secondary1-text-active);
+      &.pressed {
+        color: var(--secondary1-contents-color-pressed);
         
         & .button-background {
-          background-color: var(--btn-secondary1-bg-active);
-          outline-color: var(--btn-secondary1-border);
+          background-color: var(--secondary1-background-color-pressed);
+          outline-color: var(--secondary1-border-color-pressed);
         }
       }
     }
     
     /* 비활성 상태 */
     &[aria-disabled="true"] {
-      color: var(--btn-disabled-text);
+      color: var(--secondary1-contents-color-disabled);
       
       & .button-background {
-        background-color: var(--btn-disabled-bg);
-        outline-color: var(--btn-disabled-border);
+        background-color: var(--secondary1-background-color-disabled);
+        outline-color: var(--secondary1-border-color-disabled);
       }
     }
   }
   
-  /* Secondary-2 버튼 (Neutral 변형) */
+  /* Secondary-2 버튼 */
   &.secondary-2 {
-    color: var(--btn-secondary2-text);
+    color: var(--secondary2-contents-color-default);
     
     & .button-background {
-      background-color: var(--btn-secondary2-bg);
-      outline-color: var(--btn-secondary2-border);
+      background-color: var(--secondary2-background-color-default);
+      outline-color: var(--secondary2-border-color-default);
     }
     
     /* 상태별 스타일 */
     &:not([aria-disabled="true"]):hover {
       & .button-background {
-        background-color: var(--btn-secondary2-bg-hover);
+        background-color: var(--secondary2-background-color-hover);
       }
     }
     
     &:not([aria-disabled="true"]) {
       &:active,
-      &.selected {
-        color: var(--btn-secondary2-text-active);
+      &.pressed {
+        color: var(--secondary2-contents-color-pressed);
         
         & .button-background {
-          background-color: var(--btn-secondary2-bg-active);
-          outline-color: var(--btn-secondary2-border);
+          background-color: var(--secondary2-background-color-pressed);
+          outline-color: var(--secondary2-border-color-pressed);
         }
       }
     }
     
     /* 비활성 상태 */
     &[aria-disabled="true"] {
-      color: var(--btn-disabled-text);
+      color: var(--secondary2-contents-color-disabled);
       
       & .button-background {
-        background-color: var(--btn-disabled-bg);
-        outline-color: var(--btn-disabled-border);
+        background-color: var(--secondary2-background-color-disabled);
+        outline-color: var(--secondary2-border-color-disabled);
       }
     }
   }
   
-  /* Primary-2 버튼 (Light 테마 변형) */
+  /* Primary-2 버튼 */
   &.primary-2 {
-    color: var(--btn-primary2-text);
+    color: var(--primary2-contents-color-default);
     
     & .button-background {
-      background-color: var(--btn-primary2-bg);
-      outline-color: var(--btn-primary2-border);
+      background-color: var(--primary2-background-color-default);
+      outline-color: var(--primary2-border-color-default);
     }
     
     /* 상태별 스타일 */
     &:not([aria-disabled="true"]):hover {
       & .button-background {
-        background-color: var(--btn-primary2-bg-hover);
+        background-color: var(--primary2-background-color-hover);
       }
     }
     
     &:not([aria-disabled="true"]) {
       &:active,
-      &.selected {
-        color: var(--btn-primary2-text-active);
+      &.pressed {
+        color: var(--primary2-contents-color-pressed);
         
         & .button-background {
-          background-color: var(--btn-primary2-bg-active);
-          outline-color: var(--btn-primary2-border);
+          background-color: var(--primary2-background-color-pressed);
+          outline-color: var(--primary2-border-color-pressed);
         }
       }
       
-      &:hover {
-        outline-color: var(--primary-2-border-color-active);
-        
-        & .button-background {
-          background-color: color-mix(in srgb, var(--primary-2-background-color-default) 90%, var(--primary-2-background-color-active));
-        }
-      }
-      
-      &.selected {
-        color: var(--primary-2-contents-pre-sel);
-        
-        & .button-background {
-          background-color: var(--primary-2-background-color-active);
-          outline-color: var(--primary-2-border-color-active);
-        }
-      }
+
     }
     
     &[aria-disabled="true"] {
-      color: var(--primary-2-contents-color-disabled);
+      color: var(--primary2-contents-color-disabled);
       
       & .button-background {
-        background-color: var(--primary-2-background-color-disabled);
-        outline-color: var(--primary-2-border-color-disabled);
-      }
-      
-      &.selected {
-        color: var(--primary-2-contents-color-disabled-2);
-        
-        & .button-background {
-          background-color: var(--primary-2-background-color-disabled-2);
-          outline-color: var(--primary-2-border-color-disabled-2);
-        }
+        background-color: var(--primary2-background-color-disabled);
+        outline-color: var(--primary2-border-color-disabled);
       }
     }
   }
 }
 
-} /* @layer components 끝 */
-
-/* ==============================
-   Dark 테마 상태 오버라이드 🌙
-   ============================== */
-@layer states {
-
-/* Dark 테마에서는 --current-* 토큰들을 Dark 테마로 재정의 */
-.high-contrast {
-  --current-bg-primary: var(--theme-dark-bg-primary);
-  --current-bg-hover: var(--theme-dark-bg-hover);
-  --current-bg-active: var(--theme-dark-bg-active);
-  --current-bg-surface: var(--theme-dark-bg-surface);
-  --current-bg-body: var(--theme-dark-bg-body);
-  
-  --current-text-primary: var(--theme-dark-text-primary);
-  --current-text-secondary: var(--theme-dark-text-secondary);
-  --current-text-on-primary: var(--theme-dark-text-on-primary);
-  --current-text-on-surface: var(--theme-dark-text-on-surface);
-  
-  --current-border-primary: var(--theme-dark-border-primary);
-  --current-border-subtle: var(--theme-dark-border-subtle);
-  
-  /* 컴포넌트 토큰 업데이트 (Dark 테마 특수값) */
-  --btn-primary-text-active: var(--color-dark-200);
 }
 
-} /* @layer states 끝 */
-
-/* ==============================
-   유틸리티 클래스
-   ============================== */
+/* 유틸리티 클래스 */
 @layer utilities {
 
-/* 레이아웃 유틸리티 */
+
 .sr-only {
   position: absolute;
-  width: var(--unit-xs);  /* 1px → 0.25rem */
-  height: var(--unit-xs); /* 1px → 0.25rem */
+  width: var(--unit-xs);
+  height: var(--unit-xs);
   padding: 0;
-  margin: calc(var(--unit-xs) * -1); /* -1px → -0.25rem */
+  margin: calc(var(--unit-xs) * -1);
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
 }
 
-} /* @layer utilities 끝 */
-
-/* ==============================
-   📱 반응형 컨테이너 쿼리 그룹
-   ============================== */
-
-@container button-container (width < 25rem) { /* 400px → 25rem */
-  .button {
-    --button-width: clamp(9.375rem, 40vw, 12.5rem);  /* 150px-200px → 9.375rem-12.5rem */
-    --button-height: clamp(9.375rem, 40vw, 12.5rem); /* 150px-200px → 9.375rem-12.5rem */
-    --font-size: clamp(1.75rem, 8vw, 2.25rem);       /* 28px-36px → 1.75rem-2.25rem */
-  }
 }
-
-@container button-container (width < 18.75rem) { /* 300px → 18.75rem */
-  .button {
-    --button-width: clamp(7.5rem, 35vw, 9.375rem);   /* 120px-150px → 7.5rem-9.375rem */
-    --button-height: clamp(7.5rem, 35vw, 9.375rem);  /* 120px-150px → 7.5rem-9.375rem */
-    --font-size: clamp(1.5rem, 6vw, 1.75rem);        /* 24px-28px → 1.5rem-1.75rem */
-  }
-}
-
-/* ==============================
-   남은 기존 스타일들...
-   ============================== */
-.button.secondary-1 {
-  color: var(--secondary-1-contents-def);
-}
-
-.button.secondary-1 .button-background {
-  background-color: var(--secondary-1-background-color-default);
-  outline-color: var(--secondary-1-border-color-default);
-}
-
-/* Secondary-1 눌림 상태 */
-.button.secondary-1:not([aria-disabled="true"]):active,
-.button.secondary-1:not([aria-disabled="true"]).key-active {
-  color: var(--secondary-1-contents-pre-sel);
-}
-
-.button.secondary-1:not([aria-disabled="true"]):active .button-background,
-.button.secondary-1:not([aria-disabled="true"]).key-active .button-background {
-  background-color: var(--secondary-1-background-color-active);
-  outline-color: var(--secondary-1-border-color-active);
-}
-
-/* Secondary-1 호버 상태 */
-.button.secondary-1:not([aria-disabled="true"]):hover {
-  outline-color: var(--secondary-1-border-color-active);
-}
-
-/* Secondary-1 선택 상태 */
-.button.secondary-1:not([aria-disabled="true"]).selected {
-  color: var(--secondary-1-contents-pre-sel);
-}
-
-.button.secondary-1:not([aria-disabled="true"]).selected .button-background {
-  background-color: var(--secondary-1-background-color-active);
-  outline-color: var(--secondary-1-border-color-active);
-}
-
-/* Secondary-1 비활성 상태 */
-.button.secondary-1[aria-disabled="true"] {
-  color: var(--secondary-1-contents-color-disabled);
-}
-
-.button.secondary-1[aria-disabled="true"] .button-background {
-  background-color: var(--secondary-1-background-color-disabled);
-  outline-color: var(--secondary-1-border-color-disabled);
-}
-
-/* Secondary-1 비활성 선택 상태 */
-.button.secondary-1[aria-disabled="true"].selected {
-  color: var(--secondary-1-contents-color-disabled-2);
-}
-
-.button.secondary-1[aria-disabled="true"].selected .button-background {
-  background-color: var(--secondary-1-background-color-disabled-2);
-  outline-color: var(--secondary-1-border-color-disabled-2);
-}
-
-/* ==============================
-   Secondary-2 버튼 스타일
-   ============================== */
-.button.secondary-2 {
-  color: var(--secondary-2-contents-def);
-}
-
-.button.secondary-2 .button-background {
-  background-color: var(--secondary-2-background-color-default);
-  outline-color: var(--secondary-2-border-color-default);
-}
-
-/* Secondary-2 눌림 상태 */
-.button.secondary-2:not([aria-disabled="true"]):active,
-.button.secondary-2:not([aria-disabled="true"]).key-active {
-  color: var(--secondary-2-contents-pre-sel);
-}
-
-.button.secondary-2:not([aria-disabled="true"]):active .button-background,
-.button.secondary-2:not([aria-disabled="true"]).key-active .button-background {
-  background-color: var(--secondary-2-background-color-active);
-  outline-color: var(--secondary-2-border-color-active);
-}
-
-/* Secondary-2 호버 상태 */
-.button.secondary-2:not([aria-disabled="true"]):hover {
-  outline-color: var(--secondary-2-border-color-active);
-}
-
-/* Secondary-2 선택 상태 */
-.button.secondary-2:not([aria-disabled="true"]).selected {
-  color: var(--secondary-2-contents-pre-sel);
-}
-
-.button.secondary-2:not([aria-disabled="true"]).selected .button-background {
-  background-color: var(--secondary-2-background-color-active);
-  outline-color: var(--secondary-2-border-color-active);
-}
-
-/* Secondary-2 비활성 상태 */
-.button.secondary-2[aria-disabled="true"] {
-  color: var(--secondary-2-contents-color-disabled);
-}
-
-.button.secondary-2[aria-disabled="true"] .button-background {
-  background-color: var(--secondary-2-background-color-disabled);
-  outline-color: var(--secondary-2-border-color-disabled);
-}
-
-/* Secondary-2 비활성 선택 상태 */
-.button.secondary-2[aria-disabled="true"].selected {
-  color: var(--secondary-2-contents-color-disabled-2);
-}
-
-.button.secondary-2[aria-disabled="true"].selected .button-background {
-  background-color: var(--secondary-2-background-color-disabled-2);
-  outline-color: var(--secondary-2-border-color-disabled-2);
-}
-
-/* ==============================
-   Dark 테마 - 팔래트별 1:1 대응
-   ============================== */
-
-/* Primary-1 팔레트 Dark 테마 */
-.high-contrast .button:not(.primary-2):not(.secondary-1):not(.secondary-2) {
-  --primary-1-background-color-default: var(--primary-1-high-contrast-background-color-default);
-  --primary-1-background-color-default-2: var(--primary-1-high-contrast-background-color-default-2);
-  --primary-1-background-color-active: var(--primary-1-high-contrast-background-color-active);
-  --primary-1-background-color-active-2: var(--primary-1-high-contrast-background-color-active-2);
-  --primary-1-background-color-disabled: var(--primary-1-high-contrast-background-color-disabled);
-  --primary-1-background-color-disabled-2: var(--primary-1-high-contrast-background-color-disabled-2);
-  
-  --primary-1-border-color-default: var(--primary-1-high-contrast-border-color-default);
-  --primary-1-border-color-default-2: var(--primary-1-high-contrast-border-color-default-2);
-  --primary-1-border-color-active: var(--primary-1-high-contrast-border-color-active);
-  --primary-1-border-color-active-2: var(--primary-1-high-contrast-border-color-active-2);
-  --primary-1-border-color-disabled: var(--primary-1-high-contrast-border-color-disabled);
-  --primary-1-border-color-disabled-2: var(--primary-1-high-contrast-border-color-disabled-2);
-  
-  --primary-1-contents-color-default: var(--primary-1-high-contrast-contents-color-default);
-  --primary-1-contents-color-default-2: var(--primary-1-high-contrast-contents-color-default-2);
-  --primary-1-contents-color-active: var(--primary-1-high-contrast-contents-color-active);
-  --primary-1-contents-color-active-2: var(--primary-1-high-contrast-contents-color-active-2);
-  --primary-1-contents-color-disabled: var(--primary-1-high-contrast-contents-color-disabled);
-  --primary-1-contents-color-disabled-2: var(--primary-1-high-contrast-contents-color-disabled-2);
-}
-
-/* Primary-2 팔레트 Dark 테마 */
-.high-contrast .button.primary-2 {
-  --primary-2-background-color-default: var(--primary-2-high-contrast-background-color-default);
-  --primary-2-background-color-default-2: var(--primary-2-high-contrast-background-color-default-2);
-  --primary-2-background-color-active: var(--primary-2-high-contrast-background-color-active);
-  --primary-2-background-color-active-2: var(--primary-2-high-contrast-background-color-active-2);
-  --primary-2-background-color-disabled: var(--primary-2-high-contrast-background-color-disabled);
-  --primary-2-background-color-disabled-2: var(--primary-2-high-contrast-background-color-disabled-2);
-  
-  --primary-2-border-color-default: var(--primary-2-high-contrast-border-color-default);
-  --primary-2-border-color-default-2: var(--primary-2-high-contrast-border-color-default-2);
-  --primary-2-border-color-active: var(--primary-2-high-contrast-border-color-active);
-  --primary-2-border-color-active-2: var(--primary-2-high-contrast-border-color-active-2);
-  --primary-2-border-color-disabled: var(--primary-2-high-contrast-border-color-disabled);
-  --primary-2-border-color-disabled-2: var(--primary-2-high-contrast-border-color-disabled-2);
-  
-  --primary-2-contents-color-default: var(--primary-2-high-contrast-contents-color-default);
-  --primary-2-contents-color-default-2: var(--primary-2-high-contrast-contents-color-default-2);
-  --primary-2-contents-color-active: var(--primary-2-high-contrast-contents-color-active);
-  --primary-2-contents-color-active-2: var(--primary-2-high-contrast-contents-color-active-2);
-  --primary-2-contents-color-disabled: var(--primary-2-high-contrast-contents-color-disabled);
-  --primary-2-contents-color-disabled-2: var(--primary-2-high-contrast-contents-color-disabled-2);
-}
-
-/* Secondary-1 팔레트 Dark 테마 */
-.high-contrast .button.secondary-1 {
-  --secondary-1-background-color-default: var(--secondary-1-high-contrast-background-color-default);
-  --secondary-1-background-color-default-2: var(--secondary-1-high-contrast-background-color-default-2);
-  --secondary-1-background-color-active: var(--secondary-1-high-contrast-background-color-active);
-  --secondary-1-background-color-active-2: var(--secondary-1-high-contrast-background-color-active-2);
-  --secondary-1-background-color-disabled: var(--secondary-1-high-contrast-background-color-disabled);
-  --secondary-1-background-color-disabled-2: var(--secondary-1-high-contrast-background-color-disabled-2);
-  
-  --secondary-1-border-color-default: var(--secondary-1-high-contrast-border-color-default);
-  --secondary-1-border-color-default-2: var(--secondary-1-high-contrast-border-color-default-2);
-  --secondary-1-border-color-active: var(--secondary-1-high-contrast-border-color-active);
-  --secondary-1-border-color-active-2: var(--secondary-1-high-contrast-border-color-active-2);
-  --secondary-1-border-color-disabled: var(--secondary-1-high-contrast-border-color-disabled);
-  --secondary-1-border-color-disabled-2: var(--secondary-1-high-contrast-border-color-disabled-2);
-  
-  --secondary-1-contents-color-default: var(--secondary-1-high-contrast-contents-color-default);
-  --secondary-1-contents-color-default-2: var(--secondary-1-high-contrast-contents-color-default-2);
-  --secondary-1-contents-color-active: var(--secondary-1-high-contrast-contents-color-active);
-  --secondary-1-contents-color-active-2: var(--secondary-1-high-contrast-contents-color-active-2);
-  --secondary-1-contents-color-disabled: var(--secondary-1-high-contrast-contents-color-disabled);
-  --secondary-1-contents-color-disabled-2: var(--secondary-1-high-contrast-contents-color-disabled-2);
-}
-
-/* Secondary-2 팔레트 Dark 테마 */
-.high-contrast .button.secondary-2 {
-  --secondary-2-background-color-default: var(--secondary-2-high-contrast-background-color-default);
-  --secondary-2-background-color-default-2: var(--secondary-2-high-contrast-background-color-default-2);
-  --secondary-2-background-color-active: var(--secondary-2-high-contrast-background-color-active);
-  --secondary-2-background-color-active-2: var(--secondary-2-high-contrast-background-color-active-2);
-  --secondary-2-background-color-disabled: var(--secondary-2-high-contrast-background-color-disabled);
-  --secondary-2-background-color-disabled-2: var(--secondary-2-high-contrast-background-color-disabled-2);
-  
-  --secondary-2-border-color-default: var(--secondary-2-high-contrast-border-color-default);
-  --secondary-2-border-color-default-2: var(--secondary-2-high-contrast-border-color-default-2);
-  --secondary-2-border-color-active: var(--secondary-2-high-contrast-border-color-active);
-  --secondary-2-border-color-active-2: var(--secondary-2-high-contrast-border-color-active-2);
-  --secondary-2-border-color-disabled: var(--secondary-2-high-contrast-border-color-disabled);
-  --secondary-2-border-color-disabled-2: var(--secondary-2-high-contrast-border-color-disabled-2);
-  
-  --secondary-2-contents-color-default: var(--secondary-2-high-contrast-contents-color-default);
-  --secondary-2-contents-color-default-2: var(--secondary-2-high-contrast-contents-color-default-2);
-  --secondary-2-contents-color-active: var(--secondary-2-high-contrast-contents-color-active);
-  --secondary-2-contents-color-active-2: var(--secondary-2-high-contrast-contents-color-active-2);
-  --secondary-2-contents-color-disabled: var(--secondary-2-high-contrast-contents-color-disabled);
-  --secondary-2-contents-color-disabled-2: var(--secondary-2-high-contrast-contents-color-disabled-2);
-}
-
-/* 공통 초점/호버 상태 Static 요소 */
-.high-contrast .button {
-  --static-focus-color: var(--high-contrast-focus-color);
-  --static-hover-color: var(--high-contrast-hover-color);
-}
-
-/* Dark 테마에서 페이지 배경과 텍스트 색상 조정 */
-.high-contrast body {
-  background: var(--color-neutral-1000); /* body/page bg: 000000 (Dark 테마) */
-  color: var(--primitive-color-gray-14); /* body/text sec: FFFFFF (Dark 테마) */
-}
-
-.high-contrast header {
-  background: var(--color-neutral-1000); /* body/page bg: 000000 */
-  border-bottom-color: var(--primitive-color-gray-14); /* body/page bor: FFFFFF */
-}
-
-.high-contrast .button-showcase {
-  background: #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
-  border-color: #FFFFFF;
-}
-
-.high-contrast .button-showcase h2 {
-  color: #FFFFFF;
-}
-
-.high-contrast .button-showcase p {
-  color: #FFFFFF;
-}
-
-.high-contrast .plain-text {
-  color: #FFFFFF;
-}
-
-.high-contrast .button-description {
-  color: #FFFFFF;
-}
-
-.high-contrast .usage-guide {
-  background: #FFFFFF1A; /* rgba(255, 255, 255, 0.1) → HEX */
-  border-color: #FFFFFF;
-}
-
-.high-contrast .usage-guide h2,
-.high-contrast .usage-guide h3 {
-  color: #FFFFFF;
-}
-
-.high-contrast .usage-guide ul {
-  color: #FFFFFF;
-}
-
-.high-contrast .usage-guide kbd {
-  background: #FFFFFF;
-  border-color: #000000;
-  color: #000000;
-}
-
-/* ==============================
-   Dark 테마 토글 버튼
-   ============================== */
-.high-contrast-toggle {
-  /* 테마 토글 버튼 스타일은 기본 .button 스타일을 상속합니다 */
-}
-
-/* ==============================
-   🖥️ 시스템 접근성 미디어 쿼리 그룹
-   ============================== */
-
-/* 시스템 고대비 설정 자동 감지 → Dark 테마 적용 */
-@media (prefers-contrast: high) {
-  html:not(.manual-theme-mode) {
-    --current-bg-primary: var(--theme-dark-bg-primary);
-    --current-bg-hover: var(--theme-dark-bg-hover);
-    --current-bg-active: var(--theme-dark-bg-active);
-    --current-bg-surface: var(--theme-dark-bg-surface);
-    --current-bg-body: var(--theme-dark-bg-body);
-    
-    --current-text-primary: var(--theme-dark-text-primary);
-    --current-text-secondary: var(--theme-dark-text-secondary);
-    --current-text-on-primary: var(--theme-dark-text-on-primary);
-    --current-text-on-surface: var(--theme-dark-text-on-surface);
-    
-    --current-border-primary: var(--theme-dark-border-primary);
-    --current-border-subtle: var(--theme-dark-border-subtle);
-    
-    --btn-primary-text-active: var(--color-dark-200);
-  }
-}
-
-/* 더 강한 대비를 요구하는 시스템 설정 */
-@media (prefers-contrast: more) {
-  html:not(.manual-theme-mode) {
-    /* 매우 강한 대비 (순흑백 기준) */
-    --current-bg-primary: var(--color-neutral-1000);
-    --current-text-primary: var(--color-dark-100);
-    --current-bg-surface: var(--color-neutral-0);
-    --current-text-on-surface: var(--color-neutral-1000);
-  }
-} /* 미디어 쿼리 그룹 끝 */
-
-/* ===============================================
-   🎨 버튼 컴포넌트 시스템 CSS - 완료
-   =============================================== */

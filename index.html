@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="no-js">
 <head>
   <!-- ===== 기본 메타 정보 ===== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
   <title>버튼 컴포넌트 시스템 - 데모</title>
   
   <!-- ===== SEO 최적화 그룹 ===== -->
@@ -15,43 +16,100 @@
   <meta property="og:title" content="버튼 컴포넌트 시스템">
   <meta property="og:description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="버튼 컴포넌트 시스템 데모">
+  <meta property="og:locale" content="ko_KR">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="버튼 컴포넌트 시스템">
+  <meta name="twitter:description" content="Light/Dark 테마와 접근성을 갖춘 현대적 버튼 컴포넌트">
+  
+  <!-- 접근성 메타데이터 -->
+  <meta name="theme-color" content="#A4693F" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#FFE100" media="(prefers-color-scheme: dark)">
   
   <!-- ===== 리소스 로딩 그룹 ===== -->
   <link rel="icon" type="image/svg+xml" href="favicon.ico">
   <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css">
+  
+  <!-- ===== 구조화 데이터 (JSON-LD) ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "버튼 컴포넌트 시스템",
+    "description": "동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모",
+    "applicationCategory": "WebApplication",
+    "operatingSystem": "Web Browser",
+    "programmingLanguage": ["HTML", "CSS", "JavaScript"],
+    "keywords": "버튼, 컴포넌트, 접근성, 반응형, 웹 개발, Dark 테마",
+    "author": {
+      "@type": "Organization",
+      "name": "개발팀"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
 </head>
 <body>
+  <!-- ===== 접근성 내비게이션 ===== -->
+  <a href="#main-content" class="skip-link">메인 콘텐츠로 건너뛰기</a>
+  <a href="#theme-controls" class="skip-link">테마 설정으로 건너뛰기</a>
+  
   <!-- ===== 페이지 헤더 그룹 ===== -->
-  <header>
+  <header role="banner">
     <!-- 제목 및 설명 -->
     <h1>버튼 컴포넌트 시스템</h1>
     <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
     
-    <!-- 테마 전환 컨트롤 그룹 -->
-    <div class="theme-control-group">
-      <!-- 테마 전환 버튼 -->
-      <button 
-        type="button"
-        style="width: fit-content; height: fit-content;"
-        class="button theme-toggle high-contrast-toggle"
-        aria-label="테마 전환 (Light ↔ Dark) (단축키: Ctrl+Alt+H)"
-        aria-pressed="false"
-        title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
-        <div class="button-background">
-          <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
-          <span class="label">Dark<br>테마</span>
-        </div>
-      </button>
+
+    <div id="theme-controls" class="theme-control-group" role="region" aria-labelledby="theme-controls-title">
+      <!-- 버튼 그룹 컨테이너 -->
+      <div class="control-buttons" style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
+        <!-- 테마 전환 버튼 -->
+        <button 
+          type="button"
+          style="width: fit-content; height: fit-content;"
+          class="button theme-toggle"
+          aria-label="테마 전환 (Light ↔ Dark) (단축키: Ctrl+Alt+H)"
+          aria-pressed="false"
+          title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
+          <div class="button-background">
+            <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+            <span class="label">Dark<br>테마</span>
+          </div>
+        </button>
+        
+        <!-- 큰글씨 모드 전환 버튼 -->
+        <button 
+          type="button"
+          style="width: fit-content; height: fit-content;"
+          class="button secondary-1 large-text-toggle"
+          aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)"
+          aria-pressed="false"
+          title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
+          <div class="button-background">
+            <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+            <span class="label">큰글씨<br>모드</span>
+          </div>
+        </button>
+      </div>
       
       <!-- 테마 시스템 도움말 -->
       <div style="margin-top: 0.625rem; font-size: 0.9em; color: #666; max-width: 37.5rem;">
-        🎨 <strong>테마 시스템 사용법:</strong>
+        🎨 <strong id="theme-controls-title">테마 & 접근성 시스템 사용법:</strong>
         <ul style="margin: 0.3125rem 0; padding-left: 1.25rem;">
           <li><strong>Light 테마:</strong> 기본 브랜드 색상 중심의 밝은 인터페이스</li>
-          <li><strong>Dark 테마:</strong> 고대비 모드, 접근성 최적화된 어두운 인터페이스</li>
+          <li><strong>Dark 테마:</strong> 접근성 최적화된 어두운 고대비 인터페이스</li>
+          <li><strong>큰글씨 모드:</strong> 모든 텍스트가 1.2배 확대 (40px → 48px)</li>
           <li><strong>Static 요소:</strong> 포커스/호버는 테마 독립적 핑크 색상</li>
-          <li>버튼 클릭 또는 <kbd>Ctrl+Alt+H</kbd> 단축키로 전환</li>
+          <li><strong>단축키:</strong> <kbd>Ctrl+Alt+H</kbd> (테마), <kbd>Ctrl+Alt+L</kbd> (큰글씨)</li>
           <li>설정이 자동으로 저장되어 다음 방문 시에도 유지됩니다</li>
           <li>시스템 접근성 설정과 자동으로 연동됩니다</li>
         </ul>
@@ -60,7 +118,7 @@
   </header>
 
   <!-- ===== 메인 콘텐츠 그룹 ===== -->
-  <main>
+  <main id="main-content" role="main">
     <!-- ===== 버튼 팔레트 데모 그룹 ===== -->
     
     <!-- Primary-1 팔레트 (Light 테마 기본) -->
@@ -259,8 +317,34 @@
   </main>
 
   <!-- ===== 페이지 푸터 그룹 ===== -->
-  <footer>
-    <p>&copy; 이강철 / 2025 / 버튼 컴포넌트 시스템 v1.0.0</p>
+  <footer role="contentinfo" class="site-footer">
+    <nav aria-label="푸터 내비게이션" class="footer-nav">
+      <ul class="footer-links">
+        <li><a href="#main-content">메인으로 돌아가기</a></li>
+        <li><a href="#theme-controls">테마 설정</a></li>
+      </ul>
+    </nav>
+    
+    <div class="footer-info">
+      <p class="footer-copyright">
+        <span>&copy; 이강철 / 2025 / 버튼 컴포넌트 시스템 v1.0.0</span>
+        <span class="footer-separator" aria-hidden="true"> • </span>
+        <span class="footer-tech">크롬 기준 현대 CSS/JS</span>
+      </p>
+      
+      <details class="footer-accessibility-info">
+        <summary>접근성 정보</summary>
+        <div class="accessibility-details">
+          <p>이 데모는 웹 접근성 가이드라인(WCAG 2.1 AA)을 준수합니다:</p>
+          <ul>
+            <li>키보드 전용 네비게이션 지원</li>
+            <li>스크린 리더 호환성</li>
+            <li>충분한 색상 대비 (4.5:1 이상)</li>
+            <li>현대 CSS 기능 활용 (Nesting, Container Queries, color-mix)</li>
+          </ul>
+        </div>
+      </details>
+    </div>
   </footer>
 
   <!-- ===== 스크립트 로딩 그룹 ===== -->
