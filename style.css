@@ -244,6 +244,7 @@ button {
   --secondary2-border-color-disabled: var(--gray-600);
   --secondary2-border-color-focus: var(--system-focus);
   --secondary2-border-color-hover: var(--system-hover);
+  
   /* 테두리 스타일 */
   --border-style: solid;
   --border-style-pressed: solid;

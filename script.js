@@ -55,7 +55,6 @@ window.addEventListener("DOMContentLoaded", () => {
     _initDOMCache() {
       this._domCache.html = document.documentElement;
       
-
       this._domCache.html.classList.remove('no-js');
       this._domCache.html.classList.add('js');
       
@@ -705,5 +704,3 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener('dblclick', blockPointerEvents, true);
   document.addEventListener('dragstart', blockPointerEvents, true);
 });
-
-
