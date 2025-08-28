@@ -1,14 +1,8 @@
-/* ===============================================
-   🎨 버튼 컴포넌트 시스템 - 메인 스크립트
-   =============================================== */
+/* 버튼 컴포넌트 시스템 - 메인 스크립트 */
 
 window.addEventListener('DOMContentLoaded', () => {
-  /* ===============================================
-     🎯 테마 관리 시스템 그룹
-     =============================================== */
-  
   /**
-   * 🎨 ThemeManager - 테마 상태 관리 (Light ↔ Dark 전환)
+   * ThemeManager - 테마 상태 관리 (Light ↔ Dark 전환)
    * 
    * 기능:
    * - Light 테마: 기본 브랜드 색상 중심의 밝은 인터페이스
@@ -18,10 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
    * - 키보드 단축키 지원 (Ctrl+Alt+H)
    */
   const ThemeManager = {
-    
-    /* ===============================================
-       상수 및 설정
-       =============================================== */
     THEMES: {
       LIGHT: 'light',
       DARK: 'dark'
@@ -30,9 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
     STORAGE_KEY: 'theme-mode',
     MANUAL_MODE_KEY: 'manual-theme-mode',
     
-    /* ===============================================
-       DOM 캐시
-       =============================================== */
     _domCache: {
       html: null,
       toggleButton: null,
@@ -40,15 +27,8 @@ window.addEventListener('DOMContentLoaded', () => {
       liveRegion: null
     },
     
-    /* ===============================================
-       상태 관리
-       =============================================== */
     currentTheme: 'light',
     isManualMode: false,
-    
-    /* ===============================================
-       초기화 플로우
-       =============================================== */
     init() {
       this._initDOMCache();
       this.loadSettings();
@@ -233,12 +213,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
   window.ThemeManager = ThemeManager;
 
-  /* ===============================================
-     📏 큰글씨 모드 관리 시스템 그룹
-     =============================================== */
-  
   /**
-   * 📝 LargeTextManager - 큰글씨 모드 상태 관리 (기본 ↔ 큰글씨 전환)
+   * LargeTextManager - 큰글씨 모드 상태 관리 (기본 ↔ 큰글씨 전환)
    * 
    * 기능:
    * - 기본 모드: 40px 기준 텍스트 크기
@@ -425,12 +401,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
   window.LargeTextManager = LargeTextManager;
 
-  /* ===============================================
-     🎛️ 버튼 크기 조절 시스템 그룹
-     =============================================== */
-  
   /**
-   * 📏 SizeControlManager - 버튼 크기 실시간 조절 (데모용)
+   * SizeControlManager - 버튼 크기 실시간 조절 (데모용)
    * 
    * 기능:
    * - 가로/세로 크기 슬라이더로 실시간 조절
@@ -471,7 +443,7 @@ window.addEventListener('DOMContentLoaded', () => {
       this._domCache.heightSlider = document.querySelector('.button-height');
       this._domCache.widthValue = document.querySelector('.width-value');
       this._domCache.heightValue = document.querySelector('.height-value');
-      this._domCache.resetButton = document.querySelector('.reset-size-btn');
+      this._domCache.resetButton = document.querySelector('.scaling.reset');
       this._domCache.allButtons = document.querySelectorAll('.button');
     },
     
@@ -559,9 +531,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // 전역 접근을 위해 window 객체에 추가 (개발자 도구용)
   window.SizeControlManager = SizeControlManager;
 
-  /* ===============================================
-     🎨 동적 스타일링 시스템
-     =============================================== */
+
   
   /* 상수 (비율/스케일) */
   const BASE = 0.03125;
@@ -578,9 +548,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const buttonElements = Array.from(document.querySelectorAll('.button'));
   const styleCache = new WeakMap();
 
-  /* ===============================================
-     동적 스타일링 함수
-     =============================================== */
+
   /**
    * minSide 기준으로 버튼, 배경, 선택 상태 아이콘을 동적으로 스타일링합니다.
    * 
@@ -593,7 +561,7 @@ window.addEventListener('DOMContentLoaded', () => {
    */
   function applyButtonStyles() {
     for (const button of buttonElements) {
-      const background = button.querySelector(".button-background");
+      const background = button.querySelector(".background");
       if (!background) continue;
 
       const rect = button.getBoundingClientRect();
@@ -634,7 +602,7 @@ window.addEventListener('DOMContentLoaded', () => {
       background.style.outlineWidth = `${backgroundOutlineWidth}px`;
 
       // 선택 상태 아이콘 스타일 적용 (min-side 기준)
-      const iconSelected = button.querySelector('.icon-selected');
+      const iconSelected = button.querySelector('.icon.dynamic.selected');
       if (iconSelected) {
         iconSelected.style.width = `${iconSelectedSize}px`;
         iconSelected.style.height = `${iconSelectedSize}px`;
@@ -650,9 +618,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ===============================================
-     SVG 주입 시스템
-     =============================================== */
+
   /**
    * SVG 파일을 로드하고 DOM 컨테이너에 주입합니다.
    * 
@@ -662,7 +628,7 @@ window.addEventListener('DOMContentLoaded', () => {
    * - 비활성 버튼: 기본 아이콘만 주입 (상호작용 불가)
    * - 모든 팔레트에 동일한 아이콘 적용
    * 
-   * 누락된 icon-selected 컨테이너가 있다면 생성합니다.
+   * 누락된 icon.dynamic.selected 컨테이너가 있다면 생성합니다.
    */
   function loadSvg(path, selector) {
     return fetch(path)
@@ -675,20 +641,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 두 아이콘 타입을 동시에 로드
   const iconPromise = loadSvg('icon.svg', '.icon');
-  const iconSelectedPromise = loadSvg('selected.svg', '.icon-selected')
+  const iconSelectedPromise = loadSvg('selected.svg', '.icon.dynamic.selected')
     .then(svg => { iconSelectedSvgContent = svg; });
 
   Promise.all([iconPromise, iconSelectedPromise])
     .then(() => {
-      // 누락된 icon-selected 컨테이너를 생성하고 SVG 주입
+      // 누락된 icon.dynamic.selected 컨테이너를 생성하고 SVG 주입 (토글 버튼에만)
       for (const button of buttonElements) {
-        const background = button.querySelector('.button-background');
+        const background = button.querySelector('.background');
         if (!background) continue;
-        if (!background.querySelector('.icon-selected')) {
+        
+        // 토글 버튼인지 확인 (toggle 클래스가 있는 경우)
+        const isToggleButton = button.classList.contains('toggle');
+        
+        if (isToggleButton && !background.querySelector('.icon.dynamic.selected')) {
           const iconSelectedSpan = document.createElement('span');
-          iconSelectedSpan.className = 'icon-selected';
+          iconSelectedSpan.className = 'icon dynamic selected';
           if (iconSelectedSvgContent) iconSelectedSpan.innerHTML = iconSelectedSvgContent;
-          const iconEl = background.querySelector('.icon');
+          const iconEl = background.querySelector('.icon.dynamic');
           if (iconEl && iconEl.parentNode) background.insertBefore(iconSelectedSpan, iconEl);
           else background.insertBefore(iconSelectedSpan, background.firstChild);
         }
@@ -696,9 +666,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
       // 주입 후 접근성 상태 동기화
       for (const button of buttonElements) {
+        const isToggleButton = button.classList.contains('toggle');
         const isInitiallySelected = button.classList.contains('selected');
-        if (isInitiallySelected) button.dataset.toggleSelected = 'true';
-        button.setAttribute('aria-pressed', isInitiallySelected ? 'true' : 'false');
+        
+        if (isToggleButton) {
+          button.dataset.toggleSelected = 'true';
+          button.setAttribute('aria-pressed', isInitiallySelected ? 'true' : 'false');
+        }
       }
 
       // 최적 성능을 위해 다음 프레임에서 스타일 적용
@@ -709,9 +683,7 @@ window.addEventListener('DOMContentLoaded', () => {
       applyButtonStyles(); // 폴백 스타일링
     });
 
-  /* ===============================================
-     리사이즈 처리
-     =============================================== */
+
   let resizeScheduled = false;
   window.addEventListener("resize", () => {
     if (resizeScheduled) return;
@@ -722,9 +694,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ===============================================
-     이벤트 핸들러 (버튼 타입별 상태 전환)
-     =============================================== */
+
   // 토글 버튼을 위한 클릭 핸들러 (기본 상태 ↔ 선택 상태)
   document.addEventListener('click', (event) => {
     const button = event.target.closest('.button');
@@ -732,7 +702,7 @@ window.addEventListener('DOMContentLoaded', () => {
         button.dataset.toggleSelected !== 'true') return;
 
     const wasSelected = button.classList.contains('selected');
-    const iconSelected = button.querySelector('.icon-selected');
+    const iconSelected = button.querySelector('.icon.dynamic.selected');
 
     if (wasSelected) {
       // 아이콘을 먼저 숨기고 다음 프레임에서 선택 상태 제거
@@ -785,26 +755,380 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 활성화된 버튼에서 Enter/Space 처리
+    // Enter 키를 Space 키로 변환하여 브라우저 기본 :active 동작 활용
     const enabledButton = event.target.closest('.button');
+    console.log('🔍 키보드 이벤트:', event.key, enabledButton);
+    
     if (enabledButton && enabledButton.getAttribute('aria-disabled') !== 'true') {
-      if (event.key === 'Enter' || event.key === 'NumpadEnter' || event.key === ' ') {
+      if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+        console.log('🔄 Enter → pressed 클래스로 활성화');
         event.preventDefault();
+        event.stopPropagation();
+        
+        // pressed 클래스 추가로 활성 상태 시뮬레이션
         enabledButton.classList.add('pressed');
+        
+        setTimeout(() => {
+          // pressed 클래스 제거 후 클릭 실행
+          enabledButton.classList.remove('pressed');
+          
+          // 클릭 이벤트 발생
+          const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            button: 0
+          });
+          enabledButton.dispatchEvent(clickEvent);
+        }, 100);
       }
     }
   }, true);
 
-  document.addEventListener('keyup', (event) => {
-    const button = event.target.closest('.button');
-    if (!button) return;
-    if (event.key === 'Enter' || event.key === 'NumpadEnter' || event.key === ' ') {
-      button.classList.remove('pressed');
-      if (button.getAttribute('aria-disabled') !== 'true') {
-        button.click();
+  // 회사 표준: 위아래 방향키로 네비게이션 구현
+  document.addEventListener('keydown', (event) => {
+    const focusedButton = document.activeElement;
+    
+    // 방향키가 눌렸는지 확인
+    const isArrowKey = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key);
+    
+    // 현재 포커스된 요소가 버튼이 아니고 방향키가 눌렸다면 첫 번째 버튼으로 이동
+    if ((!focusedButton || !focusedButton.classList.contains('button')) && isArrowKey) {
+      console.log('🔄 방향키 감지 → 첫 번째 버튼으로 자동 포커스');
+      event.preventDefault();
+      const firstButton = getFirstButton();
+      if (firstButton) {
+        firstButton.focus();
       }
+      return;
+    }
+
+    // 현재 포커스된 요소가 버튼인지 확인
+    if (!focusedButton || !focusedButton.classList.contains('button')) {
+      return;
+    }
+
+    let targetButton = null;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        console.log('🔄 ↓ 다음 버튼 그룹으로 이동');
+        event.preventDefault();
+        targetButton = getNextButtonGroup(focusedButton);
+        break;
+        
+      case 'ArrowUp':
+        console.log('🔄 ↑ 이전 버튼 그룹으로 이동');
+        event.preventDefault();
+        targetButton = getPreviousButtonGroup(focusedButton);
+        break;
+
+              case 'ArrowRight':
+          console.log('🔄 → 전체 버튼 중 다음 버튼으로 이동');
+          event.preventDefault();
+          targetButton = getNextButton(focusedButton);
+          break;
+          
+        case 'ArrowLeft':
+          console.log('🔄 ← 전체 버튼 중 이전 버튼으로 이동');
+          event.preventDefault();
+          targetButton = getPreviousButton(focusedButton);
+          break;
+        
+      case 'Home':
+        console.log('🔄 Home: 첫 번째 버튼으로 이동');
+        event.preventDefault();
+        targetButton = getFirstButton();
+        break;
+        
+      case 'End':
+        console.log('🔄 End: 마지막 버튼으로 이동');
+        event.preventDefault();
+        targetButton = getLastButton();
+        break;
+    }
+
+    // 포커스 이동
+    if (targetButton) {
+      targetButton.focus();
     }
   }, true);
+
+  // 마우스/터치 상호작용을 .pressed 클래스로 통일
+  document.addEventListener('mousedown', (event) => {
+    const button = event.target.closest('.button');
+    if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
+      console.log('🖱️ 마우스 다운 → pressed 클래스 추가');
+      button.classList.add('pressed');
+    }
+  }, true);
+
+  document.addEventListener('mouseup', (event) => {
+    const button = event.target.closest('.button');
+    if (button && button.classList.contains('pressed')) {
+      console.log('🖱️ 마우스 업 → pressed 클래스 제거');
+      button.classList.remove('pressed');
+    }
+  }, true);
+
+  document.addEventListener('mouseleave', (event) => {
+    const button = event.target.closest('.button');
+    if (button && button.classList.contains('pressed')) {
+      console.log('🖱️ 마우스 벗어남 → pressed 클래스 제거');
+      button.classList.remove('pressed');
+    }
+  }, true);
+
+  // 터치 상호작용도 .pressed 클래스로 통일
+  document.addEventListener('touchstart', (event) => {
+    const button = event.target.closest('.button');
+    if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
+      console.log('👆 터치 시작 → pressed 클래스 추가');
+      button.classList.add('pressed');
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', (event) => {
+    const button = event.target.closest('.button');
+    if (button && button.classList.contains('pressed')) {
+      console.log('👆 터치 종료 → pressed 클래스 제거');
+      button.classList.remove('pressed');
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchcancel', (event) => {
+    const button = event.target.closest('.button');
+    if (button && button.classList.contains('pressed')) {
+      console.log('👆 터치 취소 → pressed 클래스 제거');
+      button.classList.remove('pressed');
+    }
+  }, { passive: true });
+
+  // 회사 표준: 모든 버튼이 Tab으로 접근 가능 (기본 동작 유지)
+
+  // 버튼 네비게이션 헬퍼 함수들
+  function getAllButtons() {
+    const allButtons = Array.from(document.querySelectorAll('.button'));
+    const visibleButtons = allButtons.filter(btn => 
+      btn.offsetParent !== null // 보이는 버튼만 (aria-disabled 포함)
+    );
+    console.log('🔍 전체 버튼:', allButtons.length, '보이는 버튼:', visibleButtons.length);
+    return visibleButtons;
+  }
+
+  function getNextButton(currentButton) {
+    const buttons = getAllButtons();
+    const currentIndex = buttons.indexOf(currentButton);
+    console.log('🔍 전체 버튼 탐색 (다음):', currentIndex, '/', buttons.length);
+    
+    if (currentIndex === -1) return null;
+    
+    // 다음 버튼, 마지막이면 첫 번째로 순환
+    const nextIndex = (currentIndex + 1) % buttons.length;
+    console.log('🔍 다음 버튼 인덱스:', nextIndex, buttons[nextIndex]);
+    return buttons[nextIndex];
+  }
+
+  function getPreviousButton(currentButton) {
+    const buttons = getAllButtons();
+    const currentIndex = buttons.indexOf(currentButton);
+    console.log('🔍 전체 버튼 탐색 (이전):', currentIndex, '/', buttons.length);
+    
+    if (currentIndex === -1) return null;
+    
+    // 이전 버튼, 첫 번째면 마지막으로 순환
+    const prevIndex = currentIndex === 0 ? buttons.length - 1 : currentIndex - 1;
+    console.log('🔍 이전 버튼 인덱스:', prevIndex, buttons[prevIndex]);
+    return buttons[prevIndex];
+  }
+
+  function getFirstButton() {
+    const buttons = getAllButtons();
+    return buttons.length > 0 ? buttons[0] : null;
+  }
+
+  function getLastButton() {
+    const buttons = getAllButtons();
+    return buttons.length > 0 ? buttons[buttons.length - 1] : null;
+  }
+
+  // 다음 버튼 그룹으로 이동 (상하 네비게이션) - 부모 변경 기준
+  function getNextButtonGroup(currentButton) {
+    const allButtons = getAllButtons();
+    const currentIndex = allButtons.indexOf(currentButton);
+    const currentParent = getCurrentShowcase(currentButton);
+    
+    console.log('🔍 현재 버튼 인덱스:', currentIndex, '부모:', currentParent?.tagName, currentParent?.className);
+    
+    if (currentIndex === -1) return null;
+    
+    // 현재 버튼 다음부터 탐색하여 부모가 다른 첫 번째 버튼 찾기
+    for (let i = currentIndex + 1; i < allButtons.length; i++) {
+      const nextButton = allButtons[i];
+      const nextParent = getCurrentShowcase(nextButton);
+      
+      if (nextParent !== currentParent) {
+        console.log('🔍 다음 그룹 발견:', nextParent?.tagName, nextParent?.className);
+        // 새로운 부모의 첫 번째 버튼 찾기
+        const firstButtonInNewParent = getButtonsInShowcase(nextParent)[0];
+        console.log('🔍 새 부모의 첫 번째 버튼:', firstButtonInNewParent);
+        return firstButtonInNewParent;
+      }
+    }
+    
+    // 끝까지 갔으면 처음부터 다시 탐색 (루프)
+    for (let i = 0; i < currentIndex; i++) {
+      const nextButton = allButtons[i];
+      const nextParent = getCurrentShowcase(nextButton);
+      
+      if (nextParent !== currentParent) {
+        console.log('🔍 루프하여 다음 그룹 발견:', nextParent?.tagName, nextParent?.className);
+        // 새로운 부모의 첫 번째 버튼 찾기
+        const firstButtonInNewParent = getButtonsInShowcase(nextParent)[0];
+        console.log('🔍 루프하여 새 부모의 첫 번째 버튼:', firstButtonInNewParent);
+        return firstButtonInNewParent;
+      }
+    }
+    
+    return null;
+  }
+
+  // 이전 버튼 그룹으로 이동 (상하 네비게이션) - 부모 변경 기준
+  function getPreviousButtonGroup(currentButton) {
+    const allButtons = getAllButtons();
+    const currentIndex = allButtons.indexOf(currentButton);
+    const currentParent = getCurrentShowcase(currentButton);
+    
+    console.log('🔍 현재 버튼 인덱스 (이전):', currentIndex, '부모:', currentParent?.tagName, currentParent?.className);
+    
+    if (currentIndex === -1) return null;
+    
+    // 현재 버튼 이전부터 역순으로 탐색하여 부모가 다른 첫 번째 버튼 찾기
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      const prevButton = allButtons[i];
+      const prevParent = getCurrentShowcase(prevButton);
+      
+      if (prevParent !== currentParent) {
+        console.log('🔍 이전 그룹 발견:', prevParent?.tagName, prevParent?.className);
+        // 새로운 부모의 첫 번째 버튼 찾기
+        const firstButtonInNewParent = getButtonsInShowcase(prevParent)[0];
+        console.log('🔍 새 부모의 첫 번째 버튼:', firstButtonInNewParent);
+        return firstButtonInNewParent;
+      }
+    }
+    
+    // 처음까지 갔으면 끝부터 다시 탐색 (루프)
+    for (let i = allButtons.length - 1; i > currentIndex; i--) {
+      const prevButton = allButtons[i];
+      const prevParent = getCurrentShowcase(prevButton);
+      
+      if (prevParent !== currentParent) {
+        console.log('🔍 루프하여 이전 그룹 발견:', prevParent?.tagName, prevParent?.className);
+        // 새로운 부모의 첫 번째 버튼 찾기
+        const firstButtonInNewParent = getButtonsInShowcase(prevParent)[0];
+        console.log('🔍 루프하여 새 부모의 첫 번째 버튼:', firstButtonInNewParent);
+        return firstButtonInNewParent;
+      }
+    }
+    
+    return null;
+  }
+
+  // 같은 그룹 내에서 다음 버튼 찾기 (좌우 네비게이션)
+  function getNextButtonInSameGroup(currentButton) {
+    const currentPalette = getCurrentPalette(currentButton);
+    if (!currentPalette) return null;
+
+    const paletteButtons = getButtonsInPalette(currentPalette);
+    const currentIndex = paletteButtons.indexOf(currentButton);
+    
+    if (currentIndex === -1) return null;
+    
+    // 같은 그룹 내에서 다음 버튼, 마지막이면 첫 번째로 순환
+    const nextIndex = (currentIndex + 1) % paletteButtons.length;
+    return paletteButtons[nextIndex];
+  }
+
+  // 같은 그룹 내에서 이전 버튼 찾기 (좌우 네비게이션)
+  function getPreviousButtonInSameGroup(currentButton) {
+    const currentPalette = getCurrentPalette(currentButton);
+    if (!currentPalette) return null;
+
+    const paletteButtons = getButtonsInPalette(currentPalette);
+    const currentIndex = paletteButtons.indexOf(currentButton);
+    
+    if (currentIndex === -1) return null;
+    
+    // 같은 그룹 내에서 이전 버튼, 첫 번째면 마지막으로 순환
+    const prevIndex = currentIndex === 0 ? paletteButtons.length - 1 : currentIndex - 1;
+    return paletteButtons[prevIndex];
+  }
+
+  // 현재 버튼의 팔레트 클래스 찾기
+  function getCurrentPalette(button) {
+    const paletteClasses = ['primary1', 'primary2', 'secondary1', 'secondary2'];
+    return paletteClasses.find(palette => button.classList.contains(palette));
+  }
+
+  // 특정 팔레트의 모든 버튼 가져오기
+  function getButtonsInPalette(palette) {
+    return getAllButtons().filter(btn => btn.classList.contains(palette));
+  }
+
+  // 현재 버튼이 속한 showcase 섹션 찾기 (section 또는 aside 기준)
+  function getCurrentShowcase(button) {
+    // section.showcase 또는 aside를 찾기
+    const showcase = button.closest('section.showcase, aside');
+    console.log('🔍 버튼 부모 showcase 찾음:', showcase?.tagName, showcase?.className, showcase);
+    return showcase;
+  }
+
+  // 다음 showcase 섹션 찾기
+  function getNextShowcase(currentShowcase) {
+    const allShowcases = Array.from(document.querySelectorAll('section.showcase, aside'));
+    const currentIndex = allShowcases.indexOf(currentShowcase);
+    console.log('🔍 전체 showcase 개수:', allShowcases.length, '현재 인덱스:', currentIndex);
+    
+    // showcase가 없거나 찾지 못한 경우 첫 번째 showcase로
+    if (currentIndex === -1 || allShowcases.length === 0) {
+      console.log('🔍 showcase 찾지 못함 → 첫 번째로 이동');
+      return allShowcases.length > 0 ? allShowcases[0] : null;
+    }
+    
+    // 다음 showcase, 마지막이면 첫 번째로 순환
+    const nextIndex = (currentIndex + 1) % allShowcases.length;
+    console.log('🔍 다음 인덱스:', nextIndex, '(순환 적용)');
+    return allShowcases[nextIndex];
+  }
+
+  // 이전 showcase 섹션 찾기
+  function getPreviousShowcase(currentShowcase) {
+    const allShowcases = Array.from(document.querySelectorAll('section.showcase, aside'));
+    const currentIndex = allShowcases.indexOf(currentShowcase);
+    console.log('🔍 전체 showcase 개수 (이전):', allShowcases.length, '현재 인덱스:', currentIndex);
+    
+    // showcase가 없거나 찾지 못한 경우 마지막 showcase로
+    if (currentIndex === -1 || allShowcases.length === 0) {
+      console.log('🔍 showcase 찾지 못함 → 마지막으로 이동');
+      return allShowcases.length > 0 ? allShowcases[allShowcases.length - 1] : null;
+    }
+    
+    // 이전 showcase, 첫 번째면 마지막으로 순환
+    const prevIndex = currentIndex === 0 ? allShowcases.length - 1 : currentIndex - 1;
+    console.log('🔍 이전 인덱스:', prevIndex, '(순환 적용)');
+    return allShowcases[prevIndex];
+  }
+
+  // 특정 showcase 섹션의 모든 버튼 가져오기
+  function getButtonsInShowcase(showcase) {
+    const buttonsInShowcase = Array.from(showcase.querySelectorAll('.button'));
+    return buttonsInShowcase.filter(btn => 
+      btn.offsetParent !== null // 보이는 버튼만 (aria-disabled 포함)
+    );
+  }
+
+  // keyup 이벤트는 더 이상 필요 없음 (pressed 클래스 사용 안 함)
+
+  // 마우스 이벤트는 브라우저가 자동으로 :active 상태 처리
 
   // 비활성 버튼을 위한 포인터 이벤트 차단
   const blockPointerEvents = (event) => blockDisabledButtonEvents(event);

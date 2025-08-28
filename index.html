@@ -1,131 +1,119 @@
 <!DOCTYPE html>
 <html lang="ko" class="no-js">
-<head>
-  <!-- ===============================================
-       📝 기본 메타 정보
-       =============================================== -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light dark">
-  <title>버튼 컴포넌트 시스템 - 데모</title>
-  
-  <!-- ===============================================
-       🔍 SEO 최적화 그룹
-       =============================================== -->
-  <meta name="description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모">
-  <meta name="keywords" content="버튼, 컴포넌트, 접근성, 반응형, 웹 개발">
-  <meta name="author" content="개발팀">
-  
-  <!-- ===============================================
-       📱 소셜 미디어 최적화 그룹
-       =============================================== -->
-  <meta property="og:title" content="버튼 컴포넌트 시스템">
-  <meta property="og:description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="버튼 컴포넌트 시스템 데모">
-  <meta property="og:locale" content="ko_KR">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="버튼 컴포넌트 시스템">
-  <meta name="twitter:description" content="Light/Dark 테마와 접근성을 갖춘 현대적 버튼 컴포넌트">
-  
-  <!-- 접근성 메타데이터 -->
-  <meta name="theme-color" content="#A4693FFF" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#FFE100FF" media="(prefers-color-scheme: dark)">
-  
-  <!-- ===============================================
-       📦 리소스 로딩 그룹
-       =============================================== -->
-  <link rel="icon" type="image/svg+xml" href="favicon.ico">
-  <link rel="preload" href="style.css" as="style">
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- ===============================================
-       📊 구조화 데이터 (JSON-LD)
-       =============================================== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "버튼 컴포넌트 시스템",
-    "description": "동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모",
-    "applicationCategory": "WebApplication",
-    "operatingSystem": "Web Browser",
-    "programmingLanguage": ["HTML", "CSS", "JavaScript"],
-    "keywords": "버튼, 컴포넌트, 접근성, 반응형, 웹 개발, Dark 테마",
-    "author": {
-      "@type": "Organization",
-      "name": "개발팀"
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "KRW",
-      "availability": "https://schema.org/InStock"
-    }
-  }
-  </script>
-</head>
-<body>
-  
-  <!-- ===============================================
-       🏠 페이지 헤더 그룹
-       =============================================== -->
-  <header role="banner">
-    <!-- 🎯 제목 및 설명 쇼케이스 -->
-    <div class="showcase">
-      <h1>버튼 컴포넌트 시스템</h1>
-      <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
-    </div>
+  <head>
+    <!-- 기본 메타 정보 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>버튼 컴포넌트 시스템 - 데모</title>
     
-    <div class="control-panel" role="region">
-      <!-- 🎛️ 테마 & 접근성 모드 컨트롤 -->
-      <div class="showcase">
+    <!-- SEO 최적화 -->
+    <meta name="description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모">
+    <meta name="keywords" content="버튼, 컴포넌트, 접근성, 반응형, 웹 개발">
+    <meta name="author" content="이강철">
+    
+    <!-- 소셜 미디어 최적화 -->
+    <meta property="og:title" content="버튼 컴포넌트 시스템">
+    <meta property="og:description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템">
+    <meta property="og:type" content="website">
+    <meta property="og:site-name" content="버튼 컴포넌트 시스템 데모">
+    <meta property="og:locale" content="ko_KR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="버튼 컴포넌트 시스템">
+    <meta name="twitter:description" content="Light/Dark 테마와 접근성을 갖춘 현대적 버튼 컴포넌트">
+    
+    <!-- 접근성 메타데이터 -->
+    <meta name="theme-color" content="#A4693FFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#FFE100FF" media="(prefers-color-scheme: dark)">
+    
+    <!-- 리소스 로딩 -->
+    <link rel="icon" type="image/svg+xml" href="favicon.ico">
+    <link rel="preload" href="style.css" as="style">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 구조화 데이터 -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "버튼 컴포넌트 시스템",
+      "description": "동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모",
+      "applicationCategory": "WebApplication",
+      "operatingSystem": "Web Browser",
+      "programmingLanguage": ["HTML", "CSS", "JavaScript"],
+      "keywords": "버튼, 컴포넌트, 접근성, 반응형, 웹 개발, Dark 테마",
+      "author": {
+        "@type": "Organization",
+        "name": "이강철"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <!-- 페이지 헤더 -->
+    <header role="banner">
+      <section>
+        <h1>버튼 컴포넌트 시스템</h1>
+        <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
+      </section>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main role="main">
+      <!-- 컨트롤 패널 -->
+      <aside>
+      <!-- 테마 & 접근성 모드 컨트롤 -->
+      <section class="showcase sidebar">
         <h3>🎨 테마 & 접근성 모드</h3>
-        <div class="control-buttons">
+        <div class="showcase sidebar theme">
           <!-- 테마 전환 버튼 -->
-        <button class="button theme-toggle" type="button" aria-label="테마 전환 (Light ↔ Dark 테마) (단축키: Ctrl+Alt+H)" aria-pressed="false" title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
-          <div class="button-background">
-            <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
-            <span class="label">Dark<br>테마</span>
-          </div>
-        </button>
-        
+          <button class="button primary1 theme-toggle" type="button" aria-label="테마 전환 (Light ↔ Dark 테마) (단축키: Ctrl+Alt+H)" aria-pressed="false" title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+              <span class="label dynamic">Dark<br>테마</span>
+            </div>
+          </button>
+
           <!-- 큰글씨 모드 전환 버튼 -->
-        <button class="button secondary1 large-toggle" type="button" aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)" aria-pressed="false" title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
-          <div class="button-background">
-            <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
-            <span class="label">큰글씨<br>모드</span>
-          </div>
-        </button>
-      </div>
-      </div>
+          <button class="button primary1 large-toggle" type="button" aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)" aria-pressed="false" title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+              <span class="label dynamic">큰글씨<br>모드</span>
+            </div>
+          </button>
+        </div>
+      </section>
       
-      <!-- 📏 버튼 크기 조절 컨트롤 -->
-      <div class="showcase">
-        <div class="size-controls">
+      <!-- 버튼 크기 조절 컨트롤 -->
+      <section class="showcase sidebar">
         <h3>🎛️ 버튼 크기 조절 (데모용)</h3>
-        <div class="size-control-group">
-          <label for="button-width">가로 크기:</label>
-          <input class="button-width" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 가로 크기 조절 (64px ~ 1024px)">
-          <span class="size-value width-value">256px</span>
+        <div class="showcase sidebar scale">
+          <div class="scaling width">
+            <label for="button-width">가로 크기:</label>
+            <input class="button-width" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 가로 크기 조절 (64px ~ 1024px)">
+            <span class="size value width-value">256px</span>
+          </div>
+          <div class="scaling height">
+            <label for="button-height">세로 크기:</label>
+            <input class="button-height" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 세로 크기 조절 (64px ~ 1024px)">
+            <span class="size value height-value">256px</span>
+          </div>
         </div>
-        
-        <div class="size-control-group">
-          <label for="button-height">세로 크기:</label>
-          <input class="button-height" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 세로 크기 조절 (64px ~ 1024px)">
-          <span class="size-value height-value">256px</span>
-        </div>
-        
-        <button class="reset-size-btn" type="button" aria-label="버튼 크기를 기본값으로 재설정">
+        <button class="scaling reset" type="button" aria-label="버튼 크기를 기본값으로 재설정">
           기본 크기로 재설정
         </button>
-      </div>
-      </div>
+      </section>
       
-      <!-- 📖 통합 사용법 안내 -->
-      <div class="showcase">
+      <!-- 통합 사용법 안내 -->
+      <section class="showcase sidebar guide">
         <h3>📖 시스템 사용법</h3>
         <div class="usage-content">
           <h4>🎨 테마 & 접근성</h4>
@@ -144,7 +132,7 @@
             <li><strong>토글 버튼</strong>: 기본 상태 ↔ 선택 상태</li>
             <li><strong>비활성 버튼</strong>: 비활성 상태 (상호작용 불가)</li>
           </ul>
-          
+        
           <h4>🎯 버튼 상태</h4>
           <ul>
             <li><strong>기본 상태</strong>: 버튼의 기본 모습</li>
@@ -154,7 +142,7 @@
             <li><strong>초점 상태</strong>: 모든 버튼에 복합적으로 적용</li>
             <li><strong>호버 상태</strong>: 모든 버튼에 복합적으로 적용</li>
           </ul>
-          
+        
           <h4>⌨️ 키보드 조작</h4>
           <ul>
             <li><kbd>Tab</kbd>: 버튼 간 초점 이동</li>
@@ -162,191 +150,150 @@
             <li><kbd>Ctrl+Alt+H</kbd>: 테마 전환</li>
             <li><kbd>Ctrl+Alt+L</kbd>: 큰글씨 모드 전환</li>
           </ul>
-          
+        
           <h4>🖱️ 마우스 조작</h4>
           <ul>
             <li><strong>클릭</strong>: 기본 버튼은 눌림 상태, 토글 버튼은 선택 상태 토글</li>
             <li><strong>호버</strong>: 마우스 오버 시 호버 상태 표시</li>
           </ul>
         </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- ===============================================
-       🎨 메인 콘텐츠 그룹
-       =============================================== -->
-  <main class="main-content" role="main">
-    <!-- ===============================================
-         🎭 쇼케이스 데모 그룹
-         =============================================== -->
+      </section>
+    </aside>
     
-    <!-- Primary1 팔레트 (Light 테마 기본) -->
-    <section class="showcase">
-      <h2 class="primary1-palette-title">Primary1 팔레트 (Light 테마 기본)</h2>
-      <p>Light 테마의 기본 브랜드 색상을 사용하는 버튼들입니다. Dark 테마에서는 Dark 테마 색상으로 자동 전환됩니다.</p>
-      <div class="palette-showcase">
+      <!-- 콘텐츠 데모 영역 -->
+      <contents>
+      <!-- Primary1 팔레트 -->
+      <section class="showcase content">
+        <h2>Primary1 팔레트 (Light 테마 기본)</h2>
+        <p>Light 테마의 기본 브랜드 색상을 사용하는 버튼들입니다. Dark 테마에서는 Dark 테마 색상으로 자동 전환됩니다.</p>
+        <div class="showcase content palette">
+          <!-- 기본 버튼 -->
+          <button class="button primary1" type="button" aria-label="Primary1 기본 버튼">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">기본 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 토글 버튼 -->
+          <button class="button primary1 toggle selected" type="button" aria-label="Primary1 토글 버튼" aria-pressed="true">
+            <div class="background dynamic">
+              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">토글 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 비활성 버튼 -->
+          <button class="button primary1" type="button" aria-label="Primary1 비활성 버튼" aria-disabled="true">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">비활성 버튼</span>
+            </div>
+          </button>
+        </div>
+      </section>
 
-        <!-- 기본 버튼 그룹 -->
-        <div class="palette-showcase-box">
-          <span class="palette-label">기본 버튼</span>
-          <button class="button" type="button" aria-label="Primary1 기본 버튼">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-        
-        <!-- 토글 버튼 그룹 -->
-        <div class="palette-showcase-box">
-          <span class="palette-label">토글 버튼</span>
-          <button class="button selected" type="button" aria-label="Primary1 토글 버튼" aria-pressed="true">
-            <div class="button-background">
-              <span class="icon-selected" aria-hidden="true"></span>
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-        
-        <!-- 비활성 버튼 그룹 -->
-        <div class="palette-showcase-box">
-          <span class="palette-label">비활성 버튼</span>
-          <button class="button disabled" type="button" aria-label="Primary1 비활성 버튼" aria-disabled="true">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Primary2 팔레트 (Light 테마 변형) -->
-    <section class="showcase">
-      <h2 class="primary2-palette-title">Primary2 팔레트 (Light 테마 변형)</h2>
-      <p>Light 테마의 변형 색상을 사용하는 버튼들입니다. Gray 색상과 조합하여 다양한 대비를 제공합니다.</p>
-      
-      <div class="palette-showcase">
-        <div class="palette-showcase-box">
-          <span class="palette-label">기본 버튼</span>
+      <!-- Primary2 팔레트 -->
+      <section class="showcase content">
+        <h2>Primary2 팔레트 (Light 테마 변형)</h2>
+        <p>Light 테마의 변형 색상을 사용하는 버튼들입니다. Gray 색상과 조합하여 다양한 대비를 제공합니다.</p>
+        <div class="showcase content palette">
+          <!-- 기본 버튼 -->
           <button class="button primary2" type="button" aria-label="Primary2 기본 버튼">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">기본 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 토글 버튼 -->
+          <button class="button primary2 toggle selected" type="button" aria-label="Primary2 토글 버튼" aria-pressed="true">
+            <div class="background dynamic">
+              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">토글 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 비활성 버튼 -->
+          <button class="button primary2" type="button" aria-label="Primary2 비활성 버튼" aria-disabled="true">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">비활성 버튼</span>
             </div>
           </button>
         </div>
-        
-        <div class="palette-showcase-box">
-          <span class="palette-label">토글 버튼</span>
-          <button class="button primary2 selected" type="button" aria-label="Primary2 토글 버튼" aria-pressed="true">
-            <div class="button-background">
-              <span class="icon-selected" aria-hidden="true"></span>
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-        
-        <div class="palette-showcase-box">
-          <span class="palette-label">비활성 버튼</span>
-          <button class="button primary2 disabled" type="button" aria-label="Primary2 비활성 버튼" aria-disabled="true">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Secondary1 팔레트 (Gray 기반) -->
-    <section class="showcase">
-      <h2 class="secondary1-palette-title">Secondary1 팔레트 (Gray 기반)</h2>
-      <p>테마에 독립적인 Gray 색상을 기반으로 하는 보조 버튼들입니다. 모든 테마에서 일관된 색상을 유지합니다.</p>
-      
-      <div class="palette-showcase">
-        <div class="palette-showcase-box">
-          <span class="palette-label">기본 버튼</span>
+      <!-- Secondary1 팔레트 -->
+      <section class="showcase content">
+        <h2>Secondary1 팔레트 (Gray 기반)</h2>
+        <p>테마에 독립적인 Gray 색상을 기반으로 하는 보조 버튼들입니다. 모든 테마에서 일관된 색상을 유지합니다.</p>
+        <div class="showcase content palette">
+          <!-- 기본 버튼 -->
           <button class="button secondary1" type="button" aria-label="Secondary1 기본 버튼">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">기본 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 토글 버튼 -->
+          <button class="button secondary1 toggle selected" type="button" aria-label="Secondary1 토글 버튼" aria-pressed="true">
+            <div class="background dynamic">
+              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">토글 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 비활성 버튼 -->
+          <button class="button secondary1" type="button" aria-label="Secondary1 비활성 버튼" aria-disabled="true">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">비활성 버튼</span>
             </div>
           </button>
         </div>
-        
-        <div class="palette-showcase-box">
-          <span class="palette-label">토글 버튼</span>
-          <button class="button secondary1 selected" type="button" aria-label="Secondary1 토글 버튼" aria-pressed="true">
-            <div class="button-background">
-              <span class="icon-selected" aria-hidden="true"></span>
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-        
-        <div class="palette-showcase-box">
-          <span class="palette-label">비활성 버튼</span>
-          <button class="button secondary1 disabled" type="button" aria-label="Secondary1 비활성 버튼" aria-disabled="true">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Secondary2 팔레트 (Gray 변형) -->
-    <section class="showcase">
-      <h2 class="secondary2-palette-title">Secondary2 팔레트 (Gray 변형)</h2>
-      <p>Gray 색상의 변형을 사용하는 보조 버튼들입니다. 다양한 회색조로 계층적 인터페이스를 구현합니다.</p>
-      
-      <div class="palette-showcase">
-        <div class="palette-showcase-box">
-          <span class="palette-label">기본 버튼</span>
+      <!-- Secondary2 팔레트 -->
+      <section class="showcase content">
+        <h2>Secondary2 팔레트 (Gray 변형)</h2>
+        <p>Gray 색상의 변형을 사용하는 보조 버튼들입니다. 다양한 회색조로 계층적 인터페이스를 구현합니다.</p>
+        <div class="showcase content palette">
+          <!-- 기본 버튼 -->
           <button class="button secondary2" type="button" aria-label="Secondary2 기본 버튼">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">기본 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 토글 버튼 -->
+          <button class="button secondary2 toggle selected" type="button" aria-label="Secondary2 토글 버튼" aria-pressed="true">
+            <div class="background dynamic">
+              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">토글 버튼</span>
+            </div>
+          </button>
+          
+          <!-- 비활성 버튼 -->
+          <button class="button secondary2" type="button" aria-label="Secondary2 비활성 버튼" aria-disabled="true">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">비활성 버튼</span>
             </div>
           </button>
         </div>
-        
-        <div class="palette-showcase-box">
-          <span class="palette-label">토글 버튼</span>
-          <button class="button secondary2 selected" type="button" aria-label="Secondary2 토글 버튼" aria-pressed="true">
-            <div class="button-background">
-              <span class="icon-selected" aria-hidden="true"></span>
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-        
-        <div class="palette-showcase-box">
-          <span class="palette-label">비활성 버튼</span>
-          <button class="button secondary2 disabled" type="button" aria-label="Secondary2 비활성 버튼" aria-disabled="true">
-            <div class="button-background">
-              <span class="icon" aria-hidden="true"></span>
-              <span class="label">Label</span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
-  </main>
+      </section>
+      </contents>
+    </main>
 
-  <!-- ===============================================
-       📝 페이지 푸터 그룹
-       =============================================== -->
-  <footer role="contentinfo" class="site-footer">
-
-    
+    <!-- 페이지 푸터 -->
+    <footer role="contentinfo" class="site-footer">
     <div class="footer-info">
       <p class="footer-copyright">
         <span>&copy; 이강철 / 2025 / 버튼 컴포넌트 시스템 v1.0.0</span>
@@ -354,24 +301,19 @@
         <span class="footer-tech">크롬 기준 현대 CSS/JS</span>
       </p>
       
-      <details class="footer-accessibility-info">
-        <summary>접근성 정보</summary>
-        <div class="accessibility-details">
-          <p>이 데모는 웹 접근성 가이드라인(WCAG 2.1 AA)을 준수합니다:</p>
-          <ul>
-            <li>키보드 전용 네비게이션 지원</li>
-            <li>스크린 리더 호환성</li>
-            <li>충분한 색상 대비 (4.5:1 이상)</li>
-            <li>현대 CSS 기능 활용 (Nesting, Container Queries, color-mix)</li>
-          </ul>
-        </div>
-      </details>
+      <div class="footer-accessibility-info">
+        <p><strong>접근성 정보:</strong> 이 데모는 웹 접근성 가이드라인(WCAG 2.1 AA)을 준수합니다</p>
+        <ul>
+          <li>키보드 전용 네비게이션 지원</li>
+          <li>스크린 리더 호환성</li>
+          <li>충분한 색상 대비 (4.5:1 이상)</li>
+          <li>현대 CSS 기능 활용 (Nesting, Container Queries, color-mix)</li>
+        </ul>
+      </div>
     </div>
-  </footer>
+    </footer>
 
-  <!-- ===============================================
-       ⚙️ 스크립트 로딩 그룹
-       =============================================== -->
-  <script src="script.js" defer></script>
-</body>
+    <!-- 스크립트 로딩 -->
+    <script src="script.js" defer></script>
+  </body>
 </html>
