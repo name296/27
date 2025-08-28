@@ -255,7 +255,7 @@ window.addEventListener('DOMContentLoaded', () => {
       LARGE: 'large'
     },
     
-    STORAGE_KEY: 'large-text-mode',
+    STORAGE_KEY: 'large-mode',
     
     // DOM 캐시
     _domCache: {
@@ -288,11 +288,11 @@ window.addEventListener('DOMContentLoaded', () => {
     _initDOMCache() {
       this._domCache.html = document.documentElement;
       this._domCache.body = document.body;
-      this._domCache.toggleButton = document.querySelector('.large-text-toggle');
+      this._domCache.toggleButton = document.querySelector('.large-toggle');
       if (this._domCache.toggleButton) {
         this._domCache.toggleLabel = this._domCache.toggleButton.querySelector('.label');
       }
-      this._domCache.liveRegion = document.getElementById('large-text-announcer');
+      this._domCache.liveRegion = document.getElementById('large-announcer');
     },
     
     /**
@@ -373,7 +373,7 @@ window.addEventListener('DOMContentLoaded', () => {
       let liveRegion = this._domCache.liveRegion;
       if (!liveRegion) {
         liveRegion = document.createElement('div');
-        liveRegion.id = 'large-text-announcer';
+        liveRegion.id = 'large-announcer';
         liveRegion.setAttribute('aria-live', 'polite');
         liveRegion.setAttribute('aria-atomic', 'true');
         liveRegion.style.position = 'absolute';
@@ -394,7 +394,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     setupEventListeners() {
       // 큰글씨 모드 토글 버튼 클릭
-      const toggleButton = document.querySelector('.large-text-toggle');
+      const toggleButton = document.querySelector('.large-toggle');
       console.log('🔍 큰글씨 모드 토글 버튼 찾기:', toggleButton);
       
       if (toggleButton) {
@@ -467,10 +467,10 @@ window.addEventListener('DOMContentLoaded', () => {
     
     // DOM 캐시 초기화
     _initDOMCache() {
-      this._domCache.widthSlider = document.getElementById('button-width');
-      this._domCache.heightSlider = document.getElementById('button-height');
-      this._domCache.widthValue = document.getElementById('width-value');
-      this._domCache.heightValue = document.getElementById('height-value');
+      this._domCache.widthSlider = document.querySelector('.button-width');
+      this._domCache.heightSlider = document.querySelector('.button-height');
+      this._domCache.widthValue = document.querySelector('.width-value');
+      this._domCache.heightValue = document.querySelector('.height-value');
       this._domCache.resetButton = document.querySelector('.reset-size-btn');
       this._domCache.allButtons = document.querySelectorAll('.button');
     },
