@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko" class="no-js">
 <head>
-  <!-- ===== 기본 메타 정보 ===== -->
+  <!-- ===============================================
+       📝 기본 메타 정보
+       =============================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <title>버튼 컴포넌트 시스템 - 데모</title>
   
-  <!-- ===== SEO 최적화 그룹 ===== -->
+  <!-- ===============================================
+       🔍 SEO 최적화 그룹
+       =============================================== -->
   <meta name="description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템 데모">
   <meta name="keywords" content="버튼, 컴포넌트, 접근성, 반응형, 웹 개발">
   <meta name="author" content="개발팀">
   
-  <!-- ===== 소셜 미디어 최적화 그룹 ===== -->
+  <!-- ===============================================
+       📱 소셜 미디어 최적화 그룹
+       =============================================== -->
   <meta property="og:title" content="버튼 컴포넌트 시스템">
   <meta property="og:description" content="동적 스케일링과 접근성을 갖춘 버튼 컴포넌트 시스템">
   <meta property="og:type" content="website">
@@ -28,12 +34,16 @@
   <meta name="theme-color" content="#A4693F" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#FFE100" media="(prefers-color-scheme: dark)">
   
-  <!-- ===== 리소스 로딩 그룹 ===== -->
+  <!-- ===============================================
+       📦 리소스 로딩 그룹
+       =============================================== -->
   <link rel="icon" type="image/svg+xml" href="favicon.ico">
   <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css">
   
-  <!-- ===== 구조화 데이터 (JSON-LD) ===== -->
+  <!-- ===============================================
+       📊 구조화 데이터 (JSON-LD)
+       =============================================== -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -58,24 +68,28 @@
   </script>
 </head>
 <body>
-  <!-- ===== 접근성 내비게이션 ===== -->
+  <!-- ===============================================
+       ♿️ 접근성 내비게이션
+       =============================================== -->
   <a href="#main-content" class="skip-link">메인 콘텐츠로 건너뛰기</a>
   <a href="#theme-controls" class="skip-link">테마 설정으로 건너뛰기</a>
   
-  <!-- ===== 페이지 헤더 그룹 ===== -->
+  <!-- ===============================================
+       🏠 페이지 헤더 그룹
+       =============================================== -->
   <header role="banner">
-    <!-- 제목 및 설명 쇼케이스 -->
+    <!-- 🎯 제목 및 설명 쇼케이스 -->
     <div class="showcase">
       <h1>버튼 컴포넌트 시스템</h1>
       <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
     </div>
     
-    <div id="theme-controls" class="theme-control-group" role="region" aria-labelledby="theme-controls-title">
-      <!-- 버튼 그룹 컨테이너 -->
+    <div class="control-panel" role="region">
+      <!-- 🎛️ 테마 & 접근성 모드 컨트롤 -->
       <div class="showcase">
         <h3>🎨 테마 & 접근성 모드</h3>
         <div class="control-buttons">
-        <!-- 테마 전환 버튼 -->
+          <!-- 테마 전환 버튼 -->
         <button 
           type="button"
           class="button theme-toggle"
@@ -88,7 +102,7 @@
           </div>
         </button>
         
-        <!-- 큰글씨 모드 전환 버튼 -->
+          <!-- 큰글씨 모드 전환 버튼 -->
         <button 
           type="button"
           class="button secondary1 large-text-toggle"
@@ -103,9 +117,7 @@
       </div>
       </div>
       
-
-      
-      <!-- 버튼 크기 조절 컨트롤 -->
+      <!-- 📏 버튼 크기 조절 컨트롤 -->
       <div class="showcase">
         <div class="size-controls">
         <h3>🎛️ 버튼 크기 조절 (데모용)</h3>
@@ -141,8 +153,8 @@
       </div>
       </div>
       
-      <!-- 통합 사용법 안내 -->
-      <div class="showcase" id="theme-controls-title">
+      <!-- 📖 통합 사용법 안내 -->
+      <div class="showcase">
         <h3>📖 시스템 사용법</h3>
         <div class="usage-content">
           <h4>🎨 테마 & 접근성</h4>
@@ -190,9 +202,13 @@
     </div>
   </header>
 
-  <!-- ===== 메인 콘텐츠 그룹 ===== -->
+  <!-- ===============================================
+       🎨 메인 콘텐츠 그룹
+       =============================================== -->
   <main id="main-content" role="main">
-    <!-- ===== 쇼케이스 데모 그룹 ===== -->
+    <!-- ===============================================
+         🎭 쇼케이스 데모 그룹
+         =============================================== -->
     
     <!-- Primary1 팔레트 (Light 테마 기본) -->
     <section class="showcase" aria-labelledby="primary1-palette-title">
@@ -200,7 +216,7 @@
       <p>Light 테마의 기본 브랜드 색상을 사용하는 버튼들입니다. Dark 테마에서는 Dark 테마 색상으로 자동 전환됩니다.</p>
       <div class="palette-showcase">
 
-        <!-- === 기본 버튼 그룹 === -->
+        <!-- 기본 버튼 그룹 -->
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
           <button type="button" class="button" aria-label="Primary1 기본 버튼">
@@ -211,7 +227,7 @@
           </button>
         </div>
         
-        <!-- === 토글 버튼 그룹 === -->
+        <!-- 토글 버튼 그룹 -->
         <div class="palette-showcase-box">
           <span class="palette-label">토글 버튼</span>
           <button type="button" class="button selected" aria-label="Primary1 토글 버튼" aria-pressed="true">
@@ -223,7 +239,7 @@
           </button>
         </div>
         
-        <!-- === 비활성 버튼 그룹 === -->
+        <!-- 비활성 버튼 그룹 -->
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 버튼</span>
           <button type="button" class="button disabled" aria-label="Primary1 비활성 버튼" aria-disabled="true">
@@ -352,11 +368,11 @@
         </div>
       </div>
     </section>
-
-
   </main>
 
-  <!-- ===== 페이지 푸터 그룹 ===== -->
+  <!-- ===============================================
+       📝 페이지 푸터 그룹
+       =============================================== -->
   <footer role="contentinfo" class="site-footer">
     <nav aria-label="푸터 내비게이션" class="footer-nav">
       <ul class="footer-links">
@@ -387,7 +403,9 @@
     </div>
   </footer>
 
-  <!-- ===== 스크립트 로딩 그룹 ===== -->
+  <!-- ===============================================
+       ⚙️ 스크립트 로딩 그룹
+       =============================================== -->
   <script src="script.js" defer></script>
 </body>
 </html>
