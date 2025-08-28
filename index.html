@@ -68,11 +68,6 @@
   </script>
 </head>
 <body>
-  <!-- ===============================================
-       ♿️ 접근성 내비게이션
-       =============================================== -->
-  <a href="#main-content" class="skip-link">메인 콘텐츠로 건너뛰기</a>
-  <a href="#control-panel" class="skip-link">제어판으로 건너뛰기</a>
   
   <!-- ===============================================
        🏠 페이지 헤더 그룹
@@ -84,18 +79,13 @@
       <p>다양한 상태와 팔레트를 지원하는 접근성 중심의 버튼 컴포넌트입니다.</p>
     </div>
     
-    <div id="control-panel" class="control-panel" role="region">
+    <div class="control-panel" role="region">
       <!-- 🎛️ 테마 & 접근성 모드 컨트롤 -->
       <div class="showcase">
         <h3>🎨 테마 & 접근성 모드</h3>
         <div class="control-buttons">
           <!-- 테마 전환 버튼 -->
-        <button 
-          type="button"
-          class="button theme-toggle"
-          aria-label="테마 전환 (Light ↔ Dark 테마) (단축키: Ctrl+Alt+H)"
-          aria-pressed="false"
-          title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
+        <button class="button theme-toggle" type="button" aria-label="테마 전환 (Light ↔ Dark 테마) (단축키: Ctrl+Alt+H)" aria-pressed="false" title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
           <div class="button-background">
             <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
             <span class="label">Dark<br>테마</span>
@@ -103,12 +93,7 @@
         </button>
         
           <!-- 큰글씨 모드 전환 버튼 -->
-        <button 
-          type="button"
-          class="button secondary1 large-toggle"
-          aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)"
-          aria-pressed="false"
-          title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
+        <button class="button secondary1 large-toggle" type="button" aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)" aria-pressed="false" title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
           <div class="button-background">
             <span class="icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
             <span class="label">큰글씨<br>모드</span>
@@ -123,31 +108,17 @@
         <h3>🎛️ 버튼 크기 조절 (데모용)</h3>
         <div class="size-control-group">
           <label for="button-width">가로 크기:</label>
-          <input 
-            type="range" 
-            class="button-width" 
-            min="64" 
-            max="1024" 
-            value="256" 
-            step="8"
-            aria-label="버튼 가로 크기 조절 (64px ~ 1024px)">
+          <input class="button-width" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 가로 크기 조절 (64px ~ 1024px)">
           <span class="size-value width-value">256px</span>
         </div>
         
         <div class="size-control-group">
           <label for="button-height">세로 크기:</label>
-          <input 
-            type="range" 
-            class="button-height" 
-            min="64" 
-            max="1024" 
-            value="256" 
-            step="8"
-            aria-label="버튼 세로 크기 조절 (64px ~ 1024px)">
+          <input class="button-height" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 세로 크기 조절 (64px ~ 1024px)">
           <span class="size-value height-value">256px</span>
         </div>
         
-        <button type="button" class="reset-size-btn" aria-label="버튼 크기를 기본값으로 재설정">
+        <button class="reset-size-btn" type="button" aria-label="버튼 크기를 기본값으로 재설정">
           기본 크기로 재설정
         </button>
       </div>
@@ -205,7 +176,7 @@
   <!-- ===============================================
        🎨 메인 콘텐츠 그룹
        =============================================== -->
-  <main id="main-content" class="main-content" role="main">
+  <main class="main-content" role="main">
     <!-- ===============================================
          🎭 쇼케이스 데모 그룹
          =============================================== -->
@@ -219,7 +190,7 @@
         <!-- 기본 버튼 그룹 -->
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
-          <button type="button" class="button" aria-label="Primary1 기본 버튼">
+          <button class="button" type="button" aria-label="Primary1 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -230,7 +201,7 @@
         <!-- 토글 버튼 그룹 -->
         <div class="palette-showcase-box">
           <span class="palette-label">토글 버튼</span>
-          <button type="button" class="button selected" aria-label="Primary1 토글 버튼" aria-pressed="true">
+          <button class="button selected" type="button" aria-label="Primary1 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="icon-selected" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -242,7 +213,7 @@
         <!-- 비활성 버튼 그룹 -->
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 버튼</span>
-          <button type="button" class="button disabled" aria-label="Primary1 비활성 버튼" aria-disabled="true">
+          <button class="button disabled" type="button" aria-label="Primary1 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -260,7 +231,7 @@
       <div class="palette-showcase">
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
-          <button type="button" class="button primary2" aria-label="Primary2 기본 버튼">
+          <button class="button primary2" type="button" aria-label="Primary2 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -270,7 +241,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">토글 버튼</span>
-          <button type="button" class="button primary2 selected" aria-label="Primary2 토글 버튼" aria-pressed="true">
+          <button class="button primary2 selected" type="button" aria-label="Primary2 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="icon-selected" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -281,7 +252,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 버튼</span>
-          <button type="button" class="button primary2 disabled" aria-label="Primary2 비활성 버튼" aria-disabled="true">
+          <button class="button primary2 disabled" type="button" aria-label="Primary2 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -299,7 +270,7 @@
       <div class="palette-showcase">
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
-          <button type="button" class="button secondary1" aria-label="Secondary1 기본 버튼">
+          <button class="button secondary1" type="button" aria-label="Secondary1 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -309,7 +280,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">토글 버튼</span>
-          <button type="button" class="button secondary1 selected" aria-label="Secondary1 토글 버튼" aria-pressed="true">
+          <button class="button secondary1 selected" type="button" aria-label="Secondary1 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="icon-selected" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -320,7 +291,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 버튼</span>
-          <button type="button" class="button secondary1 disabled" aria-label="Secondary1 비활성 버튼" aria-disabled="true">
+          <button class="button secondary1 disabled" type="button" aria-label="Secondary1 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -338,7 +309,7 @@
       <div class="palette-showcase">
         <div class="palette-showcase-box">
           <span class="palette-label">기본 버튼</span>
-          <button type="button" class="button secondary2" aria-label="Secondary2 기본 버튼">
+          <button class="button secondary2" type="button" aria-label="Secondary2 기본 버튼">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -348,7 +319,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">토글 버튼</span>
-          <button type="button" class="button secondary2 selected" aria-label="Secondary2 토글 버튼" aria-pressed="true">
+          <button class="button secondary2 selected" type="button" aria-label="Secondary2 토글 버튼" aria-pressed="true">
             <div class="button-background">
               <span class="icon-selected" aria-hidden="true"></span>
               <span class="icon" aria-hidden="true"></span>
@@ -359,7 +330,7 @@
         
         <div class="palette-showcase-box">
           <span class="palette-label">비활성 버튼</span>
-          <button type="button" class="button secondary2 disabled" aria-label="Secondary2 비활성 버튼" aria-disabled="true">
+          <button class="button secondary2 disabled" type="button" aria-label="Secondary2 비활성 버튼" aria-disabled="true">
             <div class="button-background">
               <span class="icon" aria-hidden="true"></span>
               <span class="label">Label</span>
@@ -374,12 +345,7 @@
        📝 페이지 푸터 그룹
        =============================================== -->
   <footer role="contentinfo" class="site-footer">
-    <nav aria-label="푸터 내비게이션" class="footer-nav">
-      <ul class="footer-links">
-        <li><a href="#main-content">메인으로 돌아가기</a></li>
-        <li><a href="#control-panel">제어판</a></li>
-      </ul>
-    </nav>
+
     
     <div class="footer-info">
       <p class="footer-copyright">
