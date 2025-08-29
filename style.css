@@ -65,8 +65,7 @@
     --border-style: solid;
     --border-style-pressed: solid;
     --border-style-disabled: dashed;
-    --border-style-focus: dashed;
-    --border-style-hover: dashed;
+    --border-style-pointed: dashed;
 
     /* ==============================
       🧮 계산된 값들
@@ -125,8 +124,7 @@
     --gray-1000: #000000FF;
     
     /* 시스템 계열 */
-    --system-focus: #FF00E1FF;
-    --system-hover: #FF00E1FF;
+    --system-pointed: #FF00E1FF;
     --system-error: #CC1D00FF;
     --system-warning: #FF4800FF;
     --system-success: #00A86BFF;
@@ -153,7 +151,7 @@
     --primary1-background-color-default: var(--brown-300);
     --primary1-background-color-pressed: var(--brown-50);
     --primary1-background-color-disabled: #00000000;
-    --primary1-background-color-hover: var(--brown-300);
+    --primary1-background-color-pointed: var(--brown-300);
     
     --primary1-contents-color-default: var(--gray-0);
     --primary1-contents-color-pressed: var(--brown-200);
@@ -162,14 +160,13 @@
     --primary1-border-color-default: var(--brown-300);
     --primary1-border-color-pressed: var(--brown-300);
     --primary1-border-color-disabled: var(--gray-400);
-    --primary1-border-color-focus: var(--system-focus);
-    --primary1-border-color-hover: var(--system-hover);
+    --primary1-border-color-pointed: var(--system-pointed);
     
     /* Primary2 팔레트 */
     --primary2-background-color-default: var(--gray-0);
     --primary2-background-color-pressed: var(--brown-300);
     --primary2-background-color-disabled: var(--gray-200);
-    --primary2-background-color-hover: var(--gray-0);
+    --primary2-background-color-pointed: var(--gray-0);
     
     --primary2-contents-color-default: var(--gray-900);
     --primary2-contents-color-pressed: var(--gray-0);
@@ -178,14 +175,13 @@
     --primary2-border-color-default: var(--gray-500);
     --primary2-border-color-pressed: var(--brown-300);
     --primary2-border-color-disabled: var(--gray-400);
-    --primary2-border-color-focus: var(--system-focus);
-    --primary2-border-color-hover: var(--system-hover);
+    --primary2-border-color-pointed: var(--system-pointed);
     
     /* Secondary1 팔레트 */
     --secondary1-background-color-default: var(--gray-400);
     --secondary1-background-color-pressed: var(--gray-100);
     --secondary1-background-color-disabled: #00000000;
-    --secondary1-background-color-hover: var(--gray-400);
+    --secondary1-background-color-pointed: var(--gray-400);
     
     --secondary1-contents-color-default: var(--gray-0);
     --secondary1-contents-color-pressed: var(--gray-900);
@@ -194,14 +190,13 @@
     --secondary1-border-color-default: var(--gray-400);
     --secondary1-border-color-pressed: var(--gray-400);
     --secondary1-border-color-disabled: var(--gray-400);
-    --secondary1-border-color-focus: var(--system-focus);
-    --secondary1-border-color-hover: var(--system-hover);
+    --secondary1-border-color-pointed: var(--system-pointed);
     
     /* Secondary2 팔레트 */
     --secondary2-background-color-default: var(--gray-100);
     --secondary2-background-color-pressed: var(--gray-400);
     --secondary2-background-color-disabled: #00000000;
-    --secondary2-background-color-hover: var(--gray-100);
+    --secondary2-background-color-pointed: var(--gray-100);
     
     --secondary2-contents-color-default: var(--gray-900);
     --secondary2-contents-color-pressed: var(--gray-0);
@@ -210,8 +205,7 @@
     --secondary2-border-color-default: var(--gray-300);
     --secondary2-border-color-pressed: var(--gray-400);
     --secondary2-border-color-disabled: var(--gray-400);
-    --secondary2-border-color-focus: var(--system-focus);
-    --secondary2-border-color-hover: var(--system-hover);
+    --secondary2-border-color-pointed: var(--system-pointed);
   }
 
   /* ==============================
@@ -233,7 +227,7 @@
     --primary1-background-color-default: var(--yellow-300);
     --primary1-background-color-pressed: var(--yellow-100);
     --primary1-background-color-disabled: #00000000;
-    --primary1-background-color-hover: var(--yellow-300);
+    --primary1-background-color-pointed: var(--yellow-300);
     
     --primary1-contents-color-default: var(--yellow-100);
     --primary1-contents-color-pressed: var(--yellow-200);
@@ -242,14 +236,13 @@
     --primary1-border-color-default: var(--yellow-100);
     --primary1-border-color-pressed: var(--yellow-100);
     --primary1-border-color-disabled: var(--gray-600);
-    --primary1-border-color-focus: var(--system-focus);
-    --primary1-border-color-hover: var(--system-hover);
+    --primary1-border-color-pointed: var(--system-pointed);
     
     /* Primary2 팔레트 */
     --primary2-background-color-default: var(--gray-1000);
     --primary2-background-color-pressed: var(--yellow-300);
     --primary2-background-color-disabled: var(--gray-800);
-    --primary2-background-color-hover: var(--gray-1000);
+    --primary2-background-color-pointed: var(--gray-1000);
     
     --primary2-contents-color-default: var(--yellow-100);
     --primary2-contents-color-pressed: var(--yellow-100);
@@ -258,14 +251,13 @@
     --primary2-border-color-default: var(--gray-600);
     --primary2-border-color-pressed: var(--yellow-100);
     --primary2-border-color-disabled: var(--gray-600);
-    --primary2-border-color-focus: var(--system-focus);
-    --primary2-border-color-hover: var(--system-hover);
+    --primary2-border-color-pointed: var(--system-pointed);
     
     /* Secondary1 팔레트 */
     --secondary1-background-color-default: var(--gray-600);
     --secondary1-background-color-pressed: var(--gray-850);
     --secondary1-background-color-disabled: #00000000;
-    --secondary1-background-color-hover: var(--gray-600);
+    --secondary1-background-color-pointed: var(--gray-600);
     
     --secondary1-contents-color-default: var(--gray-100);
     --secondary1-contents-color-pressed: var(--gray-100);
@@ -274,14 +266,13 @@
     --secondary1-border-color-default: var(--gray-600);
     --secondary1-border-color-pressed: var(--gray-600);
     --secondary1-border-color-disabled: var(--gray-600);
-    --secondary1-border-color-focus: var(--system-focus);
-    --secondary1-border-color-hover: var(--system-hover);
+    --secondary1-border-color-pointed: var(--system-pointed);
     
     /* Secondary2 팔레트 */
     --secondary2-background-color-default: var(--gray-850);
     --secondary2-background-color-pressed: var(--gray-600);
     --secondary2-background-color-disabled: #00000000;
-    --secondary2-background-color-hover: var(--gray-850);
+    --secondary2-background-color-pointed: var(--gray-850);
     
     --secondary2-contents-color-default: var(--gray-100);
     --secondary2-contents-color-pressed: var(--gray-100);
@@ -290,8 +281,7 @@
     --secondary2-border-color-default: var(--gray-700);
     --secondary2-border-color-pressed: var(--gray-600);
     --secondary2-border-color-disabled: var(--gray-600);
-    --secondary2-border-color-focus: var(--system-focus);
-    --secondary2-border-color-hover: var(--system-hover);
+    --secondary2-border-color-pointed: var(--system-pointed);
   }
 
   /* ==============================
@@ -372,7 +362,7 @@
       }
 
       &:focus {
-        outline: 2px solid var(--system-focus);
+        outline: 2px solid var(--system-pointed);
         outline-offset: 2px;
       }
     }
@@ -449,7 +439,7 @@
           }
 
           &:focus {
-            outline: 2px solid var(--system-focus);
+            outline: 2px solid var(--system-pointed);
             outline-offset: 2px;
           }
         }
@@ -613,7 +603,7 @@
               }
 
               &:focus {
-                outline: 2px solid var(--system-focus);
+                outline: 2px solid var(--system-pointed);
                 outline-offset: 2px;
               }
             }
@@ -799,9 +789,9 @@
       공통 상호작용 상태 (팔레트 독립적)
       ============================== */
     
-    /* 호버, 포커스 상태 (모든 팔레트, 모든 버튼 종류 공통) */
+    /* 초점 상태 (모든 팔레트, 모든 버튼 종류 공통) */
     &:hover, &:focus-visible {
-      outline: 0 var(--border-style-hover) var(--system-hover);
+      outline: 0 var(--border-style-pointed) var(--system-pointed);
     }
 
     /* ==============================
@@ -1011,8 +1001,6 @@
           background: var(--primary2-background-color-disabled);
           outline: 0 var(--border-style-disabled) var(--primary2-border-color-disabled);
         }
-
-        /* 비활성 버튼도 포커스 아웃라인은 공통 레벨에서 처리 */
       }
     }
   }
