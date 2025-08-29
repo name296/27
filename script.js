@@ -837,15 +837,15 @@ window.addEventListener('DOMContentLoaded', async () => {
         } else {
           // 일반 버튼: momentary press 효과 (Enter/Space 동일)
           enabledButton.classList.add('pressed');
-          setTimeout(() => {
-            enabledButton.classList.remove('pressed');
-            const clickEvent = new MouseEvent('click', {
-              bubbles: true,
-              cancelable: true,
-              button: 0
-            });
-            enabledButton.dispatchEvent(clickEvent);
-          }, 100);
+        setTimeout(() => {
+          enabledButton.classList.remove('pressed');
+          const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            button: 0
+          });
+          enabledButton.dispatchEvent(clickEvent);
+        }, 100);
         }
       }
     }
@@ -874,22 +874,62 @@ window.addEventListener('DOMContentLoaded', async () => {
     );
 
     switch (event.key) {
-      case 'ArrowDown':
-              case 'ArrowRight':
-          event.preventDefault();
+      case 'ArrowRight':
+        event.preventDefault();
+        // 전체 버튼을 순환하여 다음 버튼으로 이동
         const currentIndex = allButtons.indexOf(focusedButton);
         const nextIndex = (currentIndex + 1) % allButtons.length;
         targetButton = allButtons[nextIndex];
-          break;
-          
-      case 'ArrowUp':
-        case 'ArrowLeft':
-          event.preventDefault();
+        break;
+        
+      case 'ArrowLeft':
+        event.preventDefault();
+        // 전체 버튼을 순환하여 이전 버튼으로 이동
         const currentIndex2 = allButtons.indexOf(focusedButton);
         const prevIndex = currentIndex2 === 0 ? allButtons.length - 1 : currentIndex2 - 1;
         targetButton = allButtons[prevIndex];
-          break;
+        break;
+
+      case 'ArrowDown':
+        event.preventDefault();
+        // 좌우 버튼 순환에서 다음 컨테이너 경계 찾기
+        const currentContainer = focusedButton.closest('.showcase');
+        const currentIndexDown = allButtons.indexOf(focusedButton);
         
+        // 현재 버튼부터 다음 컨테이너의 첫 번째 버튼 찾기
+        for (let i = 1; i < allButtons.length; i++) {
+          const nextIndex = (currentIndexDown + i) % allButtons.length;
+          const nextButton = allButtons[nextIndex];
+          const nextContainer = nextButton.closest('.showcase');
+          
+          if (nextContainer !== currentContainer) {
+            targetButton = nextButton;
+            break;
+          }
+        }
+        break;
+        
+      case 'ArrowUp':
+        event.preventDefault();
+        // 좌우 버튼 순환에서 이전 컨테이너 경계 찾기
+        const currentContainerUp = focusedButton.closest('.showcase');
+        const currentIndexUp = allButtons.indexOf(focusedButton);
+        
+        // 현재 버튼부터 역순으로 이전 컨테이너의 첫 번째 버튼 찾기
+        for (let i = 1; i < allButtons.length; i++) {
+          const prevIndex = (currentIndexUp - i + allButtons.length) % allButtons.length;
+          const prevButton = allButtons[prevIndex];
+          const prevContainer = prevButton.closest('.showcase');
+          
+          if (prevContainer !== currentContainerUp) {
+            // 이전 컨테이너의 첫 번째 버튼 찾기
+            const buttonsInPrevContainer = allButtons.filter(btn => btn.closest('.showcase') === prevContainer);
+            targetButton = buttonsInPrevContainer[0];
+            break;
+          }
+        }
+        break;
+      
       case 'Home':
         event.preventDefault();
         targetButton = allButtons[0];
