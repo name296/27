@@ -70,7 +70,147 @@
     <main role="main">
       <!-- 컨트롤 패널 -->
       <aside>
-      <!-- 테마 & 접근성 모드 컨트롤 -->
+      
+      <!-- 1순위: 커스텀 팔레트 생성기 -->
+      <section class="showcase sidebar">
+        <h3>🎨 커스텀 팔래트 생성기</h3>
+        
+        <!-- Light 테마 색상 -->
+        <div class="palette-colors-section">
+          <h4>Light 테마</h4>
+          
+          <div class="palette-input-group">
+            <label for="light-bg-default">배경(기본):</label>
+            <input type="color" id="light-bg-default" value="#A4693F">
+            <input type="text" class="hex-input" value="#A4693FFF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="light-text-default">텍스트(기본):</label>
+            <input type="color" id="light-text-default" value="#FFFFFF">
+            <input type="text" class="hex-input" value="#FFFFFFFF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="light-bg-pressed">배경(눌림):</label>
+            <input type="color" id="light-bg-pressed" value="#EEDCD2">
+            <input type="text" class="hex-input" value="#EEDCD2FF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="light-text-pressed">텍스트(눌림):</label>
+            <input type="color" id="light-text-pressed" value="#C4895F">
+            <input type="text" class="hex-input" value="#C4895FFF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="light-bg-disabled">배경(비활성):</label>
+            <input type="color" id="light-bg-disabled" value="#000000">
+            <input type="text" class="hex-input" value="#00000000">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="light-text-disabled">텍스트(비활성):</label>
+            <input type="color" id="light-text-disabled" value="#8C8C8C">
+            <input type="text" class="hex-input" value="#8C8C8CFF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="light-bg-pointed">배경(초점):</label>
+            <input type="color" id="light-bg-pointed" value="#A4693F">
+            <input type="text" class="hex-input" value="#A4693FFF">
+          </div>
+        </div>
+        
+        <!-- Dark 테마 색상 -->
+        <div class="palette-colors-section">
+          <h4>Dark 테마</h4>
+          
+          <div class="palette-input-group">
+            <label for="dark-bg-default">배경(기본):</label>
+            <input type="color" id="dark-bg-default" value="#241F00">
+            <input type="text" class="hex-input" value="#241F00FF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="dark-text-default">텍스트(기본):</label>
+            <input type="color" id="dark-text-default" value="#FFE100">
+            <input type="text" class="hex-input" value="#FFE100FF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="dark-bg-pressed">배경(눌림):</label>
+            <input type="color" id="dark-bg-pressed" value="#FFE100">
+            <input type="text" class="hex-input" value="#FFE100FF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="dark-text-pressed">텍스트(눌림):</label>
+            <input type="color" id="dark-text-pressed" value="#807000">
+            <input type="text" class="hex-input" value="#807000FF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="dark-bg-disabled">배경(비활성):</label>
+            <input type="color" id="dark-bg-disabled" value="#000000">
+            <input type="text" class="hex-input" value="#00000000">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="dark-text-disabled">텍스트(비활성):</label>
+            <input type="color" id="dark-text-disabled" value="#8C8C8C">
+            <input type="text" class="hex-input" value="#8C8C8CFF">
+          </div>
+          
+          <div class="palette-input-group">
+            <label for="dark-bg-pointed">배경(초점):</label>
+            <input type="color" id="dark-bg-pointed" value="#241F00">
+            <input type="text" class="hex-input" value="#241F00FF">
+          </div>
+        </div>
+        
+        <!-- 컨트롤 버튼 -->
+        <div class="palette-controls">
+          <button class="palette-apply-btn" type="button">커스텀 팔래트 적용</button>
+          <button class="palette-reset-btn" type="button">기본값으로 초기화</button>
+        </div>
+        
+        <!-- 실시간 미리보기 (모든 상태) -->
+        <div class="palette-preview">
+          <h4>색상 미리보기</h4>
+          <div class="preview-colors">
+            <div class="color-preview" id="preview-light-bg" title="Light 배경(기본)"></div>
+            <div class="color-preview" id="preview-light-text" title="Light 텍스트(기본)"></div>
+            <div class="color-preview" id="preview-dark-bg" title="Dark 배경(기본)"></div>
+            <div class="color-preview" id="preview-dark-text" title="Dark 텍스트(기본)"></div>
+          </div>
+          <div class="preview-states">
+            <small>기본 상태 미리보기 - 눌림/비활성/초점 상태는 테스트 버튼에서 확인</small>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 2순위: 버튼 크기 조절 컨트롤 -->
+      <section class="showcase sidebar">
+        <h3>🎛️ 버튼 크기 조절 (데모용)</h3>
+        <div class="showcase sidebar scale">
+          <div class="scaling width">
+            <label for="button-width">가로 크기:</label>
+            <input class="button-width" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 가로 크기 조절 (64px ~ 1024px)">
+            <span class="size value width-value">256px</span>
+          </div>
+          <div class="scaling height">
+            <label for="button-height">세로 크기:</label>
+            <input class="button-height" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 세로 크기 조절 (64px ~ 1024px)">
+            <span class="size value height-value">256px</span>
+          </div>
+        </div>
+        <button class="scaling reset" type="button" aria-label="버튼 크기를 기본값으로 재설정">
+          기본 크기로 재설정
+        </button>
+      </section>
+      
+      <!-- 3순위: 테마 & 접근성 모드 컨트롤 -->
       <section class="showcase sidebar">
         <h3>🎨 테마 & 접근성 모드</h3>
         <div class="showcase sidebar theme">
@@ -92,27 +232,7 @@
         </div>
       </section>
       
-      <!-- 버튼 크기 조절 컨트롤 -->
-      <section class="showcase sidebar">
-        <h3>🎛️ 버튼 크기 조절 (데모용)</h3>
-        <div class="showcase sidebar scale">
-          <div class="scaling width">
-            <label for="button-width">가로 크기:</label>
-            <input class="button-width" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 가로 크기 조절 (64px ~ 1024px)">
-            <span class="size value width-value">256px</span>
-          </div>
-          <div class="scaling height">
-            <label for="button-height">세로 크기:</label>
-            <input class="button-height" type="range" min="64" max="1024" value="256" step="8" aria-label="버튼 세로 크기 조절 (64px ~ 1024px)">
-            <span class="size value height-value">256px</span>
-          </div>
-        </div>
-        <button class="scaling reset" type="button" aria-label="버튼 크기를 기본값으로 재설정">
-          기본 크기로 재설정
-        </button>
-      </section>
-      
-      <!-- 통합 사용법 안내 -->
+      <!-- 4순위: 통합 사용법 안내 -->
       <section class="showcase sidebar guide">
         <h3>📖 시스템 사용법</h3>
         <div class="usage-content">
@@ -128,16 +248,15 @@
           
           <h4>🔘 버튼 타입</h4>
           <ul>
-            <li><strong>기본 버튼</strong>: 기본 상태 ↔ 눌림 상태</li>
-            <li><strong>토글 버튼</strong>: 기본 상태 ↔ 선택 상태</li>
+            <li><strong>기본 버튼</strong>: 기본 상태 ↔ 눌림 상태 (.pressed)</li>
+            <li><strong>토글 버튼</strong>: 기본 상태 ↔ 눌림 상태 (.pressed.toggle)</li>
             <li><strong>비활성 버튼</strong>: 비활성 상태 (상호작용 불가)</li>
           </ul>
         
           <h4>🎯 버튼 상태</h4>
           <ul>
             <li><strong>기본 상태</strong>: 버튼의 기본 모습</li>
-            <li><strong>눌림 상태</strong>: 기본 버튼이 눌린 상태</li>
-            <li><strong>선택 상태</strong>: 토글 버튼이 선택된 상태</li>
+            <li><strong>눌림 상태</strong>: 기본 버튼은 일시적, 토글 버튼은 지속적 눌림</li>
             <li><strong>비활성 상태</strong>: 상호작용이 불가능한 상태</li>
             <li><strong>초점 상태</strong>: 모든 버튼에 복합적으로 적용 (hover + focus)</li>
           </ul>
@@ -152,15 +271,49 @@
         
           <h4>🖱️ 마우스 조작</h4>
           <ul>
-            <li><strong>클릭</strong>: 기본 버튼은 눌림 상태, 토글 버튼은 선택 상태 토글</li>
+            <li><strong>클릭</strong>: 기본 버튼은 일시적 눌림, 토글 버튼은 지속적 눌림 토글</li>
             <li><strong>초점</strong>: 마우스 오버 또는 키보드 포커스 시 초점 상태 표시</li>
           </ul>
         </div>
       </section>
+      
     </aside>
     
       <!-- 콘텐츠 데모 영역 -->
       <contents>
+
+      <!-- 커스텀 팔레트 테스트 영역 -->
+      <section class="showcase content">
+        <h2>🎨 커스텀 팔레트 테스트</h2>
+        <p>사이드바에서 생성한 커스텀 팔레트를 실시간으로 테스트할 수 있는 버튼들입니다.</p>
+        <div class="showcase content palette" id="custom-palette-test">
+          <!-- 커스텀 기본 버튼 -->
+          <button class="button custom" type="button" aria-label="커스텀 기본 버튼">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">커스텀 기본</span>
+            </div>
+          </button>
+          
+          <!-- 커스텀 토글 버튼 -->
+          <button class="button custom pressed toggle" type="button" aria-label="커스텀 토글 버튼" aria-pressed="true">
+            <div class="background dynamic">
+              <span class="icon dynamic pressed" aria-hidden="true"></span>
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">커스텀 토글</span>
+            </div>
+          </button>
+          
+          <!-- 커스텀 비활성 버튼 -->
+          <button class="button custom" type="button" aria-label="커스텀 비활성 버튼" aria-disabled="true">
+            <div class="background dynamic">
+              <span class="icon dynamic" aria-hidden="true"></span>
+              <span class="label dynamic">커스텀 비활성</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
       <!-- Primary1 팔레트 -->
       <section class="showcase content">
         <h2>Primary1 팔레트 (Light 테마 기본)</h2>
@@ -175,9 +328,9 @@
           </button>
           
           <!-- 토글 버튼 -->
-          <button class="button primary1 toggle selected" type="button" aria-label="Primary1 토글 버튼" aria-pressed="true">
+          <button class="button primary1 pressed toggle" type="button" aria-label="Primary1 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic pressed" aria-hidden="true"></span>
               <span class="icon dynamic" aria-hidden="true"></span>
               <span class="label dynamic">토글 버튼</span>
             </div>
@@ -207,9 +360,9 @@
           </button>
           
           <!-- 토글 버튼 -->
-          <button class="button primary2 toggle selected" type="button" aria-label="Primary2 토글 버튼" aria-pressed="true">
+          <button class="button primary2 pressed toggle" type="button" aria-label="Primary2 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic pressed" aria-hidden="true"></span>
               <span class="icon dynamic" aria-hidden="true"></span>
               <span class="label dynamic">토글 버튼</span>
             </div>
@@ -239,9 +392,9 @@
           </button>
           
           <!-- 토글 버튼 -->
-          <button class="button secondary1 toggle selected" type="button" aria-label="Secondary1 토글 버튼" aria-pressed="true">
+          <button class="button secondary1 pressed toggle" type="button" aria-label="Secondary1 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic pressed" aria-hidden="true"></span>
               <span class="icon dynamic" aria-hidden="true"></span>
               <span class="label dynamic">토글 버튼</span>
             </div>
@@ -271,9 +424,9 @@
           </button>
           
           <!-- 토글 버튼 -->
-          <button class="button secondary2 toggle selected" type="button" aria-label="Secondary2 토글 버튼" aria-pressed="true">
+          <button class="button secondary2 pressed toggle" type="button" aria-label="Secondary2 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic selected" aria-hidden="true"></span>
+              <span class="icon dynamic pressed" aria-hidden="true"></span>
               <span class="icon dynamic" aria-hidden="true"></span>
               <span class="label dynamic">토글 버튼</span>
             </div>
@@ -288,6 +441,8 @@
           </button>
         </div>
       </section>
+      
+
       </contents>
     </main>
 
