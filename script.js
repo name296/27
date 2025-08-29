@@ -1,4 +1,15 @@
 /* 버튼 컴포넌트 시스템 - 시스테매틱 모듈 구조 */
+/* ==============================
+  📋 시스템 정보
+  ============================== */
+/* 
+  프로젝트: 버튼 컴포넌트 시스템
+  버전: v1.0.0
+  최종 수정: 2025-01-27
+  HTML 종속성: #main-header, #main-content, #control-panel, #demo-area
+  CSS 종속성: @layer design-system, layout, components
+  파일 연동: index.html ↔ style.css ↔ script.js ↔ README.md
+*/
 
 /* ==============================
   🛠️ 유틸리티 모듈
@@ -745,21 +756,55 @@ window.addEventListener('DOMContentLoaded', async () => {
     🚀 메인 초기화 체인
     ============================== */
   
+  /* ==============================
+    🚀 시스템 무결성 검증 및 초기화
+    ============================== */
+  
   console.log('🚀 시스템 초기화 시작');
   
-  ThemeManager.init();
-  console.log('✅ ThemeManager 초기화 완료');
+  // HTML 구조 검증
+  const requiredElements = ['#main-header', '#main-content', '#control-panel', '#demo-area'];
+  const missingElements = requiredElements.filter(selector => !document.querySelector(selector));
+  if (missingElements.length > 0) {
+    console.error('❌ HTML 구조 오류 - 누락된 요소:', missingElements);
+  } else {
+    console.log('✅ HTML 구조 검증 완료');
+  }
   
-  LargeTextManager.init();
-  console.log('✅ LargeTextManager 초기화 완료');
+  // CSS 변수 검증
+  const testElement = document.createElement('div');
+  document.body.appendChild(testElement);
+  const computedStyle = getComputedStyle(testElement);
+  const criticalVars = ['--primary1-background-color-default', '--system-pointed', '--font-family'];
+  const missingVars = criticalVars.filter(varName => !computedStyle.getPropertyValue(varName));
+  document.body.removeChild(testElement);
+  if (missingVars.length > 0) {
+    console.error('❌ CSS 변수 오류 - 누락된 변수:', missingVars);
+  } else {
+    console.log('✅ CSS 변수 검증 완료');
+  }
   
-  SizeControlManager.init();
-  console.log('✅ SizeControlManager 초기화 완료');
-  
-  CustomPaletteManager.init();
-  console.log('✅ CustomPaletteManager 초기화 완료');
-  
-  await ButtonSystem.init();
+  // Manager 초기화 (종속성 순서)
+  try {
+    ThemeManager.init();
+    console.log('✅ ThemeManager 초기화 완료');
+    
+    LargeTextManager.init();
+    console.log('✅ LargeTextManager 초기화 완료');
+    
+    SizeControlManager.init();
+    console.log('✅ SizeControlManager 초기화 완료');
+    
+    CustomPaletteManager.init();
+    console.log('✅ CustomPaletteManager 초기화 완료');
+    
+    await ButtonSystem.init();
+    
+    console.log('🎯 모든 시스템 초기화 성공');
+  } catch (error) {
+    console.error('❌ 시스템 초기화 실패:', error);
+    throw error;
+  }
   
   /* ==============================
     🎮 이벤트 시스템
@@ -894,11 +939,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         event.preventDefault();
         // 좌우 버튼 순환에서 다음 컨테이너 경계 찾기
         const currentContainer = focusedButton.closest('.showcase');
-        const currentIndexDown = allButtons.indexOf(focusedButton);
+        const currentIndexForDown = allButtons.indexOf(focusedButton);
         
         // 현재 버튼부터 다음 컨테이너의 첫 번째 버튼 찾기
         for (let i = 1; i < allButtons.length; i++) {
-          const nextIndex = (currentIndexDown + i) % allButtons.length;
+          const nextIndex = (currentIndexForDown + i) % allButtons.length;
           const nextButton = allButtons[nextIndex];
           const nextContainer = nextButton.closest('.showcase');
           

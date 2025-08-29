@@ -89,16 +89,17 @@
 
 ## 🎮 사용법
 
-### ⌨️ **키보드 조작**
+### ⌨️ **키보드 조작 (향상된 네비게이션)**
 
-| 키 | 기능 |
-|---|------|
-| `Tab` | 버튼 간 초점 이동 |
-| `↑` `↓` | 그룹 간 수직 이동 (루프) |
-| `←` `→` | 버튼 간 수평 이동 (루프) |
-| `Enter` / `Space` | 버튼 활성화 |
-| `Ctrl+Alt+H` | 테마 전환 (Light ↔ Dark) |
-| `Ctrl+Alt+L` | 큰글씨 모드 전환 |
+| 키 | 기능 | 동작 방식 |
+|---|------|---------|
+| `Tab` | 표준 초점 이동 | 브라우저 기본 탭 순서 |
+| `↑` `↓` | **컨테이너 간 이동** | showcase 섹션 간 점프 (루프) |
+| `←` `→` | **전체 버튼 순환** | 모든 버튼을 순서대로 순환 |
+| `Enter` / `Space` | 버튼 활성화 | 토글/일반 버튼 구분 처리 |
+| `Home` / `End` | 처음/끝 이동 | 전체 버튼 중 첫/마지막 |
+| `Ctrl+Alt+H` | 테마 전환 | Light ↔ Dark 테마 |
+| `Ctrl+Alt+L` | 큰글씨 모드 | 기본 ↔ 1.2배 확대 |
 
 ### 🖱️ **마우스 조작**
 
@@ -262,40 +263,59 @@ const KeyboardNavigation = {
 ## 📁 파일 구조
 
 ```
-📦 버튼 컴포넌트 시스템
-├── 📄 index.html          # 메인 HTML 파일
-├── 🎨 style.css           # 통합 CSS 스타일
-├── ⚡ script.js           # JavaScript 기능
-├── 🖼️ icon.svg            # 기본 아이콘
-├── ✅ selected.svg        # 선택 상태 아이콘
-├── 🔖 favicon.ico         # 파비콘
-├── 🎭 PretendardGOV-*.otf # 폰트 파일들
-└── 📚 README.md           # 프로젝트 문서
+📦 버튼 컴포넌트 시스템 v1.0.0 (2025-01-27)
+├── 📄 index.html          # 메인 HTML (492줄) - 시맨틱 구조, 접근성 최적화
+├── 🎨 style.css           # 통합 CSS (736줄) - @layer 모듈화, 가독성 우선
+├── ⚡ script.js           # JavaScript (1,044줄) - 시스테매틱 모듈 구조
+├── 🖼️ icon.svg            # 기본 아이콘 (HTML 종속성)
+├── ✅ selected.svg        # 선택 상태 아이콘 (JS 종속성)
+├── 🔖 favicon.ico         # 파비콘 (HTML preload)
+├── 🎭 PretendardGOV-*.otf # 폰트 파일들 (CSS 종속성)
+└── 📚 README.md           # 프로젝트 문서 (전체 파일 연동)
+
+🔗 파일 간 종속성:
+   HTML → CSS (클래스, ID 참조)
+   HTML → JS (DOM 선택자 참조) 
+   CSS → JS (CSS 변수 동적 생성)
+   MD → ALL (문서화 및 가이드)
+   
+💡 진짜 성과: 용량 압축이 아닌 구조 개선!
+   - 스파게티 코드 → 시스테매틱 모듈
+   - 중복 로직 제거 및 통합
+   - 명확한 종속성 관계 구축
 ```
 
 ---
 
 ## 🔧 개발 가이드
 
-### 🎨 **새로운 버튼 팔레트 추가**
+### 🔧 **파일 간 종속성 가이드**
 
-1. **CSS 색상 변수 정의**
+#### **새로운 버튼 팔레트 추가**
+
+1. **🎨 CSS 변수 정의 (style.css)**
    ```css
+   /* design-system layer에 추가 */
    --new-palette-background-color-default: #색상코드;
    --new-palette-contents-color-default: #색상코드;
    --new-palette-border-color-default: #색상코드;
    ```
 
-2. **Light/Dark 테마별 색상 설정**
+2. **🌙 테마별 색상 (style.css)**
    ```css
    .dark {
      --new-palette-background-color-default: #다크테마색상;
    }
    ```
 
-3. **HTML에서 클래스 적용**
+3. **📄 HTML 클래스 적용 (index.html)**
    ```html
    <button class="button new-palette">새 팔레트 버튼</button>
+   ```
+
+4. **⚡ JavaScript 자동 감지 (script.js)**
+   ```javascript
+   // PaletteManager.generateCSS()가 자동으로 감지하여 CSS 생성
    ```
 
 ### 🌙 **새로운 테마 추가**
@@ -343,12 +363,13 @@ const KeyboardNavigation = {
 - **스크린 리더**: 완전 호환
 - **색상 대비**: 4.5:1 이상
 
-### 🚀 **성능**
+### 🚀 **성능 (2025-01-27 구조 개선)**
 
-- **CSS 파일**: 1,025 라인 (최적화됨)
-- **JavaScript 파일**: 1,145 라인 (모듈화됨)
-- **HTML 파일**: 320 라인 (시맨틱)
-- **총 프로젝트**: 2,490+ 라인
+- **CSS 파일**: 736 라인 (구조 최적화, 가독성 개선)
+- **JavaScript 파일**: 1,044 라인 (시스테매틱 모듈화)  
+- **HTML 파일**: 492 라인 (시맨틱 구조, 접근성 강화)
+- **총 프로젝트**: 2,272+ 라인 (품질 중심 리팩터링)
+- **종속성**: HTML ↔ CSS ↔ JS ↔ MD 완전 연동
 
 ---
 
