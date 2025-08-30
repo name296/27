@@ -10,23 +10,23 @@
   *, 
   *::before, 
   *::after { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-  
-  html { 
-    font-size: 1rem; 
-    line-height: 1.15; 
-    -webkit-text-size-adjust: 100%; 
+
+  html {
+    font-size: 1rem;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
     
-    @media (prefers-reduced-motion: no-preference) { 
-      scroll-behavior: smooth; 
-    } 
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
   }
-  
-  button { 
-    all: unset; 
+
+  button {
+    all: unset;
   }
 }
 
@@ -56,55 +56,55 @@
 
     /* === 🎯 타이포그래피 시스템 === */
     --font-family: 'Pretendard GOV', sans-serif;
-    --font-size-base: 2.5rem; 
-    --font-size-scale: 1; 
-    --font-weight: 600; 
+    --font-size-base: 2.5rem;
+    --font-size-scale: 1;
+    --font-weight: 600;
     --line-height-label: 1;
     
-    --font-size: calc(var(--font-size-base) * var(--font-size-scale)); 
-    --font-size-xl: calc(var(--font-size-base) * var(--font-size-scale) * 1.125); 
-    --font-size-lg: calc(var(--font-size-base) * var(--font-size-scale) * 0.72); 
-    --font-size-md: calc(var(--font-size-base) * var(--font-size-scale) * 0.52); 
-    --font-size-sm: calc(var(--font-size-base) * var(--font-size-scale) * 0.44); 
+    --font-size: calc(var(--font-size-base) * var(--font-size-scale));
+    --font-size-xl: calc(var(--font-size-base) * var(--font-size-scale) * 1.125);
+    --font-size-lg: calc(var(--font-size-base) * var(--font-size-scale) * 0.72);
+    --font-size-md: calc(var(--font-size-base) * var(--font-size-scale) * 0.52);
+    --font-size-sm: calc(var(--font-size-base) * var(--font-size-scale) * 0.44);
     --font-size-xs: calc(var(--font-size-base) * var(--font-size-scale) * 0.36);
-    
+
     --icon-size: var(--font-size);
 
     /* === 🎨 원시 색상 팔레트 === */
     /* 브라운 계열 */
-    --brown-50: #EEDCD2FF; 
-    --brown-100: #EB9B63FF; 
-    --brown-200: #C4895FFF; 
-    --brown-300: #A4693FFF; 
-    --brown-400: #8C532CFF; 
+    --brown-50: #EEDCD2FF;
+    --brown-100: #EB9B63FF;
+    --brown-200: #C4895FFF;
+    --brown-300: #A4693FFF;
+    --brown-400: #8C532CFF;
     --brown-500: #4C3F37FF;
     
     /* 옐로우 계열 */
-    --yellow-50: #FFEF80FF; 
-    --yellow-100: #FFE100FF; 
-    --yellow-200: #807000FF; 
+    --yellow-50: #FFEF80FF;
+    --yellow-100: #FFE100FF;
+    --yellow-200: #807000FF;
     --yellow-300: #241F00FF;
     
     /* 그레이 계열 */
-    --gray-0: #FFFFFFFF; 
-    --gray-50: #FAFAFAFF; 
-    --gray-100: #F2F2F2FF; 
-    --gray-200: #E8E8E8FF; 
-    --gray-300: #DBDBDBFF; 
-    --gray-400: #BFBFBFFF; 
-    --gray-500: #8C8C8CFF; 
-    --gray-600: #757575FF; 
-    --gray-700: #737373FF; 
-    --gray-800: #606060FF; 
-    --gray-850: #4C4C4CFF; 
-    --gray-900: #252525FF; 
-    --gray-950: #1F1F1FFF; 
+    --gray-0: #FFFFFFFF;
+    --gray-50: #FAFAFAFF;
+    --gray-100: #F2F2F2FF;
+    --gray-200: #E8E8E8FF;
+    --gray-300: #DBDBDBFF;
+    --gray-400: #BFBFBFFF;
+    --gray-500: #8C8C8CFF;
+    --gray-600: #757575FF;
+    --gray-700: #737373FF;
+    --gray-800: #606060FF;
+    --gray-850: #4C4C4CFF;
+    --gray-900: #252525FF;
+    --gray-950: #1F1F1FFF;
     --gray-1000: #000000FF;
     
     /* 시스템 색상 */
     --system-pointed: #FF00E1FF; 
-    --system-error: #CC1D00FF; 
-    --system-warning: #FF4800FF; 
+    --system-error: #CC1D00FF;
+    --system-warning: #FF4800FF;
     --system-success: #00A86BFF;
 
     /* === 🏠 페이지 UI 색상 (Light 테마) === */
@@ -120,77 +120,91 @@
     --page-accent-primary: var(--system-pointed); 
     --page-accent-secondary: var(--brown-300);
 
-    /* === 🎯 버튼 시스템 === */
+        /* === 🎯 버튼 시스템 === */
     --button-width: 16rem; 
     --button-height: 16rem;
-    --z-index-button: 0; 
-    --z-index-background: -1; 
-    --z-index-icon-dynamic-pressed: 1;
-    --border-style: solid; 
+    --button-z-index: 0; 
+    --background-z-index: -1; 
+    --content-icon-z-index-pressed: 1;
+    
+    /* 테두리 스타일 (상태별) */
+    --border-style-default: solid; 
     --border-style-pressed: solid; 
     --border-style-disabled: dashed; 
     --border-style-pointed: dashed;
+    
+    /* === 🎯 테마/팔레트 독립적 속성 === */
+    --border-color-pointed: var(--system-pointed);
+    
+    /* 버튼 수정자 공통 속성 */
+    --button-cursor-disabled: not-allowed;
+    --content-icon-display-pressed-toggle: flex;
+    --content-icon-display-default: none;
+    
+    /* === 🎨 커스텀 팔레트 기본값 (Light 테마) === */
+    --custom-content-color-default: #252525FF;
+    --custom-content-color-pressed: #FFFFFFFF;
+    --custom-content-color-disabled: #8C8C8CFF;
+    --custom-background-color-default: #A4693FFF;
+    --custom-background-color-pressed: #EEDCD2FF;
+    --custom-background-color-disabled: #00000000;
+    --custom-border-color-default: #A4693FFF;
+    --custom-border-color-pressed: #A4693FFF;
+    --custom-border-color-disabled: #BFBFBFFF;
+    --custom-border-color-pointed: var(--system-pointed);
 
     /* === 🎨 버튼 팔레트 (Light 테마) === */
     /* Primary1 팔레트 */
-    --primary1-background-color-default: var(--brown-300); 
-    --primary1-background-color-pressed: var(--brown-50); 
-    --primary1-background-color-disabled: #00000000; 
-    --primary1-background-color-pointed: var(--brown-300);
+    --primary1-background-color-default: var(--brown-300);
+    --primary1-background-color-pressed: var(--brown-50);
+    --primary1-background-color-disabled: #00000000;
     
-    --primary1-contents-color-default: var(--gray-0); 
-    --primary1-contents-color-pressed: var(--brown-200); 
-    --primary1-contents-color-disabled: var(--gray-500);
+    --primary1-content-color-default: var(--gray-0); 
+    --primary1-content-color-pressed: var(--brown-200); 
+    --primary1-content-color-disabled: var(--gray-500);
     
-    --primary1-border-color-default: var(--brown-300); 
-    --primary1-border-color-pressed: var(--brown-300); 
-    --primary1-border-color-disabled: var(--gray-400); 
-    --primary1-border-color-pointed: var(--system-pointed);
+    --primary1-border-color-default: var(--brown-300);
+    --primary1-border-color-pressed: var(--brown-300);
+    --primary1-border-color-disabled: var(--gray-400);
     
     /* Primary2 팔레트 */
-    --primary2-background-color-default: var(--gray-0); 
-    --primary2-background-color-pressed: var(--brown-300); 
-    --primary2-background-color-disabled: var(--gray-200); 
-    --primary2-background-color-pointed: var(--gray-0);
+    --primary2-background-color-default: var(--gray-0);
+    --primary2-background-color-pressed: var(--brown-300);
+    --primary2-background-color-disabled: var(--gray-200);
     
-    --primary2-contents-color-default: var(--gray-900); 
-    --primary2-contents-color-pressed: var(--gray-0); 
-    --primary2-contents-color-disabled: var(--gray-500);
+    --primary2-content-color-default: var(--gray-900); 
+    --primary2-content-color-pressed: var(--gray-0); 
+    --primary2-content-color-disabled: var(--gray-500);
     
-    --primary2-border-color-default: var(--gray-500); 
-    --primary2-border-color-pressed: var(--brown-300); 
-    --primary2-border-color-disabled: var(--gray-400); 
-    --primary2-border-color-pointed: var(--system-pointed);
+    --primary2-border-color-default: var(--gray-500);
+    --primary2-border-color-pressed: var(--brown-300);
+    --primary2-border-color-disabled: var(--gray-400);
     
     /* Secondary1 팔레트 */
-    --secondary1-background-color-default: var(--gray-400); 
-    --secondary1-background-color-pressed: var(--gray-100); 
-    --secondary1-background-color-disabled: #00000000; 
-    --secondary1-background-color-pointed: var(--gray-400);
+    --secondary1-background-color-default: var(--gray-400);
+    --secondary1-background-color-pressed: var(--gray-100);
+    --secondary1-background-color-disabled: #00000000;
     
-    --secondary1-contents-color-default: var(--gray-0); 
-    --secondary1-contents-color-pressed: var(--gray-900); 
-    --secondary1-contents-color-disabled: var(--gray-500);
+    --secondary1-content-color-default: var(--gray-0); 
+    --secondary1-content-color-pressed: var(--gray-900); 
+    --secondary1-content-color-disabled: var(--gray-500);
     
-    --secondary1-border-color-default: var(--gray-400); 
-    --secondary1-border-color-pressed: var(--gray-400); 
-    --secondary1-border-color-disabled: var(--gray-400); 
-    --secondary1-border-color-pointed: var(--system-pointed);
+    --secondary1-border-color-default: var(--gray-400);
+    --secondary1-border-color-pressed: var(--gray-400);
+    --secondary1-border-color-disabled: var(--gray-400);
     
     /* Secondary2 팔레트 */
-    --secondary2-background-color-default: var(--gray-100); 
-    --secondary2-background-color-pressed: var(--gray-400); 
-    --secondary2-background-color-disabled: #00000000; 
-    --secondary2-background-color-pointed: var(--gray-100);
+    --secondary2-background-color-default: var(--gray-100);
+    --secondary2-background-color-pressed: var(--gray-400);
+    --secondary2-background-color-disabled: #00000000;
     
-    --secondary2-contents-color-default: var(--gray-900); 
-    --secondary2-contents-color-pressed: var(--gray-0); 
-    --secondary2-contents-color-disabled: var(--gray-500);
+    --secondary2-content-color-default: var(--gray-900); 
+    --secondary2-content-color-pressed: var(--gray-0); 
+    --secondary2-content-color-disabled: var(--gray-500);
     
-    --secondary2-border-color-default: var(--gray-300); 
-    --secondary2-border-color-pressed: var(--gray-400); 
-    --secondary2-border-color-disabled: var(--gray-400); 
-    --secondary2-border-color-pointed: var(--system-pointed);
+    --secondary2-border-color-default: var(--gray-300);
+    --secondary2-border-color-pressed: var(--gray-400);
+    --secondary2-border-color-disabled: var(--gray-400);
   }
 
   .dark {
@@ -204,71 +218,75 @@
     --page-text-muted: var(--gray-800); 
     --page-border-primary: var(--gray-850); 
     --page-border-secondary: var(--gray-800);
+    
+    /* === 🎨 커스텀 팔레트 기본값 (Dark 테마) === */
+    --custom-content-color-default: #FFE100FF;
+    --custom-content-color-pressed: #807000FF;
+    --custom-content-color-disabled: #8C8C8CFF;
+    --custom-background-color-default: #241F00FF;
+    --custom-background-color-pressed: #FFE100FF;
+    --custom-background-color-disabled: #00000000;
+    --custom-border-color-default: #FFE100FF;
+    --custom-border-color-pressed: #FFE100FF;
+    --custom-border-color-disabled: #757575FF;
 
     /* === 🎨 버튼 팔레트 (Dark 테마) === */
     /* Primary1 팔레트 */
-    --primary1-background-color-default: var(--yellow-300); 
-    --primary1-background-color-pressed: var(--yellow-100); 
-    --primary1-background-color-disabled: #00000000; 
-    --primary1-background-color-pointed: var(--yellow-300);
+    --primary1-background-color-default: var(--yellow-300);
+    --primary1-background-color-pressed: var(--yellow-100);
+    --primary1-background-color-disabled: #00000000;
     
-    --primary1-contents-color-default: var(--yellow-100); 
-    --primary1-contents-color-pressed: var(--yellow-200); 
-    --primary1-contents-color-disabled: var(--gray-500);
+    --primary1-content-color-default: var(--yellow-100); 
+    --primary1-content-color-pressed: var(--yellow-200); 
+    --primary1-content-color-disabled: var(--gray-500);
     
-    --primary1-border-color-default: var(--yellow-100); 
-    --primary1-border-color-pressed: var(--yellow-100); 
-    --primary1-border-color-disabled: var(--gray-600); 
-    --primary1-border-color-pointed: var(--system-pointed);
+    --primary1-border-color-default: var(--yellow-100);
+    --primary1-border-color-pressed: var(--yellow-100);
+    --primary1-border-color-disabled: var(--gray-600);
     
     /* Primary2 팔레트 */
-    --primary2-background-color-default: var(--gray-1000); 
-    --primary2-background-color-pressed: var(--yellow-300); 
-    --primary2-background-color-disabled: var(--gray-800); 
-    --primary2-background-color-pointed: var(--gray-1000);
+    --primary2-background-color-default: var(--gray-1000);
+    --primary2-background-color-pressed: var(--yellow-300);
+    --primary2-background-color-disabled: var(--gray-800);
     
-    --primary2-contents-color-default: var(--yellow-100); 
-    --primary2-contents-color-pressed: var(--yellow-100); 
-    --primary2-contents-color-disabled: var(--gray-500);
+    --primary2-content-color-default: var(--yellow-100); 
+    --primary2-content-color-pressed: var(--yellow-100); 
+    --primary2-content-color-disabled: var(--gray-500);
     
-    --primary2-border-color-default: var(--gray-600); 
-    --primary2-border-color-pressed: var(--yellow-100); 
-    --primary2-border-color-disabled: var(--gray-600); 
-    --primary2-border-color-pointed: var(--system-pointed);
+    --primary2-border-color-default: var(--gray-600);
+    --primary2-border-color-pressed: var(--yellow-100);
+    --primary2-border-color-disabled: var(--gray-600);
     
     /* Secondary1 팔레트 */
-    --secondary1-background-color-default: var(--gray-600); 
-    --secondary1-background-color-pressed: var(--gray-850); 
-    --secondary1-background-color-disabled: #00000000; 
-    --secondary1-background-color-pointed: var(--gray-600);
+    --secondary1-background-color-default: var(--gray-600);
+    --secondary1-background-color-pressed: var(--gray-850);
+    --secondary1-background-color-disabled: #00000000;
     
-    --secondary1-contents-color-default: var(--gray-100); 
-    --secondary1-contents-color-pressed: var(--gray-100); 
-    --secondary1-contents-color-disabled: var(--gray-500);
+    --secondary1-content-color-default: var(--gray-100); 
+    --secondary1-content-color-pressed: var(--gray-100); 
+    --secondary1-content-color-disabled: var(--gray-500);
     
-    --secondary1-border-color-default: var(--gray-600); 
-    --secondary1-border-color-pressed: var(--gray-600); 
-    --secondary1-border-color-disabled: var(--gray-600); 
-    --secondary1-border-color-pointed: var(--system-pointed);
+    --secondary1-border-color-default: var(--gray-600);
+    --secondary1-border-color-pressed: var(--gray-600);
+    --secondary1-border-color-disabled: var(--gray-600);
     
     /* Secondary2 팔레트 */
-    --secondary2-background-color-default: var(--gray-850); 
-    --secondary2-background-color-pressed: var(--gray-600); 
-    --secondary2-background-color-disabled: #00000000; 
-    --secondary2-background-color-pointed: var(--gray-850);
+    --secondary2-background-color-default: var(--gray-850);
+    --secondary2-background-color-pressed: var(--gray-600);
+    --secondary2-background-color-disabled: #00000000;
     
-    --secondary2-contents-color-default: var(--gray-100); 
-    --secondary2-contents-color-pressed: var(--gray-100); 
-    --secondary2-contents-color-disabled: var(--gray-500);
+    --secondary2-content-color-default: var(--gray-100); 
+    --secondary2-content-color-pressed: var(--gray-100); 
+    --secondary2-content-color-disabled: var(--gray-500);
     
-    --secondary2-border-color-default: var(--gray-700); 
-    --secondary2-border-color-pressed: var(--gray-600); 
-    --secondary2-border-color-disabled: var(--gray-600); 
+    --secondary2-border-color-default: var(--gray-700);
+    --secondary2-border-color-pressed: var(--gray-600);
+    --secondary2-border-color-disabled: var(--gray-600);
     --secondary2-border-color-pointed: var(--system-pointed);
   }
 
-  .large { 
-    --font-size-scale: 1.2; 
+  .large {
+    --font-size-scale: 1.2;
   }
 }
 
@@ -278,69 +296,69 @@
 @layer layout {
   /* === 🏗️ HTML 구조와 연동된 레이아웃 시스템 === */
   body[data-system-version] {
-    display: flex; 
-    padding: 0; 
-    background: var(--page-bg-primary); 
-    color: var(--page-text-primary); 
-    font: 1em/1.4 var(--font-family); 
-    flex-flow: column nowrap; 
+    display: flex;
+    padding: 0;
+    background: var(--page-bg-primary);
+    color: var(--page-text-primary);
+    font: 1em/1.4 var(--font-family);
+    flex-flow: column nowrap;
     gap: 1rem;
 
     & header, 
     & footer {
-      display: flex; 
-      padding: var(--unit-lg); 
-      background: var(--page-bg-secondary); 
-      text-align: center; 
-      flex: 0 0 auto; 
-      flex-flow: column nowrap; 
+      display: flex;
+      padding: var(--unit-lg);
+      background: var(--page-bg-secondary);
+      text-align: center;
+      flex: 0 0 auto;
+      flex-flow: column nowrap;
       gap: var(--unit-md);
     }
 
-    & header { 
-      color: var(--page-text-primary); 
-      border-bottom: var(--unit-xs) solid var(--page-border-primary); 
+    & header {
+      color: var(--page-text-primary);
+      border-bottom: var(--unit-xs) solid var(--page-border-primary);
     }
-    
-    & footer { 
-      color: var(--page-text-tertiary); 
-      border-top: var(--unit-xs) solid var(--page-border-primary); 
-      font-size: var(--font-size-xs); 
+
+    & footer {
+      color: var(--page-text-tertiary);
+      border-top: var(--unit-xs) solid var(--page-border-primary);
+      font-size: var(--font-size-xs);
+
+      & ul {
+        padding: 0;
+        list-style: none;
+      }
       
-      & ul { 
-        padding: 0; 
-        list-style: none; 
-      } 
+      & li {
+        display: inline-block;
+      }
       
-      & li { 
-        display: inline-block; 
-      } 
-      
-      & a { 
-        color: var(--page-text-secondary); 
-        text-decoration: none; 
+      & a {
+        color: var(--page-text-secondary);
+        text-decoration: none;
         
-        &:hover { 
-          color: var(--page-text-primary); 
-          text-decoration: underline; 
-        } 
-      } 
+        &:hover {
+          color: var(--page-text-primary);
+          text-decoration: underline;
+        }
+      }
     }
 
     & main#main-content {
-      display: flex; 
-      width: 100%; 
-      padding: 0 1rem; 
-      flex: 1; 
-      flex-flow: row nowrap; 
+      display: flex;
+      width: 100%;    
+      padding: 0 1rem;
+      flex: 1;
+      flex-flow: row nowrap;
       gap: 1rem;
 
       & aside#control-panel { 
-        display: flex; 
-        width: 25rem; 
-        flex: 0 0 auto; 
-        flex-flow: column nowrap; 
-        gap: 1rem; 
+        display: flex;
+        width: 25rem;
+        flex: 0 0 auto;
+        flex-flow: column nowrap;
+        gap: 1rem;
       }
       
       & div#demo-area { 
@@ -459,70 +477,70 @@
       align-items: center; 
       gap: var(--unit-lg); 
     }
-    
-    &.theme { 
-      flex-flow: row nowrap; 
-      justify-content: center; 
-      align-items: center; 
-      gap: var(--unit-md); 
-    }
-    
-    &.scale { 
-      flex-flow: column nowrap; 
-      gap: var(--unit-sm); 
+        
+        &.theme {
+          flex-flow: row nowrap;
+          justify-content: center;
+          align-items: center;
+          gap: var(--unit-md);
+        }
+
+        &.scale {
+          flex-flow: column nowrap;
+          gap: var(--unit-sm);
     }
   }
 
   /* === 🎮 인터랙티브 컨트롤 === */
   .scaling {
-    display: flex; 
-    align-items: center; 
-    gap: var(--unit-xs);
-    
-    & label { 
-      padding: 0; 
-      color: var(--page-text-secondary); 
-      font: 500 0.9rem var(--font-family); 
+            display: flex;
+            align-items: center;
+            gap: var(--unit-xs);
+
+            & label {
+              padding: 0;
+              color: var(--page-text-secondary);
+              font: 500 0.9rem var(--font-family);
       min-width: 6rem; 
       text-align: right; 
-    }
-    
-    & input[type="range"] { 
-      height: 0.375rem; 
-      border: none; 
-      outline: 0; 
-      background: var(--page-bg-tertiary); 
-      border-radius: 0.1875rem; 
-      flex: 1; 
-      cursor: pointer; 
-      
-      &::-webkit-slider-thumb { 
-        width: 1rem; 
-        height: 1rem; 
-        appearance: none; 
-        background: var(--page-accent-primary); 
-        border: 2px solid var(--page-bg-primary); 
-        border-radius: 50%; 
-        box-shadow: 0 2px 4px #00000033; 
-        cursor: pointer; 
-      } 
-      
-      &::-moz-range-thumb { 
-        width: 1rem; 
-        height: 1rem; 
-        background: var(--page-accent-primary); 
-        border: 2px solid var(--page-bg-primary); 
-        border-radius: 50%; 
-        box-shadow: 0 2px 4px #00000033; 
-        cursor: pointer; 
-      } 
-      
-      &:focus { 
+            }
+
+            & input[type="range"] {
+              height: 0.375rem;
+              border: none;
+              outline: 0;
+              background: var(--page-bg-tertiary);
+              border-radius: 0.1875rem;
+              flex: 1;
+              cursor: pointer;
+
+              &::-webkit-slider-thumb {
+                width: 1rem;
+                height: 1rem;
+                appearance: none;
+                background: var(--page-accent-primary);
+                border: 2px solid var(--page-bg-primary);
+                border-radius: 50%;
+                box-shadow: 0 2px 4px #00000033;
+                cursor: pointer;
+              }
+
+              &::-moz-range-thumb {
+                width: 1rem;
+                height: 1rem;
+                background: var(--page-accent-primary);
+                border: 2px solid var(--page-bg-primary);
+                border-radius: 50%;
+                box-shadow: 0 2px 4px #00000033;
+                cursor: pointer;
+              }
+
+              &:focus {
         outline: 2px solid var(--system-pointed); 
-        outline-offset: 2px; 
-      } 
-    }
-    
+                outline-offset: 2px;
+              }
+            }
+
     &.reset { 
       padding: var(--unit-xs) var(--unit-sm); 
       background: var(--page-bg-tertiary); 
@@ -547,79 +565,91 @@
   }
 
   .size.value { 
-    min-width: 4rem; 
-    font-size: 0.85rem; 
-    font-weight: 600; 
-    color: var(--page-accent-primary); 
-    text-align: center; 
+              min-width: 4rem;
+              font-size: 0.85rem;
+              font-weight: 600;
+              color: var(--page-accent-primary);
+              text-align: center;
   }
 
-  /* === 🎨 아이콘 시스템 === */
-  .icon { 
-    display: flex; 
-    width: var(--icon-size); 
-    height: var(--icon-size); 
-    align-items: center; 
-    justify-content: center; 
-    
-    & svg { 
-      display: block; 
-      width: 100%; 
-      height: 100%; 
-      fill: currentColor; 
-    } 
+  /* === 🎨 아이콘 시스템 (전역 기본 생리) === */
+  .icon {
+    display: flex;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    align-items: center;
+    justify-content: center;
+
+    & svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
   }
+
 
   /* === 🎯 버튼 컴포넌트 시스템 === */
   .button {
-    position: relative; 
-    display: flex; 
-    box-sizing: border-box; 
-    width: var(--button-width); 
-    height: var(--button-height); 
-    justify-content: center; 
-    align-items: center; 
-    z-index: var(--z-index-button); 
-    cursor: pointer; 
-    will-change: transform; 
-    contain: layout style; 
-    color: var(--primary1-contents-color-default);
-
+    position: relative;
+    display: flex;
+    box-sizing: border-box;
+    width: var(--button-width);
+    height: var(--button-height);
+    justify-content: center;
+    align-items: center;
+    z-index: var(--button-z-index);
+    cursor: pointer;
+    will-change: transform;
+    contain: layout style;
+    
     & .background.dynamic {
-      position: relative; 
-      display: flex; 
-      box-sizing: border-box; 
-      width: 100%; 
-      height: 100%; 
-      background: var(--primary1-background-color-default); 
-      outline: 0 var(--border-style) var(--primary1-border-color-default); 
-      flex-flow: column nowrap; 
-      justify-content: center; 
-      align-items: center; 
-      z-index: var(--z-index-background);
+      position: relative;
+      display: flex;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      background: var(--primary1-background-color-default);
+      outline: 0 var(--border-style-default) var(--primary1-border-color-default); 
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      z-index: var(--background-z-index);
 
-      & .icon.dynamic.pressed { 
-        position: absolute; 
-        display: none; 
-        z-index: var(--z-index-icon-dynamic-pressed); 
-        width: var(--icon-size); 
-        height: var(--icon-size); 
+      & .content {
+        color: var(--primary1-content-color-default);
+        &.icon {          
+          &.pressed { 
+          position: absolute;
+            display: var(--content-icon-display-default); 
+            z-index: var(--content-icon-z-index-pressed); 
+          }
+        }
+        
+        &.label { 
+        display: flex;
+        width: fit-content;
+        height: fit-content;
+        font: var(--font-weight) var(--font-size)/var(--line-height-label) var(--font-family);
+        align-items: center;
+        justify-content: center;
+        text-align: center;
       }
-      
-      & .label.dynamic { 
-        display: flex; 
-        width: fit-content; 
-        height: fit-content; 
-        font: var(--font-weight) var(--font-size)/var(--line-height-label) var(--font-family); 
-        align-items: center; 
-        justify-content: center; 
-        text-align: center; 
+    }
+    }
+
+    &[aria-disabled="true"] {
+      cursor: var(--button-cursor-disabled);
+      & .background.dynamic {
+        color: var(--primary1-content-color-disabled);
+        background: var(--primary1-background-color-disabled);
+        outline: 0 var(--border-style-disabled) var(--primary1-border-color-disabled);
       }
     }
 
     &:hover, 
     &:focus-visible { 
-      outline: 0 var(--border-style-pointed) var(--system-pointed); 
+      outline: 0 var(--border-style-pointed) var(--border-color-pointed); 
     }
   }
 
@@ -661,6 +691,107 @@
       flex: 1; 
       font-family: 'Courier New', monospace; 
       font-size: 0.7rem; 
+    }
+    
+    /* === 🎨 커스텀 컬러피커 === */
+    & .custom-color-picker {
+      position: relative;
+      display: flex;
+      align-items: center;
+      
+      & .color-display {
+        width: 2rem;
+        height: 1.5rem;
+        border: 1px solid var(--page-border-primary);
+        border-radius: calc(var(--unit-xs) / 2);
+        cursor: pointer;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+      }
+      
+      & .color-picker-panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        background: var(--page-bg-secondary);
+        border: 1px solid var(--page-border-primary);
+        border-radius: calc(var(--unit-xs) * 2);
+        padding: var(--unit-sm);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        
+        &.active {
+          display: block;
+        }
+        
+        & .canvas-container {
+          position: relative;
+          margin-bottom: calc(var(--unit-xs) * 1.5);
+          text-align: center;
+          
+          & .color-canvas-3d {
+            width: 600px;
+            height: 600px;
+            border: 2px solid var(--page-border-primary);
+            border-radius: calc(var(--unit-xs) * 1.5);
+            cursor: grab;
+            display: block;
+            margin: 0 auto;
+            
+            &:active {
+              cursor: grabbing;
+            }
+          }
+          
+          & .sphere-info {
+            margin-top: var(--unit-xs);
+            text-align: center;
+            
+            & small {
+              color: var(--page-text-tertiary);
+              font-size: 0.95rem;
+              font-style: italic;
+              font-weight: 500;
+            }
+          }
+        }
+        
+        & .color-input-group {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: calc(var(--unit-xs) * 1.5);
+          margin-top: calc(var(--unit-xs) * 1.5);
+          
+          & label {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--page-text-secondary);
+          }
+          
+          & .panel-hex-input {
+            flex: 1;
+            max-width: 12rem;
+            padding: calc(var(--unit-xs) * 0.75);
+            border: 2px solid var(--page-border-primary);
+            border-radius: calc(var(--unit-xs) * 0.75);
+            font: 600 0.975rem 'Courier New', monospace;
+            background: var(--page-bg-primary);
+            color: var(--page-text-primary);
+            text-align: center;
+            
+            &:focus {
+              outline: 1px solid var(--page-accent-primary);
+              background: var(--page-bg-secondary);
+            }
+            
+            &::placeholder {
+              color: var(--page-text-tertiary);
+              font-size: 0.6rem;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -723,7 +854,7 @@
         border: 1px solid var(--page-border-primary); 
         border-radius: calc(var(--unit-xs) / 2); 
         cursor: help; 
-      } 
+      }
     }
   }
 }

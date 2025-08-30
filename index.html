@@ -81,104 +81,38 @@
       <section class="showcase sidebar">
         <h3>🎨 커스텀 팔래트 생성기</h3>
         
-        <!-- Light 테마 색상 -->
+        <!-- Light 테마 색상 (9개 변수) -->
         <div class="palette-colors-section">
-          <h4>Light 테마</h4>
-          
-          <div class="palette-input-group">
-            <label for="light-bg-default">배경(기본):</label>
-            <input type="color" id="light-bg-default" value="#A4693F">
-            <input type="text" class="hex-input" value="#A4693FFF">
+          <h4>Light 테마 (9개 변수)</h4>
+          <div id="light-color-pickers">
+            <!-- JavaScript로 동적 생성됩니다 -->
           </div>
           
-          <div class="palette-input-group">
-            <label for="light-text-default">텍스트(기본):</label>
-            <input type="color" id="light-text-default" value="#FFFFFF">
-            <input type="text" class="hex-input" value="#FFFFFFFF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="light-bg-pressed">배경(눌림):</label>
-            <input type="color" id="light-bg-pressed" value="#EEDCD2">
-            <input type="text" class="hex-input" value="#EEDCD2FF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="light-text-pressed">텍스트(눌림):</label>
-            <input type="color" id="light-text-pressed" value="#C4895F">
-            <input type="text" class="hex-input" value="#C4895FFF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="light-bg-disabled">배경(비활성):</label>
-            <input type="color" id="light-bg-disabled" value="#000000">
-            <input type="text" class="hex-input" value="#00000000">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="light-text-disabled">텍스트(비활성):</label>
-            <input type="color" id="light-text-disabled" value="#8C8C8C">
-            <input type="text" class="hex-input" value="#8C8C8CFF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="light-bg-pointed">배경(초점):</label>
-            <input type="color" id="light-bg-pointed" value="#A4693F">
-            <input type="text" class="hex-input" value="#A4693FFF">
+          <!-- 공통 초점 상태 표시 -->
+          <div class="palette-note">
+            <small>💡 초점(pointed) 상태: 모든 팔레트 공통 핑크 테두리 (#FF00E1FF)</small>
           </div>
         </div>
         
-        <!-- Dark 테마 색상 -->
+        <!-- Dark 테마 색상 (9개 변수) -->
         <div class="palette-colors-section">
-          <h4>Dark 테마</h4>
-          
-          <div class="palette-input-group">
-            <label for="dark-bg-default">배경(기본):</label>
-            <input type="color" id="dark-bg-default" value="#241F00">
-            <input type="text" class="hex-input" value="#241F00FF">
+          <h4>Dark 테마 (9개 변수)</h4>
+          <div id="dark-color-pickers">
+            <!-- JavaScript로 동적 생성됩니다 -->
           </div>
           
-          <div class="palette-input-group">
-            <label for="dark-text-default">텍스트(기본):</label>
-            <input type="color" id="dark-text-default" value="#FFE100">
-            <input type="text" class="hex-input" value="#FFE100FF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="dark-bg-pressed">배경(눌림):</label>
-            <input type="color" id="dark-bg-pressed" value="#FFE100">
-            <input type="text" class="hex-input" value="#FFE100FF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="dark-text-pressed">텍스트(눌림):</label>
-            <input type="color" id="dark-text-pressed" value="#807000">
-            <input type="text" class="hex-input" value="#807000FF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="dark-bg-disabled">배경(비활성):</label>
-            <input type="color" id="dark-bg-disabled" value="#000000">
-            <input type="text" class="hex-input" value="#00000000">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="dark-text-disabled">텍스트(비활성):</label>
-            <input type="color" id="dark-text-disabled" value="#8C8C8C">
-            <input type="text" class="hex-input" value="#8C8C8CFF">
-          </div>
-          
-          <div class="palette-input-group">
-            <label for="dark-bg-pointed">배경(초점):</label>
-            <input type="color" id="dark-bg-pointed" value="#241F00">
-            <input type="text" class="hex-input" value="#241F00FF">
+          <!-- 공통 초점 상태 표시 -->
+          <div class="palette-note">
+            <small>💡 초점(pointed) 상태: 모든 팔레트 공통 핑크 테두리 (#FF00E1FF)</small>
           </div>
         </div>
         
         <!-- 컨트롤 버튼 -->
         <div class="palette-controls">
-          <button class="palette-apply-btn" type="button">커스텀 팔래트 적용</button>
           <button class="palette-reset-btn" type="button">기본값으로 초기화</button>
+          <div class="palette-info">
+            <small>💡 색상 변경 시 실시간 적용됩니다</small>
+          </div>
         </div>
         
         <!-- 실시간 미리보기 (모든 상태) -->
@@ -223,16 +157,16 @@
           <!-- 테마 전환 버튼 -->
           <button class="button primary1 theme-toggle" type="button" aria-label="테마 전환 (Light ↔ Dark 테마) (단축키: Ctrl+Alt+H)" aria-pressed="false" title="Light 테마와 Dark 테마를 전환합니다. 단축키: Ctrl+Alt+H">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
-              <span class="label dynamic">Dark<br>테마</span>
+              <span class="content icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+              <span class="content label">Dark<br>테마</span>
             </div>
           </button>
 
           <!-- 큰글씨 모드 전환 버튼 -->
           <button class="button primary1 large-toggle" type="button" aria-label="큰글씨 모드 전환 (기본 ↔ 큰글씨) (단축키: Ctrl+Alt+L)" aria-pressed="false" title="기본 글씨 크기와 큰글씨 모드를 전환합니다. 단축키: Ctrl+Alt+L">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
-              <span class="label dynamic">큰글씨<br>모드</span>
+              <span class="content icon" aria-hidden="true"><!-- SVG 아이콘이 JavaScript로 주입됩니다 --></span>
+              <span class="content label">큰글씨<br>모드</span>
             </div>
           </button>
         </div>
@@ -293,28 +227,28 @@
         <h2>🎨 커스텀 팔레트 테스트</h2>
         <p>사이드바에서 생성한 커스텀 팔레트를 실시간으로 테스트할 수 있는 버튼들입니다.</p>
         <div class="showcase content palette" id="custom-palette-test">
-          <!-- 커스텀 기본 버튼 -->
+          <!-- 기본 버튼 -->
           <button class="button custom" type="button" aria-label="커스텀 기본 버튼">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">커스텀 기본</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">기본 버튼</span>
             </div>
           </button>
           
-          <!-- 커스텀 토글 버튼 -->
+          <!-- 토글 버튼 -->
           <button class="button custom pressed toggle" type="button" aria-label="커스텀 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic pressed" aria-hidden="true"></span>
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">커스텀 토글</span>
+              <span class="content icon pressed" aria-hidden="true"></span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">토글 버튼</span>
             </div>
           </button>
           
-          <!-- 커스텀 비활성 버튼 -->
+          <!-- 비활성 버튼 -->
           <button class="button custom" type="button" aria-label="커스텀 비활성 버튼" aria-disabled="true">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">커스텀 비활성</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">비활성 버튼</span>
             </div>
           </button>
         </div>
@@ -328,25 +262,25 @@
           <!-- 기본 버튼 -->
           <button class="button primary1" type="button" aria-label="Primary1 기본 버튼">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">기본 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">기본 버튼</span>
             </div>
           </button>
           
           <!-- 토글 버튼 -->
           <button class="button primary1 pressed toggle" type="button" aria-label="Primary1 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic pressed" aria-hidden="true"></span>
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">토글 버튼</span>
+              <span class="content icon pressed" aria-hidden="true"></span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">토글 버튼</span>
             </div>
           </button>
           
           <!-- 비활성 버튼 -->
           <button class="button primary1" type="button" aria-label="Primary1 비활성 버튼" aria-disabled="true">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">비활성 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">비활성 버튼</span>
             </div>
           </button>
         </div>
@@ -360,25 +294,25 @@
           <!-- 기본 버튼 -->
           <button class="button primary2" type="button" aria-label="Primary2 기본 버튼">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">기본 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">기본 버튼</span>
             </div>
           </button>
           
           <!-- 토글 버튼 -->
           <button class="button primary2 pressed toggle" type="button" aria-label="Primary2 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic pressed" aria-hidden="true"></span>
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">토글 버튼</span>
+              <span class="content icon pressed" aria-hidden="true"></span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">토글 버튼</span>
             </div>
           </button>
           
           <!-- 비활성 버튼 -->
           <button class="button primary2" type="button" aria-label="Primary2 비활성 버튼" aria-disabled="true">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">비활성 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">비활성 버튼</span>
             </div>
           </button>
         </div>
@@ -392,25 +326,25 @@
           <!-- 기본 버튼 -->
           <button class="button secondary1" type="button" aria-label="Secondary1 기본 버튼">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">기본 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">기본 버튼</span>
             </div>
           </button>
           
           <!-- 토글 버튼 -->
           <button class="button secondary1 pressed toggle" type="button" aria-label="Secondary1 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic pressed" aria-hidden="true"></span>
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">토글 버튼</span>
+              <span class="content icon pressed" aria-hidden="true"></span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">토글 버튼</span>
             </div>
           </button>
           
           <!-- 비활성 버튼 -->
           <button class="button secondary1" type="button" aria-label="Secondary1 비활성 버튼" aria-disabled="true">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">비활성 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">비활성 버튼</span>
             </div>
           </button>
         </div>
@@ -424,25 +358,25 @@
           <!-- 기본 버튼 -->
           <button class="button secondary2" type="button" aria-label="Secondary2 기본 버튼">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">기본 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">기본 버튼</span>
             </div>
           </button>
           
           <!-- 토글 버튼 -->
           <button class="button secondary2 pressed toggle" type="button" aria-label="Secondary2 토글 버튼" aria-pressed="true">
             <div class="background dynamic">
-              <span class="icon dynamic pressed" aria-hidden="true"></span>
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">토글 버튼</span>
+              <span class="content icon pressed" aria-hidden="true"></span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">토글 버튼</span>
             </div>
           </button>
           
           <!-- 비활성 버튼 -->
           <button class="button secondary2" type="button" aria-label="Secondary2 비활성 버튼" aria-disabled="true">
             <div class="background dynamic">
-              <span class="icon dynamic" aria-hidden="true"></span>
-              <span class="label dynamic">비활성 버튼</span>
+              <span class="content icon" aria-hidden="true"></span>
+              <span class="content label">비활성 버튼</span>
             </div>
           </button>
         </div>

@@ -15,6 +15,534 @@
   🛠️ 유틸리티 모듈
   ============================== */
 
+// 색상 시스템 공통 모듈
+const ColorSystem = {
+  // 8자리 헥스코드 변환
+  rgbaToHex(r, g, b, a = 255) {
+    const clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
+    return "#" + 
+      clamp(r).toString(16).padStart(2, '0').toUpperCase() +
+      clamp(g).toString(16).padStart(2, '0').toUpperCase() +
+      clamp(b).toString(16).padStart(2, '0').toUpperCase() +
+      clamp(a).toString(16).padStart(2, '0').toUpperCase();
+  },
+  
+  // 8자리 헥스코드 파싱
+  hexToRgba(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+      a: result[4] ? parseInt(result[4], 16) : 255
+    } : { r: 0, g: 0, b: 0, a: 255 };
+  },
+  
+  // HSV → RGB 변환
+  hsvToRgb(h, s, v) {
+    h = h % 360;
+    if (h < 0) h += 360;
+    s /= 100;
+    v /= 100;
+    
+    const c = v * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = v - c;
+    
+    let r, g, b;
+    if (h < 60) { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    
+    return {
+      r: Math.round((r + m) * 255),
+      g: Math.round((g + m) * 255),
+      b: Math.round((b + m) * 255)
+    };
+  },
+  
+  // RGB → HSL 변환
+  rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    
+    if (max === min) {
+      h = s = 0; // 무채색
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    
+    return {
+      h: Math.round(h * 360),
+      s: Math.round(s * 100),
+      l: Math.round(l * 100)
+    };
+  },
+  
+  // HSL → RGB 변환
+  hslToRgb(h, s, l) {
+    h /= 360; s /= 100; l /= 100;
+    
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    let r, g, b;
+    if (s === 0) {
+      r = g = b = l; // 무채색
+    } else {
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+    
+    return {
+      r: Math.round(r * 255),
+      g: Math.round(g * 255),
+      b: Math.round(b * 255)
+    };
+  }
+};
+
+// 구면 역학 시스템 (구면좌표계 + 3D 회전)
+const SphericalDynamics = {
+  // === 쿼터니언 회전 ===
+  
+  // 범용 정규화 (3D 벡터 또는 4D 쿼터니언)
+  normalize(v) {
+    const length = Math.sqrt(v.reduce((sum, val) => sum + val * val, 0));
+    if (length === 0) {
+      // 기본값: 3D는 [0,0,1], 4D는 [0,0,0,1]
+      return v.length === 3 ? [0, 0, 1] : [0, 0, 0, 1];
+    }
+    return v.map(val => val / length);
+  },
+  
+  // 축-각도에서 쿼터니언 생성
+  fromAxisAngle(axis, angle) {
+    const halfAngle = angle * 0.5;
+    const s = Math.sin(halfAngle);
+    return [axis[0] * s, axis[1] * s, axis[2] * s, Math.cos(halfAngle)];
+  },
+  
+  // 쿼터니언 곱셈
+  multiply(q1, q2) {
+    return [
+      q1[3] * q2[0] + q1[0] * q2[3] + q1[1] * q2[2] - q1[2] * q2[1],
+      q1[3] * q2[1] - q1[0] * q2[2] + q1[1] * q2[3] + q1[2] * q2[0],
+      q1[3] * q2[2] + q1[0] * q2[1] - q1[1] * q2[0] + q1[2] * q2[3],
+      q1[3] * q2[3] - q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2]
+    ];
+  },
+  
+  // 쿼터니언으로 벡터 회전
+  rotateVector(q, v) {
+    const qv = [v[0], v[1], v[2], 0];
+    const qConj = [-q[0], -q[1], -q[2], q[3]];
+    const temp = this.multiply(q, qv);
+    const result = this.multiply(temp, qConj);
+    return [result[0], result[1], result[2]];
+  },
+  
+  // SLERP (구면 선형 보간)
+  slerp(q1, q2, t) {
+    let dot = q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3];
+    
+    if (dot < 0.0) {
+      q2 = [-q2[0], -q2[1], -q2[2], -q2[3]];
+      dot = -dot;
+    }
+    
+    if (dot > 0.9995) {
+      return this.normalize([
+        q1[0] + t * (q2[0] - q1[0]),
+        q1[1] + t * (q2[1] - q1[1]),
+        q1[2] + t * (q2[2] - q1[2]),
+        q1[3] + t * (q2[3] - q1[3])
+      ]);
+    }
+    
+    const theta0 = Math.acos(Math.abs(dot));
+    const theta = theta0 * t;
+    const sinTheta0 = Math.sin(theta0);
+    const sinTheta = Math.sin(theta);
+    
+    const s0 = Math.cos(theta) - dot * sinTheta / sinTheta0;
+    const s1 = sinTheta / sinTheta0;
+    
+    return [
+      s0 * q1[0] + s1 * q2[0],
+      s0 * q1[1] + s1 * q2[1],
+      s0 * q1[2] + s1 * q2[2],
+      s0 * q1[3] + s1 * q2[3]
+    ];
+  },
+  
+  // 클릭 좌표에서 회전 계산 (드래그와 동일한 좌표계)
+  fromClickRotation(screenX, screenY) {
+    // 드래그와 동일한 방식: 클릭 거리에 비례한 회전
+    const distance = Math.sqrt(screenX * screenX + screenY * screenY);
+    const angle = distance * Math.PI * 0.5; // 클릭 거리에 비례
+    
+    if (angle < 1e-6) return [1, 0, 0, 0]; // 단위 쿼터니언
+    
+    // 드래그와 동일한 축 계산 방식
+    const axis = this.normalize([screenY, -screenX, 0]);
+    return this.fromAxisAngle(axis, angle);
+  },
+  
+  // 드래그 회전 계산 (트랙볼 방식)
+  fromDragRotation(dx, dy, sensitivity = 0.005) {
+    const angle = Math.sqrt(dx * dx + dy * dy) * sensitivity;
+    if (angle < 1e-6) return [1, 0, 0, 0]; // 단위 쿼터니언
+    
+    const axis = this.normalize([dy, -dx, 0]); // 범용 정규화
+    return this.fromAxisAngle(axis, angle);
+  },
+  
+  // === 구면좌표계 ===
+  
+  // 직교좌표 → 구면좌표 변환
+  cartesianToSpherical(x, y, z) {
+    const r = Math.sqrt(x * x + y * y + z * z);
+    const theta = Math.acos(Math.max(-1, Math.min(1, z / r))); // 위도각 (0 ~ π)
+    const phi = Math.atan2(y, x); // 경도각 (-π ~ π)
+    return { r, theta, phi };
+  },
+  
+  // 구면좌표 → 직교좌표 변환
+  sphericalToCartesian(r, theta, phi) {
+    const x = r * Math.sin(theta) * Math.cos(phi);
+    const y = r * Math.sin(theta) * Math.sin(phi);
+    const z = r * Math.cos(theta);
+    return { x, y, z };
+  },
+  
+  // 8자리 헥스코드에서 구면좌표 찾기
+  findPosition(hexColor) {
+    const rgba = ColorSystem.hexToRgba(hexColor);
+    const targetHex = ColorSystem.rgbaToHex(rgba.r, rgba.g, rgba.b, 255).substr(0, 7);
+    
+    // 구체 전체 검색
+    for (let theta = 0; theta <= Math.PI; theta += 0.05) {
+      for (let phi = -Math.PI; phi <= Math.PI; phi += 0.05) {
+        const color = ColorSphereSystem.calculateColor(theta, phi);
+        const testHex = ColorSystem.rgbaToHex(color.r, color.g, color.b, 255).substr(0, 7);
+        
+        if (testHex === targetHex) {
+          return { theta, phi };
+        }
+      }
+    }
+    
+    return { theta: 0, phi: 0 }; // 못 찾으면 북극
+  },
+  
+  // === 3D 구체 상호작용 ===
+  
+  // 3D 캔버스 상호작용 설정
+  setupCanvasInteraction(canvas, sphereState, onUpdate) {
+    let renderPending = false;
+    let dragStartPos = null;
+    let hasDragged = false;
+    
+    // pointerdown: 드래그 시작
+    canvas.addEventListener('pointerdown', (e) => {
+      sphereState.dragging = true;
+      sphereState.last = [e.clientX, e.clientY];
+      sphereState.isDragging = true;
+      dragStartPos = [e.clientX, e.clientY];
+      hasDragged = false;
+      canvas.setPointerCapture(e.pointerId);
+      canvas.style.cursor = 'grabbing';
+    });
+    
+    // pointermove: 회전
+    canvas.addEventListener('pointermove', (e) => {
+      if (!sphereState.dragging) return;
+      
+      const dx = e.clientX - sphereState.last[0];
+      const dy = e.clientY - sphereState.last[1];
+      sphereState.last = [e.clientX, e.clientY];
+      
+      // 드래그 감지
+      if (!hasDragged && dragStartPos) {
+        const dragDistance = Math.hypot(e.clientX - dragStartPos[0], e.clientY - dragStartPos[1]);
+        if (dragDistance > 3) {
+          hasDragged = true;
+        }
+      }
+      
+      // 회전 적용
+      const s = 0.45 * Math.min(canvas.clientWidth, canvas.clientHeight);
+      const sensitivity = 1 / s;
+      const dq = this.fromDragRotation(dx, dy, sensitivity);
+      
+      if (dq[0] !== 1) {
+        sphereState.Q = this.multiply(sphereState.Q, dq);
+      }
+      
+      // 중심점 색상 업데이트
+      if (onUpdate) onUpdate(canvas);
+      
+      // 렌더링 스로틀링
+      if (!renderPending) {
+        renderPending = true;
+        requestAnimationFrame(() => {
+          const ctx = canvas.getContext('2d');
+          ColorSphereSystem.render3D(ctx, sphereState);
+          renderPending = false;
+        });
+      }
+    });
+    
+    // pointerup: 드래그 종료
+    canvas.addEventListener('pointerup', (e) => {
+      sphereState.dragging = false;
+      sphereState.isDragging = false;
+      canvas.releasePointerCapture(e.pointerId);
+      canvas.style.cursor = 'grab';
+      
+      // 고화질 최종 렌더링
+      requestAnimationFrame(() => {
+        const ctx = canvas.getContext('2d');
+        ColorSphereSystem.render3D(ctx, sphereState);
+      });
+    });
+    
+    // click: 플래그 초기화
+    canvas.addEventListener('click', (e) => {
+      hasDragged = false;
+      dragStartPos = null;
+    });
+    
+    // wheel: 알파 조절
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      
+      const picker = canvas.closest('.custom-color-picker');
+      if (!picker) return;
+      
+      const panelHexInput = picker.querySelector('.panel-hex-input');
+      if (!panelHexInput) return;
+      
+      const currentHex = panelHexInput.value.replace('#', '');
+      if (currentHex.length >= 6) {
+        let alpha = currentHex.length === 8 ? parseInt(currentHex.substr(6, 2), 16) : 255;
+        
+        // 알파값 조절
+        const alphaChange = e.deltaY > 0 ? -4 : 4;
+        alpha = Math.max(0, Math.min(255, alpha + alphaChange));
+        
+        const newHex = currentHex.substr(0, 6) + alpha.toString(16).padStart(2, '0').toUpperCase();
+        panelHexInput.value = '#' + newHex;
+        
+        // 이벤트 트리거
+        panelHexInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+  },
+  
+  // 부드러운 쿼터니언 애니메이션
+  animateToQuaternion(sphereState, targetQ, canvas) {
+    const startQ = [...sphereState.Q];
+    const duration = 200;
+    const startTime = Date.now();
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      
+      sphereState.Q = this.slerp(startQ, targetQ, easeProgress);
+      
+      // 구체 다시 그리기
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ColorSphereSystem.render3D(ctx, sphereState);
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }
+};
+
+// 색상 구체 시스템 (구면좌표 → 색상 매핑)
+const ColorSphereSystem = {
+  // 구면좌표에서 색상 계산
+  calculateColor(theta, phi) {
+    // 정확한 구간 설정: 극지방 6도 (좌우 3도씩), 적도 6도
+    const thetaDeg = theta * 180 / Math.PI;
+    const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177); // 0°~3°, 177°~180°
+    const isEquatorRegion = (Math.abs(thetaDeg - 90) < 3); // 87° ~ 93°
+    
+    let r, g, b;
+    
+    if (isPolarRegion) {
+      // 극지방: 완전한 순백/순흑
+      const value = thetaDeg < 3 ? 255 : 0; // 북극=백색, 남극=흑색
+      r = g = b = value;
+    } else if (isEquatorRegion) {
+      // 적도 띠: 순색 (명도=50% 고정)
+      const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
+      const h6 = Math.floor(hue / 60) % 6;
+      const f = (hue % 60) / 60;
+      
+      switch(h6) {
+        case 0: r = 255; g = Math.round(f * 255); b = 0; break;
+        case 1: r = Math.round((1-f) * 255); g = 255; b = 0; break;
+        case 2: r = 0; g = 255; b = Math.round(f * 255); break;
+        case 3: r = 0; g = Math.round((1-f) * 255); b = 255; break;
+        case 4: r = Math.round(f * 255); g = 0; b = 255; break;
+        case 5: r = 255; g = 0; b = Math.round((1-f) * 255); break;
+      }
+    } else {
+      // 그라데이션 영역: 극점과 적도 완전 제외 (3°~87°, 93°~177°)
+      const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
+      const h6 = Math.floor(hue / 60) % 6;
+      const f = (hue % 60) / 60;
+      
+      // 기본 순색 계산
+      let baseR, baseG, baseB;
+      switch(h6) {
+        case 0: baseR = 255; baseG = Math.round(f * 255); baseB = 0; break;
+        case 1: baseR = Math.round((1-f) * 255); baseG = 255; baseB = 0; break;
+        case 2: baseR = 0; baseG = 255; baseB = Math.round(f * 255); break;
+        case 3: baseR = 0; baseG = Math.round((1-f) * 255); baseB = 255; break;
+        case 4: baseR = Math.round(f * 255); baseG = 0; baseB = 255; break;
+        case 5: baseR = 255; baseG = 0; baseB = Math.round((1-f) * 255); break;
+      }
+      
+      // 그라데이션 영역에서만 명도 스케일링 적용
+      let lightnessRatio;
+      if (thetaDeg >= 3 && thetaDeg <= 87) {
+        // 북반구 그라데이션: 3°~87° → 100%~50% 명도
+        lightnessRatio = 1.0 - ((thetaDeg - 3) / (87 - 3)) * 0.5;
+      } else if (thetaDeg >= 93 && thetaDeg <= 177) {
+        // 남반구 그라데이션: 93°~177° → 50%~0% 명도  
+        lightnessRatio = 0.5 - ((thetaDeg - 93) / (177 - 93)) * 0.5;
+      } else {
+        // 극점/적도 경계: 가장 가까운 구간의 경계값
+        if (thetaDeg < 90) {
+          lightnessRatio = 0.5; // 적도 경계 (87°~93° 사이)
+        } else {
+          lightnessRatio = 0.5; // 적도 경계 (87°~93° 사이)
+        }
+      }
+      
+      // 채도와 명도 적용
+      const totalSaturation = Math.sin(theta);
+      const gray = Math.round(lightnessRatio * 255);
+      r = Math.round(gray + (baseR - gray) * totalSaturation);
+      g = Math.round(gray + (baseG - gray) * totalSaturation);
+      b = Math.round(gray + (baseB - gray) * totalSaturation);
+    }
+    
+    return { r, g, b };
+  },
+  
+  // 3D 구체 렌더링
+  render3D(ctx, sphereState) {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const baseRadius = Math.min(width, height) / 2 - 20;
+    const radius = baseRadius * sphereState.zoom;
+    
+    // 캔버스 초기화
+    ctx.clearRect(0, 0, width, height);
+    
+    // 3D 색상구체 렌더링
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
+    
+    // 반지름의 제곱 (성능 최적화)
+    const radiusSquared = radius * radius;
+    const invRadius = 1 / radius;
+    
+    // 픽셀 처리 최적화 (드래그 중에는 해상도 낮춤)
+    const pixelStep = sphereState.isDragging ? 2 : 1;
+    
+    for (let y = 0; y < height; y += pixelStep) {
+      for (let x = 0; x < width; x += pixelStep) {
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const distanceSquared = dx * dx + dy * dy;
+        
+        if (distanceSquared <= radiusSquared) {
+          // 3D 구체 좌표
+          const screenX = dx * invRadius;
+          const screenY = dy * invRadius;
+          const screenZ = Math.sqrt(Math.max(0, 1 - screenX * screenX - screenY * screenY));
+          
+          // 쿼터니언으로 3D 회전 적용
+          const rotatedVector = SphericalDynamics.rotateVector(sphereState.Q, [screenX, screenY, screenZ]);
+          const [rotatedX, rotatedY, rotatedZ] = rotatedVector;
+          
+          // 3D 좌표를 구면 좌표로 변환
+          const phi = Math.atan2(rotatedY, rotatedX);
+          const theta = Math.acos(Math.max(-1, Math.min(1, rotatedZ)));
+          
+          // ColorSphereSystem으로 색상 계산
+          const color = this.calculateColor(theta, phi);
+          const { r, g, b } = color;
+          
+          // 픽셀 채우기 (건너뛴 픽셀도 같은 색으로)
+          for (let py = y; py < Math.min(y + pixelStep, height); py++) {
+            for (let px = x; px < Math.min(x + pixelStep, width); px++) {
+              const index = (py * width + px) * 4;
+              data[index] = r;
+              data[index + 1] = g;
+              data[index + 2] = b;
+              data[index + 3] = 255;
+            }
+          }
+        }
+      }
+    }
+    
+    ctx.putImageData(imageData, 0, 0);
+    
+    // 중심점 표시
+    if (sphereState.selectedColor) {
+      const { r, g, b } = sphereState.selectedColor;
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // 대비되는 테두리 (2px)
+      const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+      ctx.strokeStyle = brightness > 127 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+};
+
 const AppUtils = {
   SVGLoader: {
     async loadSvg(path, selector) {
@@ -25,12 +553,11 @@ const AppUtils = {
     },
     
     async loadAllIcons() {
-      const iconPromise = this.loadSvg('icon.svg', '.icon');
-      const selectedIconPromise = this.loadSvg('selected.svg', '.icon.dynamic.pressed')
+      const iconPromise = this.loadSvg('icon.svg', '.content.icon');
+      const selectedIconPromise = this.loadSvg('selected.svg', '.content.icon.pressed')
         .then(svg => { ButtonSystem.state.iconSelectedSvgContent = svg; });
       
-      await Promise.all([iconPromise, selectedIconPromise]);
-      console.log('📦 모든 아이콘 로드 완료');
+              await Promise.all([iconPromise, selectedIconPromise]);
     }
   },
   
@@ -42,9 +569,7 @@ const AppUtils = {
       const styleElement = document.createElement('style');
       styleElement.id = id;
       styleElement.textContent = content;
-      document.head.appendChild(styleElement);
-      
-      console.log(`📝 ${description || id} CSS 주입 완료`);
+              document.head.appendChild(styleElement);
     }
   }
 };
@@ -71,18 +596,6 @@ const ButtonSystem = {
   },
   
   PaletteManager: {
-    defaultColors: {
-      light: {
-        'contents-color-default': '#252525FF', 'contents-color-pressed': '#FFFFFFFF', 'contents-color-disabled': '#8C8C8CFF',
-        'background-color-default': '#A4693FFF', 'background-color-pressed': '#EEDCD2FF', 'background-color-disabled': '#00000000', 'background-color-pointed': '#A4693FFF',
-        'border-color-default': '#A4693FFF', 'border-color-pressed': '#A4693FFF', 'border-color-disabled': '#BFBFBFFF', 'border-color-pointed': 'var(--system-pointed)'
-      },
-      dark: {
-        'contents-color-default': '#FFE100FF', 'contents-color-pressed': '#807000FF', 'contents-color-disabled': '#8C8C8CFF',
-        'background-color-default': '#241F00FF', 'background-color-pressed': '#FFE100FF', 'background-color-disabled': '#00000000', 'background-color-pointed': '#241F00FF',
-        'border-color-default': '#FFE100FF', 'border-color-pressed': '#FFE100FF', 'border-color-disabled': '#757575FF', 'border-color-pointed': 'var(--system-pointed)'
-      }
-    },
     
     generateCSS() {
       const buttons = document.querySelectorAll('.button');
@@ -104,33 +617,200 @@ const ButtonSystem = {
           { name: 'pressed', selector: '.pressed:not(.toggle)', disabled: false },
           { name: 'pressed', selector: '.pressed.toggle', disabled: false },
           { name: 'disabled', selector: '[aria-disabled="true"]', disabled: true }
-        ].forEach(({name: stateName, selector: stateSelector, disabled}) => {
-          const baseSelector = palette === 'primary1' && stateName === 'default' && !disabled ? `&${stateSelector}` : null;
+        ].forEach(({name: state, selector: stateSelector, disabled}) => {
+          const baseSelector = palette === 'primary1' && state === 'default' && !disabled ? `&${stateSelector}` : null;
           const paletteSelector = `&.${palette}${stateSelector}`;
           
           if (baseSelector) {
-            selectorsCSS += `\n    ${baseSelector} { color: var(--${palette}-contents-color-${stateName}); & .background.dynamic { background: var(--${palette}-background-color-${stateName}); outline-color: var(--${palette}-border-color-${stateName}); } }`;
+            selectorsCSS += `
+    ${baseSelector} {
+      & .background.dynamic {
+        background: var(--${palette}-background-color-${state});
+        outline-color: var(--${palette}-border-color-${state});
+        outline-style: var(--border-style-default);
+        
+        & .content {
+          color: var(--${palette}-content-color-${state});
+        }
+      }
+    }`;
           }
           
-          selectorsCSS += `\n    ${paletteSelector} { color: var(--${palette}-contents-color-${stateName}); & .background.dynamic { background: var(--${palette}-background-color-${stateName}); outline-color: var(--${palette}-border-color-${stateName}); ${stateName === 'pressed' ? 'outline-width: var(--border-style-pressed);' : ''} } ${stateName === 'pressed' ? '&.toggle { & .icon.dynamic.pressed { display: flex; } }' : ''} ${disabled ? 'cursor: not-allowed;' : ''} }`;
+          selectorsCSS += `
+    ${paletteSelector} {
+      & .background.dynamic {
+        background: var(--${palette}-background-color-${state});
+        outline-color: var(--${palette}-border-color-${state});
+        ${state === 'default' ? 'outline-style: var(--border-style-default);' : ''}
+        ${state === 'pressed' ? 'outline-style: var(--border-style-pressed); outline-width: var(--border-style-pressed);' : ''}
+        ${state === 'disabled' ? 'outline-style: var(--border-style-disabled);' : ''}
+        
+        & .content {
+          color: var(--${palette}-content-color-${state});
+        }
+      }
+      ${state === 'pressed' ? '&.toggle { & .content.icon.pressed { display: var(--content-icon-display-pressed-toggle); } }' : ''}
+      ${disabled ? 'cursor: var(--button-cursor-disabled);' : ''}
+    }`;
         });
         
         if (!isExisting) {
-          Object.entries(this.defaultColors.light).forEach(([property, value]) => {
-            lightThemeCSS += `  --${palette}-${property}: ${value};\n`;
-          });
-          Object.entries(this.defaultColors.dark).forEach(([property, value]) => {
-            darkThemeCSS += `  --${palette}-${property}: ${value};\n`;
+          // CSS에서 --custom-* 변수를 복사하여 새 팔레트 생성
+          const customProperties = [
+            'content-color-default', 'content-color-pressed', 'content-color-disabled',
+            'background-color-default', 'background-color-pressed', 'background-color-disabled',
+            'border-color-default', 'border-color-pressed', 'border-color-disabled'
+          ];
+          
+          customProperties.forEach(property => {
+            lightThemeCSS += `  --${palette}-${property}: var(--custom-${property});\n`;
+            darkThemeCSS += `  --${palette}-${property}: var(--custom-${property});\n`;
           });
         }
       });
       
-      AppUtils.CSSInjector.inject('palette-system-styles', `${lightThemeCSS ? `:root {\n${lightThemeCSS}}` : ''}${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}@layer components { .button {${selectorsCSS} } }`, '팔레트 시스템');
+      const cssContent = `
+/* HTML 클래스 기반 수정자 시스템 - CSS 상속 활용 */
+${lightThemeCSS ? `:root {\n${lightThemeCSS}}` : ''}
+
+${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
+
+@layer components {
+  .button {${selectorsCSS}
+  }
+}
+`;
+      
+      AppUtils.CSSInjector.inject('palette-system-styles', cssContent, '팔레트 시스템');
       return discoveredPalettes;
     }
   },
   
   StyleManager: {
+    // 상태 변경 후 명도대비 업데이트 (공통 함수)
+    scheduleContrastUpdate() {
+      // 렌더링 완료 후 실행하는 Promise 기반 방식
+      this.waitForRenderCompletion().then(() => {
+        this.updateButtonLabelsWithContrast();
+      });
+    },
+    
+    // 렌더링 완료 대기 함수
+    async waitForRenderCompletion() {
+      return new Promise((resolve) => {
+        // 1. 다음 프레임 대기 (레이아웃 단계)
+        requestAnimationFrame(() => {
+          // 2. 그 다음 프레임 대기 (페인트 단계)
+          requestAnimationFrame(() => {
+            // 3. 추가 안정화 대기
+            setTimeout(() => {
+              resolve();
+            }, 16); // 1프레임(16.67ms) 추가 대기
+          });
+        });
+      });
+    },
+    
+    // 모든 버튼 상태 변경을 감지하는 통합 이벤트 매니저
+    setupContrastUpdateManager() {
+      // MutationObserver로 클래스 및 스타일 변경 감지
+      const observer = new MutationObserver((mutations) => {
+        let needsUpdate = false;
+        
+        mutations.forEach(mutation => {
+          const target = mutation.target;
+          
+          // 버튼 클래스 변경 감지
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            if (target.classList.contains('button')) {
+              needsUpdate = true;
+            }
+          }
+          
+          // CSS 변수 변경 감지 (documentElement의 style 속성)
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            if (target === document.documentElement) {
+              needsUpdate = true;
+            }
+          }
+        });
+        
+        if (needsUpdate) {
+          this.scheduleContrastUpdate();
+        }
+      });
+      
+      // 모든 버튼의 클래스 변경 감지
+      document.querySelectorAll('.button').forEach(button => {
+        observer.observe(button, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      });
+      
+      // documentElement의 CSS 변수 변경 감지
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['style']
+              });
+      return observer;
+    },
+    
+    // 명도대비 계산 함수
+    calculateContrast(color1, color2) {
+      // RGB 값 추출 및 상대 휘도 계산
+      const getRGB = (color) => {
+        const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        return match ? [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] : [0, 0, 0];
+      };
+      
+      const getLuminance = (r, g, b) => {
+        const [rs, gs, bs] = [r, g, b].map(c => {
+          c = c / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+      };
+      
+      const [r1, g1, b1] = getRGB(color1);
+      const [r2, g2, b2] = getRGB(color2);
+      const lum1 = getLuminance(r1, g1, b1);
+      const lum2 = getLuminance(r2, g2, b2);
+      const brightest = Math.max(lum1, lum2);
+      const darkest = Math.min(lum1, lum2);
+      return (brightest + 0.05) / (darkest + 0.05);
+    },
+    
+    updateButtonLabelsWithContrast() {
+      const allButtons = document.querySelectorAll('.button');
+      
+      allButtons.forEach(button => {
+        const background = button.querySelector('.background.dynamic');
+        const content = button.querySelector('.content');
+        const label = button.querySelector('.content.label');
+        
+        if (background && content && label) {
+          // 스타일 재계산 강제 후 최종값 가져오기
+          background.offsetHeight; // 강제 리플로우
+          content.offsetHeight;    // 강제 리플로우
+          
+          const backgroundStyle = getComputedStyle(background);
+          const contentStyle = getComputedStyle(content);
+          const backgroundColor = backgroundStyle.backgroundColor;
+                      const textColor = contentStyle.color;
+          
+          const contrast = this.calculateContrast(textColor, backgroundColor);
+          const contrastRatio = contrast.toFixed(2);
+          
+          // 기존 라벨에서 대비값 부분 제거
+          let labelText = label.innerHTML.split('<br>')[0];
+          
+          // 대비값만 숫자로 표시
+          label.innerHTML = `${labelText}<br>${contrastRatio}`;
+        }
+      });
+    },
+    
     applyDynamicStyles() {
       const allButtons = document.querySelectorAll('.button');
       if (allButtons.length === 0) return;
@@ -170,7 +850,7 @@ const ButtonSystem = {
         background.style.borderRadius = `${backgroundBorderRadius}px`;
         background.style.outlineWidth = `${backgroundOutlineWidth}px`;
 
-        const iconPressed = button.querySelector('.icon.dynamic.pressed');
+        const iconPressed = button.querySelector('.content.icon.pressed');
         if (iconPressed) {
           iconPressed.style.width = `${iconSelectedSize}px`;
           iconPressed.style.height = `${iconSelectedSize}px`;
@@ -186,10 +866,16 @@ const ButtonSystem = {
         processedCount++;
       }
       
-      console.log(`✅ 동적 스타일링 완료 - 처리: ${processedCount}/${allButtons.length}`);
+      
+      
+      // 명도대비 라벨 업데이트
+      this.updateButtonLabelsWithContrast();
     },
     
-    setupIconInjection() {
+    async setupIconInjection() {
+      // 렌더링 완료 후 안정된 상태에서 아이콘 주입
+      await this.waitForRenderCompletion();
+      
       const allButtons = document.querySelectorAll('.button');
       
       for (const button of allButtons) {
@@ -198,11 +884,16 @@ const ButtonSystem = {
         
         const isToggleButton = button.classList.contains('toggle');
         
-        if (isToggleButton && !background.querySelector('.icon.dynamic.pressed')) {
+        if (isToggleButton && !background.querySelector('.content.icon.pressed')) {
           const iconPressedSpan = document.createElement('span');
-          iconPressedSpan.className = 'icon dynamic pressed';
-          if (ButtonSystem.state.iconSelectedSvgContent) iconPressedSpan.innerHTML = ButtonSystem.state.iconSelectedSvgContent;
-          const iconEl = background.querySelector('.icon.dynamic');
+          iconPressedSpan.className = 'content icon pressed';
+          
+          // SVG 로딩 완료 확인 후 주입
+                      if (ButtonSystem.state.iconSelectedSvgContent) {
+              iconPressedSpan.innerHTML = ButtonSystem.state.iconSelectedSvgContent;
+            }
+          
+          const iconEl = background.querySelector('.content.icon');
           if (iconEl && iconEl.parentNode) background.insertBefore(iconPressedSpan, iconEl);
           else background.insertBefore(iconPressedSpan, background.firstChild);
         }
@@ -216,19 +907,25 @@ const ButtonSystem = {
           button.dataset.isToggleButton = 'true';
           button.setAttribute('aria-pressed', isInitiallyPressed ? 'true' : 'false');
         }
-      }
-      
-      console.log('🎯 아이콘 주입 및 접근성 설정 완료');
+              }
     }
   },
   
   async init() {
-    console.log('🚀 ButtonSystem 초기화 시작');
+    // 1단계: SVG 로딩 완료 대기
     await AppUtils.SVGLoader.loadAllIcons();
-    this.StyleManager.setupIconInjection();
+    
+    // 2단계: 아이콘 주입 완료 대기  
+    await this.StyleManager.setupIconInjection();
+    
+    // 3단계: 팔레트 CSS 생성
     this.PaletteManager.generateCSS();
+    
+    // 4단계: 동적 스타일 적용
     this.StyleManager.applyDynamicStyles();
-    console.log('✅ ButtonSystem 초기화 완료');
+    
+    // 5단계: 명도대비 자동 업데이트 매니저 설정
+    this.StyleManager.setupContrastUpdateManager();
   }
 };
 
@@ -525,36 +1222,576 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const CustomPaletteManager = {
     CUSTOM_PALETTE_NAME: 'custom',
-    _domCache: { lightInputs: {}, darkInputs: {}, applyBtn: null, resetBtn: null, previewColors: {}, testButtons: null },
+    _domCache: { lightInputs: {}, darkInputs: {}, resetBtn: null, previewColors: {}, testButtons: null },
     currentPalette: { name: 'custom' },
+    
+          // 커스텀 컬러피커 시스템
+      CustomColorPicker: {
+        // 3D 구체 상태 관리 (쿼터니언 기반)
+        sphereState: {
+          dragging: false,
+          v0: null,
+          Q: [1, 0, 0, 0],  // 쿼터니언 [w, x, y, z]
+          last: [0, 0],     // 마지막 포인터 위치
+          zoom: 1.0,
+          selectedColor: { h: 0, s: 50, l: 50 },
+          isDragging: false
+        },
+      
+      init() {
+        this.generateLightThemePickers();
+        this.generateDarkThemePickers();
+        this.setupColorDisplays();
+        this.setup3DCanvasInteraction();
+        this.setupHexInputs();
+      },
+      
+      generateLightThemePickers() {
+        const lightContainer = document.getElementById('light-color-pickers');
+        if (!lightContainer) return;
+        
+        const lightPickers = [
+          { id: 'light-content-default', label: '콘텐츠(기본)', color: '#252525', hex: '#252525FF', hue: 0, alpha: 255 },
+          { id: 'light-content-pressed', label: '콘텐츠(눌림)', color: '#FFFFFF', hex: '#FFFFFFFF', hue: 0, alpha: 255 },
+          { id: 'light-content-disabled', label: '콘텐츠(비활성)', color: '#8C8C8C', hex: '#8C8C8CFF', hue: 0, alpha: 140 },
+          { id: 'light-background-default', label: '배경(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
+          { id: 'light-background-pressed', label: '배경(눌림)', color: '#EEDCD2', hex: '#EEDCD2FF', hue: 25, alpha: 255 },
+          { id: 'light-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
+          { id: 'light-border-default', label: '테두리(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
+          { id: 'light-border-pressed', label: '테두리(눌림)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
+          { id: 'light-border-disabled', label: '테두리(비활성)', color: '#BFBFBF', hex: '#BFBFBFFF', hue: 0, alpha: 255 }
+        ];
+        
+        lightPickers.forEach(picker => {
+          const html = `
+            <div class="palette-input-group">
+              <label for="${picker.id}">${picker.label}:</label>
+              <div class="custom-color-picker" data-target="${picker.id}">
+                <div class="color-display" style="background: ${picker.color}"></div>
+                <div class="color-picker-panel">
+                  <div class="canvas-container">
+                    <canvas class="color-canvas-3d" width="600" height="600"></canvas>
+                    <div class="sphere-info">
+                      <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
+                    </div>
+                  </div>
+                  <div class="color-input-group">
+                    <label>색상 코드</label>
+                    <input type="text" class="panel-hex-input" value="${picker.hex}" maxlength="9" placeholder="#RRGGBBAA">
+                  </div>
+                </div>
+              </div>
+              <input type="text" class="hex-input" value="${picker.hex}">
+            </div>
+          `;
+          lightContainer.innerHTML += html;
+                  });
+      },
+      
+      generateDarkThemePickers() {
+        const darkContainer = document.getElementById('dark-color-pickers');
+        if (!darkContainer) return;
+        
+        const darkPickers = [
+          { id: 'dark-content-default', label: '콘텐츠(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-content-pressed', label: '콘텐츠(눌림)', color: '#807000', hex: '#807000FF', hue: 54, alpha: 255 },
+          { id: 'dark-content-disabled', label: '콘텐츠(비활성)', color: '#8C8C8C', hex: '#8C8C8CFF', hue: 0, alpha: 140 },
+          { id: 'dark-background-default', label: '배경(기본)', color: '#241F00', hex: '#241F00FF', hue: 54, alpha: 255 },
+          { id: 'dark-background-pressed', label: '배경(눌림)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
+          { id: 'dark-border-default', label: '테두리(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-border-pressed', label: '테두리(눌림)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-border-disabled', label: '테두리(비활성)', color: '#757575', hex: '#757575FF', hue: 0, alpha: 255 }
+        ];
+        
+        darkPickers.forEach(picker => {
+          const html = `
+            <div class="palette-input-group">
+              <label for="${picker.id}">${picker.label}:</label>
+              <div class="custom-color-picker" data-target="${picker.id}">
+                <div class="color-display" style="background: ${picker.color}"></div>
+                <div class="color-picker-panel">
+                  <div class="canvas-container">
+                    <canvas class="color-canvas-3d" width="600" height="600"></canvas>
+                    <div class="sphere-info">
+                      <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
+                    </div>
+                  </div>
+                  <div class="color-input-group">
+                    <label>색상 코드</label>
+                    <input type="text" class="panel-hex-input" value="${picker.hex}" maxlength="9" placeholder="#RRGGBBAA">
+                  </div>
+                </div>
+              </div>
+              <input type="text" class="hex-input" value="${picker.hex}">
+            </div>
+          `;
+          darkContainer.innerHTML += html;
+                  });
+      },
+      
+      setupColorDisplays() {
+        document.querySelectorAll('.color-display').forEach(display => {
+          display.addEventListener('click', (e) => {
+            const picker = e.target.closest('.custom-color-picker');
+            const panel = picker.querySelector('.color-picker-panel');
+            
+            // 다른 패널들 닫기
+            document.querySelectorAll('.color-picker-panel').forEach(p => p.classList.remove('active'));
+            
+            // 현재 패널 토글
+            panel.classList.toggle('active');
+            
+            if (panel.classList.contains('active')) {
+              // 3D 캔버스 초기화 후 색상 이동
+              this.initialize3DCanvas(picker);
+              
+              // 팔레트 열릴 때 현재 입력값에 해당하는 색상을 중심점으로 이동
+              const hexInput = picker.parentElement.querySelector('.hex-input');
+              if (hexInput && hexInput.value) {
+                const hexValue = hexInput.value.replace('#', '').toUpperCase();
+                
+                // 8자리 헥스코드만 확인 (완전 입력시에만)
+                if (hexValue.length === 8 && /^[0-9A-F]{8}$/.test(hexValue)) {
+                  const r = parseInt(hexValue.substr(0, 2), 16);
+                  const g = parseInt(hexValue.substr(2, 2), 16);
+                  const b = parseInt(hexValue.substr(4, 2), 16);
+                  
+                  // 캔버스 초기화 완료 후 색상 이동 (입력값 변경 없이 구체만 회전)
+
+                }
+              }
+            }
+          });
+        });
+        
+        // 외부 클릭 시 패널 닫기
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.custom-color-picker')) {
+            document.querySelectorAll('.color-picker-panel').forEach(panel => {
+              panel.classList.remove('active');
+            });
+          }
+        });
+      },
+      
+      initialize3DCanvas(picker) {
+        const canvas3D = picker.querySelector('.color-canvas-3d');
+        if (canvas3D) {
+          const ctx = canvas3D.getContext('2d');
+          ColorSphereSystem.render3D(ctx, this.sphereState);
+        }
+      },
+      
+      // 구체 렌더링은 ColorSphereSystem.render3D로 이관됨
+      
+      setup3DCanvasInteraction() {
+        // SphericalDynamics로 상호작용 설정
+        const handleCanvasSetup = (canvas) => {
+          SphericalDynamics.setupCanvasInteraction(
+            canvas, 
+            this.sphereState, 
+            (canvas) => this.updateCenterColorRealtime(canvas)
+          );
+        };
+        
+        // 3D 구체에서 색상 선택 (쿼터니언 기반)
+        const selectColorAt3D = (e, canvas) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const radius = (Math.min(rect.width, rect.height) / 2 - 20) * this.sphereState.zoom;
+          
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance <= radius) {
+            // 3D 구체 좌표 (음영 효과는 없지만 구조는 3D)
+            const screenX = dx / radius;
+            const screenY = dy / radius;
+            const screenZ = Math.sqrt(Math.max(0, 1 - screenX * screenX - screenY * screenY));  // 3D 구체 곡면
+            
+            // 쿼터니언으로 회전 적용
+            const rotatedVector = SphericalDynamics.rotateVector(this.sphereState.Q, [screenX, screenY, screenZ]);
+            const [rotatedX, rotatedY, rotatedZ] = rotatedVector;
+            
+            // 구면 좌표로 변환
+            const phi = Math.atan2(rotatedY, rotatedX);
+            const theta = Math.acos(Math.max(-1, Math.min(1, rotatedZ)));
+            
+            // 직접 RGB 헥스코드 스케일링 (캘리브레이션)
+            let hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;  // 0-360도
+            if (hue >= 360) hue = 0;
+            
+            const radialFactor = distance / radius;  // 0~1
+            const lightnessRatio = ((Math.PI - theta) / Math.PI); // 0(남극)~1(북극)
+                      // SphericalSystem 모듈 사용 (통합된 색상 계산)
+          const color = ColorSphereSystem.calculateColor(theta, phi);
+          const { r, g, b } = color;
+            
+            // 8자리 헥스코드로 직접 처리
+            this.sphereState.selectedColor = { r, g, b, hue };
+            
+            const picker = canvas.closest('.custom-color-picker');
+            const targetId = picker.dataset.target;
+            const panelHexInput = picker.querySelector('.panel-hex-input');
+            
+            // 현재 알파값 유지
+            let alpha = 255;
+            if (panelHexInput && panelHexInput.value) {
+              const currentHex = panelHexInput.value.replace('#', '');
+              if (currentHex.length === 8) {
+                alpha = parseInt(currentHex.substr(6, 2), 16);
+              }
+            }
+            
+            const rgb = { r, g, b };
+            const hexColor = ColorSystem.rgbaToHex(r, g, b, alpha);
+            
+            this.updateColorInputs(targetId, rgb, alpha, hexColor);
+            
+            // 구체 다시 그리기 (선택점 업데이트)
+            const ctx = canvas.getContext('2d');
+            ColorSphereSystem.render3D(ctx, this.sphereState);
+          }
+        };
+        
+        this.selectColorAt3D = selectColorAt3D;
+        
+
+        
+        // 뷰포트 중심점 색상 실시간 업데이트
+        this.updateCenterColorRealtime = (canvas) => {
+          // 화면 중심점 (0, 0, 1) 3D 구체 표면
+          const screenX = 0;  // 중심점
+          const screenY = 0;  // 중심점  
+          const screenZ = 1;  // 3D 구체 앞면
+          
+          // 쿼터니언으로 회전 적용
+          const rotatedVector = SphericalDynamics.rotateVector(this.sphereState.Q, [screenX, screenY, screenZ]);
+          const [rotatedX, rotatedY, rotatedZ] = rotatedVector;
+          
+          // 3D 좌표를 구면 좌표로 변환
+          const phi = Math.atan2(rotatedY, rotatedX);  // 경도 (-π ~ π)
+          const theta = Math.acos(Math.max(-1, Math.min(1, rotatedZ)));  // 위도 (0 ~ π)
+
+          
+          // 중심점도 직접 RGB 헥스코드 스케일링 (캘리브레이션)
+          let hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
+          if (hue >= 360) hue = 0;
+          
+          const lightnessRatio = ((Math.PI - theta) / Math.PI); // 0(남극)~1(북극)
+          // 기본 순색 계산
+          const h6 = Math.floor(hue / 60) % 6;
+          const f = (hue % 60) / 60;
+          let baseR, baseG, baseB;
+          
+          switch(h6) {
+            case 0: baseR = 255; baseG = Math.round(f * 255); baseB = 0; break;
+            case 1: baseR = Math.round((1-f) * 255); baseG = 255; baseB = 0; break;
+            case 2: baseR = 0; baseG = 255; baseB = Math.round(f * 255); break;
+            case 3: baseR = 0; baseG = Math.round((1-f) * 255); baseB = 255; break;
+            case 4: baseR = Math.round(f * 255); baseG = 0; baseB = 255; break;
+            case 5: baseR = 255; baseG = 0; baseB = Math.round((1-f) * 255); break;
+          }
+          
+          // 위도에 따른 채도 계산 (적도에서 최대, 극지방에서 0)
+          const saturationByLatitude = Math.sin(theta);  // 적도(θ=π/2)에서 1, 극지방에서 0
+          const totalSaturation = saturationByLatitude;  // 중심점이므로 거리 요소 제외
+          
+          // 명도와 채도 동시 적용
+          const gray = Math.round(lightnessRatio * 255);
+          const r = Math.round(gray + (baseR - gray) * totalSaturation);
+          const g = Math.round(gray + (baseG - gray) * totalSaturation);
+          const b = Math.round(gray + (baseB - gray) * totalSaturation);
+          
+          // 8자리 헥스코드로 직접 처리
+          this.sphereState.selectedColor = { r, g, b, hue };
+          
+          const picker = canvas.closest('.custom-color-picker');
+          if (!picker) return;
+          
+          const targetId = picker.dataset.target;
+          const panelHexInput = picker.querySelector('.panel-hex-input');
+          
+          // 현재 알파값 유지
+          let alpha = 255;
+          if (panelHexInput && panelHexInput.value) {
+            const currentHex = panelHexInput.value.replace('#', '');
+            if (currentHex.length === 8) {
+              alpha = parseInt(currentHex.substr(6, 2), 16);
+            }
+          }
+          
+          const rgb = { r, g, b };
+          const hexColor = ColorSystem.rgbaToHex(r, g, b, alpha);
+          
+          // UI 업데이트 (드래그 시 실시간 입력값 변경)
+          requestAnimationFrame(() => {
+            this.updateColorInputs(targetId, rgb, alpha, hexColor);
+          });
+        };
+        
+        // 2D 캔버스 색상 선택
+        const handle2DColorSelect = (e, canvas) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const saturation = Math.max(0, Math.min(100, (x / rect.width) * 100));
+          const value = Math.max(0, Math.min(100, (1 - y / rect.height) * 100));
+          
+          const picker = canvas.closest('.custom-color-picker');
+          const hueSlider = picker.querySelector('.hue-slider');
+          const alphaSlider = picker.querySelector('.alpha-slider');
+          const targetId = picker.dataset.target;
+          
+          const hue = parseInt(hueSlider?.value || 0);
+          const alpha = parseInt(alphaSlider?.value || 255);
+          const rgb = ColorSystem.hsvToRgb(hue, saturation, value);
+          const hexColor = ColorSystem.rgbaToHex(rgb.r, rgb.g, rgb.b, alpha);
+          
+          this.updateColorInputs(targetId, rgb, alpha, hexColor);
+        };
+        
+        document.querySelectorAll('.color-canvas-3d').forEach(canvas => {
+          handleCanvasSetup(canvas);
+          
+          // 휠 이벤트 (알파 조절)
+          canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            const picker = canvas.closest('.custom-color-picker');
+            const panelHexInput = picker.querySelector('.panel-hex-input');
+            
+            if (panelHexInput) {
+              const currentHex = panelHexInput.value.replace('#', '');
+              let currentAlpha = 255; // 기본값
+              
+              // 현재 알파값 추출 (8자리 hex인 경우)
+              if (currentHex.length === 8) {
+                currentAlpha = parseInt(currentHex.substr(6, 2), 16);
+              } else if (currentHex.length === 6) {
+                currentAlpha = 255;
+              }
+              
+              // 휠 업: 알파 증가, 휠 다운: 알파 감소 (±4씩)
+              const alphaChange = e.deltaY > 0 ? -4 : 4;
+              const newAlpha = Math.max(0, Math.min(255, currentAlpha + alphaChange));
+              
+              // 현재 색상에 새 알파 적용
+              if (currentHex.length >= 6) {
+                const rgb = currentHex.substr(0, 6);
+                const newHex = '#' + rgb + newAlpha.toString(16).padStart(2, '0').toUpperCase();
+                
+                const targetId = picker.dataset.target;
+                const r = parseInt(rgb.substr(0, 2), 16);
+                const g = parseInt(rgb.substr(2, 2), 16);
+                const b = parseInt(rgb.substr(4, 2), 16);
+                
+                this.updateColorInputs(targetId, {r, g, b}, newAlpha, newHex);
+              }
+            }
+          });
+        });
+      },
+      
+      setupHexInputs() {
+        // 패널 내 Hex 입력 - 8자리 헥스코드 처리
+        document.querySelectorAll('.panel-hex-input').forEach(hexInput => {
+          hexInput.addEventListener('input', (e) => {
+            const hexValue = e.target.value.replace('#', '').toUpperCase();
+            
+            // 8자리 헥스코드만 검증 (#RRGGBBAA 완전 입력시에만)
+            if (hexValue.length === 8 && /^[0-9A-F]{8}$/.test(hexValue)) {
+              const r = parseInt(hexValue.substr(0, 2), 16);
+              const g = parseInt(hexValue.substr(2, 2), 16);
+              const b = parseInt(hexValue.substr(4, 2), 16);
+              const a = parseInt(hexValue.substr(6, 2), 16); // 8자리에서 알파값 추출
+              
+              const picker = e.target.closest('.custom-color-picker');
+              const targetId = picker.dataset.target;
+              const fullHex = '#' + hexValue; // 8자리 그대로 사용
+              
+              // 색상 업데이트 (슬라이더 없음)
+              
+              // 3D 캔버스 업데이트
+              const canvas3d = picker.querySelector('.color-canvas-3d');
+              if (canvas3d) {
+                const ctx3d = canvas3d.getContext('2d');
+                ColorSphereSystem.render3D(ctx3d, canvas3d.className);
+              }
+              
+              // CSS 변수 및 UI 업데이트
+              this.updateColorInputs(targetId, {r, g, b}, a, fullHex);
+              
+
+            }
+          });
+        });
+      },
+
+      
+
+      
+      updateColorInputs(targetId, rgb, alpha, hexColor) {
+        const picker = document.querySelector(`[data-target="${targetId}"]`);
+        const hexInput = picker?.parentElement?.querySelector('.hex-input');
+        const panelHexInput = picker?.querySelector('.panel-hex-input');
+        const display = picker?.querySelector('.color-display');
+        
+        // 외부 hex 입력 업데이트
+        if (hexInput) hexInput.value = hexColor;
+        
+        // 패널 내 hex 입력 업데이트
+        if (panelHexInput) panelHexInput.value = hexColor;
+        
+        // 컬러 디스플레이 업데이트
+        if (display) display.style.background = hexColor;
+        
+        // 실시간 CSS 변수 업데이트
+        this.updateCSSVariable(targetId, hexColor);
+        
+        // 버튼 적용 및 명도대비 업데이트
+        if (typeof CustomPaletteManager !== 'undefined') {
+          CustomPaletteManager.updatePreview();
+          CustomPaletteManager.generateAndApplyPalette();
+        }
+      },
+      
+      updateCSSVariable(inputId, hexColor) {
+        const root = document.documentElement;
+        
+        // input ID를 CSS 변수명으로 매핑 (Light + Dark)
+        const variableMap = {
+          // Light 테마
+          'light-content-default': '--custom-content-color-default',
+          'light-content-pressed': '--custom-content-color-pressed',
+          'light-content-disabled': '--custom-content-color-disabled',
+          'light-background-default': '--custom-background-color-default',
+          'light-background-pressed': '--custom-background-color-pressed',
+          'light-background-disabled': '--custom-background-color-disabled',
+          'light-border-default': '--custom-border-color-default',
+          'light-border-pressed': '--custom-border-color-pressed',
+          'light-border-disabled': '--custom-border-color-disabled',
+          // Dark 테마 (별도 CSS 주입 필요)
+          'dark-content-default': '--custom-content-color-default',
+          'dark-content-pressed': '--custom-content-color-pressed',
+          'dark-content-disabled': '--custom-content-color-disabled',
+          'dark-background-default': '--custom-background-color-default',
+          'dark-background-pressed': '--custom-background-color-pressed',
+          'dark-background-disabled': '--custom-background-color-disabled',
+          'dark-border-default': '--custom-border-color-default',
+          'dark-border-pressed': '--custom-border-color-pressed',
+          'dark-border-disabled': '--custom-border-color-disabled'
+        };
+        
+        const cssVariable = variableMap[inputId];
+        if (cssVariable) {
+          if (inputId.startsWith('light-')) {
+            // Light 테마: root에 직접 적용
+            root.style.setProperty(cssVariable, hexColor);
+          } else if (inputId.startsWith('dark-')) {
+            // Dark 테마: .dark 클래스에 적용 (CSS 주입)
+            AppUtils.CSSInjector.inject('custom-dark-variable', `.dark { ${cssVariable}: ${hexColor}; }`, 'Dark 커스텀 변수');
+          }
+          
+        }
+      },
+
+
+
+      
+      rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        
+        if (max === min) {
+          h = s = 0;
+        } else {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+          h /= 6;
+        }
+        
+        return { h: h * 360, s: s * 100, l: l * 100 };
+      },
+      
+      hslToRgb(h, s, l) {
+        // 입력값 정규화 및 범위 보정
+        h = ((h % 360) + 360) % 360;  // 0-360 범위로 정규화
+        s = Math.max(0, Math.min(100, s)) / 100;  // 0-1 범위로 정규화
+        l = Math.max(0, Math.min(100, l)) / 100;  // 0-1 범위로 정규화
+        
+        // HSL to RGB 정확한 변환 공식
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        const m = l - c / 2;
+        
+        let r = 0, g = 0, b = 0;
+        
+        if (h >= 0 && h < 60) {
+          r = c; g = x; b = 0;
+        } else if (h >= 60 && h < 120) {
+          r = x; g = c; b = 0;
+        } else if (h >= 120 && h < 180) {
+          r = 0; g = c; b = x;
+        } else if (h >= 180 && h < 240) {
+          r = 0; g = x; b = c;
+        } else if (h >= 240 && h < 300) {
+          r = x; g = 0; b = c;
+        } else if (h >= 300 && h < 360) {
+          r = c; g = 0; b = x;
+        }
+        
+        // 0-255 범위로 변환 (정확한 반올림)
+        return {
+          r: Math.max(0, Math.min(255, Math.round((r + m) * 255))),
+          g: Math.max(0, Math.min(255, Math.round((g + m) * 255))),
+          b: Math.max(0, Math.min(255, Math.round((b + m) * 255)))
+        };
+      }
+    },
     
     init() {
       this._initDOMCache();
       this.setupEventListeners();
+      this.CustomColorPicker.init();
       this.updatePreview();
       setTimeout(() => this.generateAndApplyPalette(), 100);
     },
     
     _initDOMCache() {
       this._domCache.lightInputs = {
-        bgDefault: document.getElementById('light-bg-default'),
-        textDefault: document.getElementById('light-text-default'),
-        bgPressed: document.getElementById('light-bg-pressed'),
-        textPressed: document.getElementById('light-text-pressed'),
-        bgDisabled: document.getElementById('light-bg-disabled'),
-        textDisabled: document.getElementById('light-text-disabled'),
-        bgPointed: document.getElementById('light-bg-pointed')
+        contentDefault: document.getElementById('light-content-default'),
+        contentPressed: document.getElementById('light-content-pressed'),
+        contentDisabled: document.getElementById('light-content-disabled'),
+        backgroundDefault: document.getElementById('light-background-default'),
+        backgroundPressed: document.getElementById('light-background-pressed'),
+        backgroundDisabled: document.getElementById('light-background-disabled'),
+        borderDefault: document.getElementById('light-border-default'),
+        borderPressed: document.getElementById('light-border-pressed'),
+        borderDisabled: document.getElementById('light-border-disabled')
       };
       this._domCache.darkInputs = {
-        bgDefault: document.getElementById('dark-bg-default'),
-        textDefault: document.getElementById('dark-text-default'),
-        bgPressed: document.getElementById('dark-bg-pressed'),
-        textPressed: document.getElementById('dark-text-pressed'),
-        bgDisabled: document.getElementById('dark-bg-disabled'),
-        textDisabled: document.getElementById('dark-text-disabled'),
-        bgPointed: document.getElementById('dark-bg-pointed')
+        contentDefault: document.getElementById('dark-content-default'),
+        contentPressed: document.getElementById('dark-content-pressed'),
+        contentDisabled: document.getElementById('dark-content-disabled'),
+        backgroundDefault: document.getElementById('dark-background-default'),
+        backgroundPressed: document.getElementById('dark-background-pressed'),
+        backgroundDisabled: document.getElementById('dark-background-disabled'),
+        borderDefault: document.getElementById('dark-border-default'),
+        borderPressed: document.getElementById('dark-border-pressed'),
+        borderDisabled: document.getElementById('dark-border-disabled')
       };
-      this._domCache.applyBtn = document.querySelector('.palette-apply-btn');
       this._domCache.resetBtn = document.querySelector('.palette-reset-btn');
       this._domCache.previewColors = {
         lightBg: document.getElementById('preview-light-bg'),
@@ -570,10 +1807,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (input) {
           input.addEventListener('input', () => {
             this.updatePreview();
-            clearTimeout(this.autoUpdateTimer);
-            this.autoUpdateTimer = setTimeout(() => {
-              this.generateAndApplyPalette();
-            }, 500);
+            this.generateAndApplyPalette(); // 즉시 실시간 적용!
           });
         }
       });
@@ -581,10 +1815,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (input) {
           input.addEventListener('input', () => {
             this.updatePreview();
-            clearTimeout(this.autoUpdateTimer);
-            this.autoUpdateTimer = setTimeout(() => {
-              this.generateAndApplyPalette();
-            }, 500);
+            this.generateAndApplyPalette(); // 즉시 실시간 적용!
           });
         }
       });
@@ -596,10 +1827,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (hexValue.length === 6) {
               colorInput.value = '#' + hexValue;
               this.updatePreview();
-              clearTimeout(this.autoUpdateTimer);
-              this.autoUpdateTimer = setTimeout(() => {
-                this.generateAndApplyPalette();
-              }, 500);
+              this.generateAndApplyPalette(); // 즉시 실시간 적용!
             }
           }
         });
@@ -611,18 +1839,10 @@ window.addEventListener('DOMContentLoaded', async () => {
             const alpha = e.target.id.includes('disabled') && e.target.id.includes('bg') ? '00' : 'FF';
             hexInput.value = e.target.value + alpha;
             this.updatePreview();
-            clearTimeout(this.autoUpdateTimer);
-            this.autoUpdateTimer = setTimeout(() => {
-              this.generateAndApplyPalette();
-            }, 500);
+            this.generateAndApplyPalette(); // 즉시 실시간 적용!
           }
         });
       });
-      if (this._domCache.applyBtn) {
-        this._domCache.applyBtn.addEventListener('click', () => {
-          this.generateAndApplyPalette();
-        });
-      }
       if (this._domCache.resetBtn) {
         this._domCache.resetBtn.addEventListener('click', () => {
           this.resetToDefaults();
@@ -631,10 +1851,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
     
     updatePreview() {
-      const lightBg = this._domCache.lightInputs.bgDefault?.value || '#A4693F';
-      const lightText = this._domCache.lightInputs.textDefault?.value || '#FFFFFF';
-      const darkBg = this._domCache.darkInputs.bgDefault?.value || '#241F00';
-      const darkText = this._domCache.darkInputs.textDefault?.value || '#FFE100';
+      const lightBg = this._domCache.lightInputs.backgroundDefault?.value || '#A4693F';
+      const lightText = this._domCache.lightInputs.contentDefault?.value || '#252525';
+      const darkBg = this._domCache.darkInputs.backgroundDefault?.value || '#241F00';
+      const darkText = this._domCache.darkInputs.contentDefault?.value || '#FFE100';
+      
       if (this._domCache.previewColors.lightBg) {
         this._domCache.previewColors.lightBg.style.backgroundColor = lightBg;
       }
@@ -647,54 +1868,64 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (this._domCache.previewColors.darkText) {
         this._domCache.previewColors.darkText.style.backgroundColor = darkText;
       }
+      
       if (this.currentPalette) {
         this.currentPalette.name = this.CUSTOM_PALETTE_NAME;
       }
     },
     
     generateAndApplyPalette() {
-      const paletteName = this.CUSTOM_PALETTE_NAME;
-      const lightColors = {
-        'background-color-default': this._domCache.lightInputs.bgDefault?.nextElementSibling?.value || '#A4693FFF',
-        'contents-color-default': this._domCache.lightInputs.textDefault?.nextElementSibling?.value || '#FFFFFFFF',
-        'background-color-pressed': this._domCache.lightInputs.bgPressed?.nextElementSibling?.value || '#EEDCD2FF',
-        'contents-color-pressed': this._domCache.lightInputs.textPressed?.nextElementSibling?.value || '#C4895FFF',
-        'background-color-disabled': this._domCache.lightInputs.bgDisabled?.nextElementSibling?.value || '#00000000',
-        'contents-color-disabled': this._domCache.lightInputs.textDisabled?.nextElementSibling?.value || '#8C8C8CFF',
-        'background-color-pointed': this._domCache.lightInputs.bgPointed?.nextElementSibling?.value || '#A4693FFF',
-        'border-color-default': this._domCache.lightInputs.bgDefault?.nextElementSibling?.value || '#A4693FFF',
-        'border-color-pressed': this._domCache.lightInputs.bgDefault?.nextElementSibling?.value || '#A4693FFF',
-        'border-color-disabled': '#BFBFBFFF',
-        'border-color-pointed': 'var(--system-pointed)'
+      const root = document.documentElement;
+      
+      // Light 테마 CSS 변수 업데이트 (9개)
+      const lightMappings = {
+        'contentDefault': '--custom-content-color-default',
+        'contentPressed': '--custom-content-color-pressed', 
+        'contentDisabled': '--custom-content-color-disabled',
+        'backgroundDefault': '--custom-background-color-default',
+        'backgroundPressed': '--custom-background-color-pressed',
+        'backgroundDisabled': '--custom-background-color-disabled',
+        'borderDefault': '--custom-border-color-default',
+        'borderPressed': '--custom-border-color-pressed',
+        'borderDisabled': '--custom-border-color-disabled'
       };
-      const darkColors = {
-        'background-color-default': this._domCache.darkInputs.bgDefault?.nextElementSibling?.value || '#241F00FF',
-        'contents-color-default': this._domCache.darkInputs.textDefault?.nextElementSibling?.value || '#FFE100FF',
-        'background-color-pressed': this._domCache.darkInputs.bgPressed?.nextElementSibling?.value || '#FFE100FF',
-        'contents-color-pressed': this._domCache.darkInputs.textPressed?.nextElementSibling?.value || '#807000FF',
-        'background-color-disabled': this._domCache.darkInputs.bgDisabled?.nextElementSibling?.value || '#00000000',
-        'contents-color-disabled': this._domCache.darkInputs.textDisabled?.nextElementSibling?.value || '#8C8C8CFF',
-        'background-color-pointed': this._domCache.darkInputs.bgPointed?.nextElementSibling?.value || '#241F00FF',
-        'border-color-default': this._domCache.darkInputs.textDefault?.nextElementSibling?.value || '#FFE100FF',
-        'border-color-pressed': this._domCache.darkInputs.textDefault?.nextElementSibling?.value || '#FFE100FF',
-        'border-color-disabled': '#757575FF',
-        'border-color-pointed': 'var(--system-pointed)'
-      };
-      this.injectCustomPaletteCSS(paletteName, lightColors, darkColors);
-      this.applyToTestButtons();
-    },
-    
-    injectCustomPaletteCSS(paletteName, lightColors, darkColors) {
-      let lightCSS = '';
-      Object.entries(lightColors).forEach(([property, value]) => {
-        lightCSS += `  --${paletteName}-${property}: ${value};\n`;
+      
+      Object.entries(lightMappings).forEach(([inputKey, cssVar]) => {
+        const input = this._domCache.lightInputs[inputKey];
+        if (input?.nextElementSibling?.value) {
+          root.style.setProperty(cssVar, input.nextElementSibling.value);
+        }
       });
+      
+      // Dark 테마 CSS 변수 업데이트 (9개) - 별도 스타일 시트 필요
+      const darkMappings = {
+        'contentDefault': '--custom-content-color-default',
+        'contentPressed': '--custom-content-color-pressed',
+        'contentDisabled': '--custom-content-color-disabled', 
+        'backgroundDefault': '--custom-background-color-default',
+        'backgroundPressed': '--custom-background-color-pressed',
+        'backgroundDisabled': '--custom-background-color-disabled',
+        'borderDefault': '--custom-border-color-default',
+        'borderPressed': '--custom-border-color-pressed',
+        'borderDisabled': '--custom-border-color-disabled'
+      };
+      
       let darkCSS = '';
-      Object.entries(darkColors).forEach(([property, value]) => {
-        darkCSS += `  --${paletteName}-${property}: ${value};\n`;
+      Object.entries(darkMappings).forEach(([inputKey, cssVar]) => {
+        const input = this._domCache.darkInputs[inputKey];
+        if (input?.nextElementSibling?.value) {
+          darkCSS += `  ${cssVar}: ${input.nextElementSibling.value};\n`;
+        }
       });
-      const cssContent = `:root {\n${lightCSS}}\n.dark {\n${darkCSS}}\n@layer components {\n  .button.${paletteName} {\n    color: var(--${paletteName}-contents-color-default);\n    & .background.dynamic {\n      background: var(--${paletteName}-background-color-default);\n      outline-color: var(--${paletteName}-border-color-default);\n    }\n    &.pressed {\n      color: var(--${paletteName}-contents-color-pressed);\n      & .background.dynamic {\n        outline: 0 var(--border-style-pressed) var(--${paletteName}-border-color-pressed);\n        background: var(--${paletteName}-background-color-pressed);\n      }\n      &.toggle {\n        & .icon.dynamic.pressed {\n          display: flex;\n        }\n      }\n    }\n    &[aria-disabled="true"] {\n      cursor: not-allowed;\n      color: var(--${paletteName}-contents-color-disabled);\n      & .background.dynamic {\n        background: var(--${paletteName}-background-color-disabled);\n        outline: 0 var(--border-style-disabled) var(--${paletteName}-border-color-disabled);\n      }\n    }\n  }\n}`;
-      AppUtils.CSSInjector.inject('custom-palette-styles', cssContent, `커스텀 팔레트 ${paletteName}`);
+      
+      if (darkCSS) {
+        AppUtils.CSSInjector.inject('custom-dark-theme', `.dark {\n${darkCSS}}`, 'Dark 테마 커스텀 변수');
+      }
+      
+      this.applyToTestButtons();
+      
+      // 커스텀 팔레트 변경 후 명도대비 강제 업데이트
+      ButtonSystem.StyleManager.scheduleContrastUpdate();
     },
     
     applyToTestButtons() {
@@ -713,15 +1944,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
     
     resetToDefaults() {
+      // Light 테마 기본값 (9개)
       const lightDefaults = {
-        bgDefault: ['#A4693F', '#A4693FFF'],
-        textDefault: ['#FFFFFF', '#FFFFFFFF'],
-        bgPressed: ['#EEDCD2', '#EEDCD2FF'],
-        textPressed: ['#C4895F', '#C4895FFF'],
-        bgDisabled: ['#000000', '#00000000'],
-        textDisabled: ['#8C8C8C', '#8C8C8CFF'],
-        bgPointed: ['#A4693F', '#A4693FFF']
+        contentDefault: ['#252525', '#252525FF'],
+        contentPressed: ['#FFFFFF', '#FFFFFFFF'],
+        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],
+        backgroundDefault: ['#A4693F', '#A4693FFF'],
+        backgroundPressed: ['#EEDCD2', '#EEDCD2FF'],
+        backgroundDisabled: ['#000000', '#00000000'],
+        borderDefault: ['#A4693F', '#A4693FFF'],
+        borderPressed: ['#A4693F', '#A4693FFF'],
+        borderDisabled: ['#BFBFBF', '#BFBFBFFF']
       };
+      
       Object.entries(lightDefaults).forEach(([key, [colorValue, hexValue]]) => {
         const input = this._domCache.lightInputs[key];
         if (input) {
@@ -730,15 +1965,20 @@ window.addEventListener('DOMContentLoaded', async () => {
           if (hexInput) hexInput.value = hexValue;
         }
       });
+      
+      // Dark 테마 기본값 (9개)
       const darkDefaults = {
-        bgDefault: ['#241F00', '#241F00FF'],
-        textDefault: ['#FFE100', '#FFE100FF'],
-        bgPressed: ['#FFE100', '#FFE100FF'],
-        textPressed: ['#807000', '#807000FF'],
-        bgDisabled: ['#000000', '#00000000'],
-        textDisabled: ['#8C8C8C', '#8C8C8CFF'],
-        bgPointed: ['#241F00', '#241F00FF']
+        contentDefault: ['#FFE100', '#FFE100FF'],
+        contentPressed: ['#807000', '#807000FF'],
+        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],
+        backgroundDefault: ['#241F00', '#241F00FF'],
+        backgroundPressed: ['#FFE100', '#FFE100FF'],
+        backgroundDisabled: ['#000000', '#00000000'],
+        borderDefault: ['#FFE100', '#FFE100FF'],
+        borderPressed: ['#FFE100', '#FFE100FF'],
+        borderDisabled: ['#757575', '#757575FF']
       };
+      
       Object.entries(darkDefaults).forEach(([key, [colorValue, hexValue]]) => {
         const input = this._domCache.darkInputs[key];
         if (input) {
@@ -747,6 +1987,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           if (hexInput) hexInput.value = hexValue;
         }
       });
+      
       this.updatePreview();
       setTimeout(() => this.generateAndApplyPalette(), 100);
     }
@@ -760,15 +2001,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     🚀 시스템 무결성 검증 및 초기화
     ============================== */
   
-  console.log('🚀 시스템 초기화 시작');
-  
   // HTML 구조 검증
   const requiredElements = ['#main-header', '#main-content', '#control-panel', '#demo-area'];
   const missingElements = requiredElements.filter(selector => !document.querySelector(selector));
   if (missingElements.length > 0) {
     console.error('❌ HTML 구조 오류 - 누락된 요소:', missingElements);
-  } else {
-    console.log('✅ HTML 구조 검증 완료');
   }
   
   // CSS 변수 검증
@@ -780,27 +2017,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   document.body.removeChild(testElement);
   if (missingVars.length > 0) {
     console.error('❌ CSS 변수 오류 - 누락된 변수:', missingVars);
-  } else {
-    console.log('✅ CSS 변수 검증 완료');
   }
   
   // Manager 초기화 (종속성 순서)
   try {
     ThemeManager.init();
-    console.log('✅ ThemeManager 초기화 완료');
-    
     LargeTextManager.init();
-    console.log('✅ LargeTextManager 초기화 완료');
-    
     SizeControlManager.init();
-    console.log('✅ SizeControlManager 초기화 완료');
-    
     CustomPaletteManager.init();
-    console.log('✅ CustomPaletteManager 초기화 완료');
-    
     await ButtonSystem.init();
-    
-    console.log('🎯 모든 시스템 초기화 성공');
   } catch (error) {
     console.error('❌ 시스템 초기화 실패:', error);
     throw error;
@@ -821,12 +2046,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.addEventListener('click', (event) => {
-    const button = event.target.closest('.button');
+    const button = event.target?.closest?.('.button');
     if (!button || button.getAttribute('aria-disabled') === 'true' || 
         button.dataset.isToggleButton !== 'true') return;
 
     const wasPressed = button.classList.contains('pressed');
-    const iconPressed = button.querySelector('.icon.dynamic.pressed');
+    const iconPressed = button.querySelector('.content.icon.pressed');
 
     if (wasPressed) {
       if (iconPressed) iconPressed.style.display = 'none';
@@ -834,16 +2059,21 @@ window.addEventListener('DOMContentLoaded', async () => {
         button.classList.remove('pressed');
         button.setAttribute('aria-pressed', 'false');
         if (iconPressed) iconPressed.style.removeProperty('display');
+        
+
       });
     } else {
       if (iconPressed) iconPressed.style.removeProperty('display');
       button.classList.add('pressed');
       button.setAttribute('aria-pressed', 'true');
+      
+      // 상태 변경 후 명도대비 업데이트
+      ButtonSystem.StyleManager.scheduleContrastUpdate();
     }
   }, false);
 
   const blockDisabledButtonEvents = (event) => {
-    const disabledButton = event.target.closest('.button[aria-disabled="true"]');
+    const disabledButton = event.target?.closest?.('.button[aria-disabled="true"]');
     if (disabledButton) {
       event.preventDefault();
       event.stopPropagation();
@@ -856,14 +2086,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   document.addEventListener('click', blockDisabledButtonEvents, true);
 
   document.addEventListener('keydown', (event) => {
-    const disabledButton = event.target.closest('.button[aria-disabled="true"]');
+    const disabledButton = event.target?.closest?.('.button[aria-disabled="true"]');
     if (disabledButton && (event.key === ' ' || event.key === 'Enter' || event.key === 'NumpadEnter')) {
       event.preventDefault();
       event.stopPropagation();
       return;
     }
 
-    const enabledButton = event.target.closest('.button');
+    const enabledButton = event.target?.closest?.('.button');
     if (enabledButton && enabledButton.getAttribute('aria-disabled') !== 'true') {
       if (event.key === 'Enter' || event.key === 'NumpadEnter' || event.key === ' ') {
         event.preventDefault();
@@ -890,6 +2120,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             button: 0
           });
           enabledButton.dispatchEvent(clickEvent);
+          
+
         }, 100);
         }
       }
@@ -936,7 +2168,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         break;
 
       case 'ArrowDown':
-        event.preventDefault();
+          event.preventDefault();
         // 좌우 버튼 순환에서 다음 컨테이너 경계 찾기
         const currentContainer = focusedButton.closest('.showcase');
         const currentIndexForDown = allButtons.indexOf(focusedButton);
@@ -952,10 +2184,10 @@ window.addEventListener('DOMContentLoaded', async () => {
             break;
           }
         }
-        break;
-        
+          break;
+          
       case 'ArrowUp':
-        event.preventDefault();
+          event.preventDefault();
         // 좌우 버튼 순환에서 이전 컨테이너 경계 찾기
         const currentContainerUp = focusedButton.closest('.showcase');
         const currentIndexUp = allButtons.indexOf(focusedButton);
@@ -973,8 +2205,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             break;
           }
         }
-        break;
-      
+          break;
+        
       case 'Home':
         event.preventDefault();
         targetButton = allButtons[0];
@@ -992,44 +2224,62 @@ window.addEventListener('DOMContentLoaded', async () => {
   }, true);
 
   document.addEventListener('mousedown', (event) => {
-    const button = event.target.closest('.button');
+    const button = event.target?.closest?.('.button');
     if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
       button.classList.add('pressed');
+      
+
     }
   }, true);
 
   document.addEventListener('mouseup', (event) => {
-    const button = event.target.closest('.button');
+    const button = event.target?.closest?.('.button');
     if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
       button.classList.remove('pressed');
+      
+      // 상태 변경 후 명도대비 업데이트
+      ButtonSystem.StyleManager.scheduleContrastUpdate();
     }
   }, true);
 
   document.addEventListener('mouseleave', (event) => {
-    const button = event.target.closest('.button');
-    if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
+    if (event.target && typeof event.target.closest === 'function') {
+      const button = event.target?.closest?.('.button');
+      if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
       button.classList.remove('pressed');
+        
+        // 상태 변경 후 명도대비 업데이트
+        ButtonSystem.StyleManager.scheduleContrastUpdate();
+      }
     }
   }, true);
 
   document.addEventListener('touchstart', (event) => {
-    const button = event.target.closest('.button');
+    const button = event.target?.closest?.('.button');
     if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
       button.classList.add('pressed');
+      
+
     }
   }, { passive: true });
 
   document.addEventListener('touchend', (event) => {
-    const button = event.target.closest('.button');
+    const button = event.target?.closest?.('.button');
     if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
       button.classList.remove('pressed');
+      
+      // 상태 변경 후 명도대비 업데이트
+      ButtonSystem.StyleManager.scheduleContrastUpdate();
     }
   }, { passive: true });
 
   document.addEventListener('touchcancel', (event) => {
-    const button = event.target.closest('.button');
+    const button = event.target?.closest?.('.button');
     if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
       button.classList.remove('pressed');
+      
+      // 상태 변경 후 명도대비 업데이트
+      ButtonSystem.StyleManager.scheduleContrastUpdate();
     }
   }, { passive: true });
 
@@ -1039,6 +2289,4 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.LargeTextManager = LargeTextManager;
   window.SizeControlManager = SizeControlManager;
   window.CustomPaletteManager = CustomPaletteManager;
-  
-  console.log('🎆 전체 시스템 초기화 완료!');
 });
