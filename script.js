@@ -1295,7 +1295,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const CustomPaletteManager = {
     CUSTOM_PALETTE_NAME: 'custom',
-    _domCache: { lightInputs: {}, darkInputs: {}, resetBtn: null, previewColors: {}, testButtons: null },
+    _domCache: { lightInputs: {}, darkInputs: {}, resetBtn: null, testButtons: null },
     currentPalette: { name: 'custom' },
     
 /* ==============================
@@ -1335,15 +1335,15 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (!lightContainer) return;
         
         const lightPickers = [
-          { id: 'light-content-default', label: '콘텐츠(기본)', color: '#252525', hex: '#252525FF', hue: 0, alpha: 255 },
-          { id: 'light-content-pressed', label: '콘텐츠(눌림)', color: '#FFFFFF', hex: '#FFFFFFFF', hue: 0, alpha: 255 },
-          { id: 'light-content-disabled', label: '콘텐츠(비활성)', color: '#8C8C8C', hex: '#8C8C8CFF', hue: 0, alpha: 255 },
+          { id: 'light-content-default', label: '콘텐츠(기본)', color: '#FFFFFF', hex: '#FFFFFFFF', hue: 0, alpha: 255 },
+          { id: 'light-content-pressed', label: '콘텐츠(눌림)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 },
+          { id: 'light-content-disabled', label: '콘텐츠(비활성)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 },
           { id: 'light-background-default', label: '배경(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
           { id: 'light-background-pressed', label: '배경(눌림)', color: '#EEDCD2', hex: '#EEDCD2FF', hue: 25, alpha: 255 },
           { id: 'light-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
           { id: 'light-border-default', label: '테두리(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
-          { id: 'light-border-pressed', label: '테두리(눌림)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
-          { id: 'light-border-disabled', label: '테두리(비활성)', color: '#BFBFBF', hex: '#BFBFBFFF', hue: 0, alpha: 255 }
+          { id: 'light-border-pressed', label: '테두리(눌림)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 },
+          { id: 'light-border-disabled', label: '테두리(비활성)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 }
         ];
         
         lightPickers.forEach(picker => {
@@ -1377,15 +1377,15 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (!darkContainer) return;
         
         const darkPickers = [
-          { id: 'dark-content-default', label: '콘텐츠(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
-          { id: 'dark-content-pressed', label: '콘텐츠(눌림)', color: '#807000', hex: '#807000FF', hue: 54, alpha: 255 },
-          { id: 'dark-content-disabled', label: '콘텐츠(비활성)', color: '#8C8C8C', hex: '#8C8C8CFF', hue: 0, alpha: 140 },
-          { id: 'dark-background-default', label: '배경(기본)', color: '#241F00', hex: '#241F00FF', hue: 54, alpha: 255 },
-          { id: 'dark-background-pressed', label: '배경(눌림)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-content-default', label: '콘텐츠(기본)', color: '#000000', hex: '#000000FF', hue: 0, alpha: 255 },
+          { id: 'dark-content-pressed', label: '콘텐츠(눌림)', color: '#FFEF80', hex: '#FFEF80FF', hue: 54, alpha: 255 },
+          { id: 'dark-content-disabled', label: '콘텐츠(비활성)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-background-default', label: '배경(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
+          { id: 'dark-background-pressed', label: '배경(눌림)', color: '#241F00', hex: '#241F00FF', hue: 54, alpha: 255 },
           { id: 'dark-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
           { id: 'dark-border-default', label: '테두리(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
-          { id: 'dark-border-pressed', label: '테두리(눌림)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
-          { id: 'dark-border-disabled', label: '테두리(비활성)', color: '#757575', hex: '#757575FF', hue: 0, alpha: 255 }
+          { id: 'dark-border-pressed', label: '테두리(눌림)', color: '#FFEF80', hex: '#FFEF80FF', hue: 54, alpha: 255 },
+          { id: 'dark-border-disabled', label: '테두리(비활성)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 }
         ];
         
         darkPickers.forEach(picker => {
@@ -1749,7 +1749,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         // 버튼 적용 및 명도대비 업데이트
         if (typeof CustomPaletteManager !== 'undefined') {
-          CustomPaletteManager.updatePreview();
           CustomPaletteManager.generateAndApplyPalette();
         }
       },
@@ -1856,50 +1855,56 @@ window.addEventListener('DOMContentLoaded', async () => {
     
     init() {
       this._initDOMCache();
-      this.setupEventListeners();
       this.CustomColorPicker.init();
-      this.updatePreview();
-      setTimeout(() => this.generateAndApplyPalette(), 100);
+      
+      // 동적 생성 완료 후 DOM 캐시 업데이트
+      setTimeout(() => {
+        this._updateDynamicDOMCache();
+        this.setupEventListeners();
+        this.generateAndApplyPalette();
+      }, 200);
     },
     
     _initDOMCache() {
+      // 정적 요소들만 먼저 캐시
+      this._domCache.resetBtn = document.querySelector('.palette-reset-btn');
+      this._domCache.testButtons = document.querySelectorAll('.button.custom');
+      
+      // 동적 생성 요소들은 나중에 캐시
+      this._domCache.lightInputs = {};
+      this._domCache.darkInputs = {};
+    },
+    
+    // 동적 생성된 요소들을 캐시하는 메서드
+    _updateDynamicDOMCache() {
       this._domCache.lightInputs = {
-        contentDefault: document.getElementById('light-content-default'),
-        contentPressed: document.getElementById('light-content-pressed'),
-        contentDisabled: document.getElementById('light-content-disabled'),
-        backgroundDefault: document.getElementById('light-background-default'),
-        backgroundPressed: document.getElementById('light-background-pressed'),
-        backgroundDisabled: document.getElementById('light-background-disabled'),
-        borderDefault: document.getElementById('light-border-default'),
-        borderPressed: document.getElementById('light-border-pressed'),
-        borderDisabled: document.getElementById('light-border-disabled')
+        contentDefault: document.querySelector('[data-target="light-content-default"]')?.parentElement?.querySelector('.hex-input'),
+        contentPressed: document.querySelector('[data-target="light-content-pressed"]')?.parentElement?.querySelector('.hex-input'),
+        contentDisabled: document.querySelector('[data-target="light-content-disabled"]')?.parentElement?.querySelector('.hex-input'),
+        backgroundDefault: document.querySelector('[data-target="light-background-default"]')?.parentElement?.querySelector('.hex-input'),
+        backgroundPressed: document.querySelector('[data-target="light-background-pressed"]')?.parentElement?.querySelector('.hex-input'),
+        backgroundDisabled: document.querySelector('[data-target="light-background-disabled"]')?.parentElement?.querySelector('.hex-input'),
+        borderDefault: document.querySelector('[data-target="light-border-default"]')?.parentElement?.querySelector('.hex-input'),
+        borderPressed: document.querySelector('[data-target="light-border-pressed"]')?.parentElement?.querySelector('.hex-input'),
+        borderDisabled: document.querySelector('[data-target="light-border-disabled"]')?.parentElement?.querySelector('.hex-input')
       };
       this._domCache.darkInputs = {
-        contentDefault: document.getElementById('dark-content-default'),
-        contentPressed: document.getElementById('dark-content-pressed'),
-        contentDisabled: document.getElementById('dark-content-disabled'),
-        backgroundDefault: document.getElementById('dark-background-default'),
-        backgroundPressed: document.getElementById('dark-background-pressed'),
-        backgroundDisabled: document.getElementById('dark-background-disabled'),
-        borderDefault: document.getElementById('dark-border-default'),
-        borderPressed: document.getElementById('dark-border-pressed'),
-        borderDisabled: document.getElementById('dark-border-disabled')
+        contentDefault: document.querySelector('[data-target="dark-content-default"]')?.parentElement?.querySelector('.hex-input'),
+        contentPressed: document.querySelector('[data-target="dark-content-pressed"]')?.parentElement?.querySelector('.hex-input'),
+        contentDisabled: document.querySelector('[data-target="dark-content-disabled"]')?.parentElement?.querySelector('.hex-input'),
+        backgroundDefault: document.querySelector('[data-target="dark-background-default"]')?.parentElement?.querySelector('.hex-input'),
+        backgroundPressed: document.querySelector('[data-target="dark-background-pressed"]')?.parentElement?.querySelector('.hex-input'),
+        backgroundDisabled: document.querySelector('[data-target="dark-background-disabled"]')?.parentElement?.querySelector('.hex-input'),
+        borderDefault: document.querySelector('[data-target="dark-border-default"]')?.parentElement?.querySelector('.hex-input'),
+        borderPressed: document.querySelector('[data-target="dark-border-pressed"]')?.parentElement?.querySelector('.hex-input'),
+        borderDisabled: document.querySelector('[data-target="dark-border-disabled"]')?.parentElement?.querySelector('.hex-input')
       };
-      this._domCache.resetBtn = document.querySelector('.palette-reset-btn');
-      this._domCache.previewColors = {
-        lightBackground: document.getElementById('preview-light-background'),
-        lightText: document.getElementById('preview-light-text'),
-        darkBackground: document.getElementById('preview-dark-background'),
-        darkText: document.getElementById('preview-dark-text')
-      };
-      this._domCache.testButtons = document.querySelectorAll('.button.custom');
     },
     
     setupEventListeners() {
       Object.entries(this._domCache.lightInputs).forEach(([key, input]) => {
         if (input) {
           input.addEventListener('input', () => {
-            this.updatePreview();
             this.generateAndApplyPalette(); // 즉시 실시간 적용!
           });
         }
@@ -1907,7 +1912,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       Object.entries(this._domCache.darkInputs).forEach(([key, input]) => {
         if (input) {
           input.addEventListener('input', () => {
-            this.updatePreview();
             this.generateAndApplyPalette(); // 즉시 실시간 적용!
           });
         }
@@ -1931,7 +1935,6 @@ window.addEventListener('DOMContentLoaded', async () => {
           if (hexInput && hexInput.classList.contains('hex-input')) {
             const alpha = e.target.id.includes('disabled') && e.target.id.includes('background') ? '00' : 'FF';
             hexInput.value = e.target.value + alpha;
-            this.updatePreview();
             this.generateAndApplyPalette(); // 즉시 실시간 적용!
           }
         });
@@ -1943,29 +1946,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     },
     
-    updatePreview() {
-      const lightBackground = this._domCache.lightInputs.backgroundDefault?.value || '#A4693F';
-      const lightText = this._domCache.lightInputs.contentDefault?.value || '#252525';
-      const darkBackground = this._domCache.darkInputs.backgroundDefault?.value || '#241F00';
-      const darkText = this._domCache.darkInputs.contentDefault?.value || '#FFE100';
-      
-      if (this._domCache.previewColors.lightBackground) {
-        this._domCache.previewColors.lightBackground.style.backgroundColor = lightBackground;
-      }
-      if (this._domCache.previewColors.lightText) {
-        this._domCache.previewColors.lightText.style.backgroundColor = lightText;
-      }
-      if (this._domCache.previewColors.darkBackground) {
-        this._domCache.previewColors.darkBackground.style.backgroundColor = darkBackground;
-      }
-      if (this._domCache.previewColors.darkText) {
-        this._domCache.previewColors.darkText.style.backgroundColor = darkText;
-      }
-      
-      if (this.currentPalette) {
-        this.currentPalette.name = this.CUSTOM_PALETTE_NAME;
-      }
-    },
     
     generateAndApplyPalette() {
       const root = document.documentElement;
@@ -2037,25 +2017,26 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
     
     resetToDefaults() {
-      // Light 테마 기본값 (새로운 색상 시스템 반영)
+      // 동적 생성된 DOM 요소들 다시 캐시
+      this._updateDynamicDOMCache();
+      
+      // Light 테마 기본값 (Primary1 팔레트 기반)
       const lightDefaults = {
-        contentDefault: ['#252525', '#252525FF'],    // color-gray-03
-        contentPressed: ['#FFFFFF', '#FFFFFFFF'],    // color-gray-14
-        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],   // color-gray-08
+        contentDefault: ['#FFFFFF', '#FFFFFFFF'],    // color-gray-14
+        contentPressed: ['#8C532C', '#8C532CFF'],    // color-brown-02
+        contentDisabled: ['#8C532C', '#8C532CFF'],   // color-brown-02
         backgroundDefault: ['#A4693F', '#A4693FFF'], // color-brown-03
         backgroundPressed: ['#EEDCD2', '#EEDCD2FF'], // color-brown-06
         backgroundDisabled: ['#000000', '#00000000'], // transparent
         borderDefault: ['#A4693F', '#A4693FFF'],     // color-brown-03
-        borderPressed: ['#A4693F', '#A4693FFF'],     // color-brown-03
-        borderDisabled: ['#BFBFBF', '#BFBFBFFF']     // color-gray-09
+        borderPressed: ['#8C532C', '#8C532CFF'],     // color-brown-02
+        borderDisabled: ['#8C532C', '#8C532CFF']     // color-brown-02
       };
       
       Object.entries(lightDefaults).forEach(([key, [colorValue, hexValue]]) => {
         const input = this._domCache.lightInputs[key];
         if (input) {
-          input.value = colorValue;
-          const hexInput = input.nextElementSibling;
-          if (hexInput) hexInput.value = hexValue;
+          input.value = hexValue; // hex 입력에는 hex 값 직접 설정
           
           // 3D 색상 선택기 UI 업데이트
           const targetId = `light-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
@@ -2069,25 +2050,23 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
       });
       
-      // Dark 테마 기본값 (새로운 색상 시스템 반영)
+      // Dark 테마 기본값 (Primary1 팔레트 기반)
       const darkDefaults = {
-        contentDefault: ['#FFE100', '#FFE100FF'],    // color-yellow-03
-        contentPressed: ['#807000', '#807000FF'],    // color-yellow-02
-        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],   // color-gray-08
-        backgroundDefault: ['#241F00', '#241F00FF'], // color-yellow-01
-        backgroundPressed: ['#FFE100', '#FFE100FF'], // color-yellow-03
+        contentDefault: ['#000000', '#000000FF'],    // color-gray-01
+        contentPressed: ['#FFEF80', '#FFEF80FF'],    // color-yellow-04
+        contentDisabled: ['#FFE100', '#FFE100FF'],   // color-yellow-03
+        backgroundDefault: ['#FFE100', '#FFE100FF'], // color-yellow-03
+        backgroundPressed: ['#241F00', '#241F00FF'], // color-yellow-01
         backgroundDisabled: ['#000000', '#00000000'], // transparent
         borderDefault: ['#FFE100', '#FFE100FF'],     // color-yellow-03
-        borderPressed: ['#FFE100', '#FFE100FF'],     // color-yellow-03
-        borderDisabled: ['#757575', '#757575FF']     // color-gray-07
+        borderPressed: ['#FFEF80', '#FFEF80FF'],     // color-yellow-04
+        borderDisabled: ['#FFE100', '#FFE100FF']     // color-yellow-03
       };
       
       Object.entries(darkDefaults).forEach(([key, [colorValue, hexValue]]) => {
         const input = this._domCache.darkInputs[key];
         if (input) {
-          input.value = colorValue;
-          const hexInput = input.nextElementSibling;
-          if (hexInput) hexInput.value = hexValue;
+          input.value = hexValue; // hex 입력에는 hex 값 직접 설정
           
           // 3D 색상 선택기 UI 업데이트
           const targetId = `dark-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
@@ -2104,7 +2083,14 @@ window.addEventListener('DOMContentLoaded', async () => {
       // 3D 구체들을 기본 위치로 초기화
       this.reset3DSpheresToDefaults();
       
-      this.updatePreview();
+      // 모든 hex 입력에 input 이벤트 트리거 (실시간 업데이트)
+      Object.values(this._domCache.lightInputs).forEach(input => {
+        if (input) input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      Object.values(this._domCache.darkInputs).forEach(input => {
+        if (input) input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      
       setTimeout(() => this.generateAndApplyPalette(), 100);
     },
     

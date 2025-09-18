@@ -165,16 +165,16 @@
     --content-icon-display-pressed-toggle: flex;
     --content-icon-display-default: none;
     
-    /* === 🎨 커스텀 팔레트 기본값 (Light 테마) === */
-    --custom-content-color-default: #252525FF;
-    --custom-content-color-pressed: #FFFFFFFF;
-    --custom-content-color-disabled: #8C8C8CFF;
-    --custom-background-color-default: #A4693FFF;
-    --custom-background-color-pressed: #EEDCD2FF;
+    /* === 🎨 커스텀 팔레트 기본값 (Light 테마 - Primary1 기반) === */
+    --custom-content-color-default: var(--color-gray-14);
+    --custom-content-color-pressed: var(--color-brown-02);
+    --custom-content-color-disabled: var(--color-brown-02);
+    --custom-background-color-default: var(--color-brown-03);
+    --custom-background-color-pressed: var(--color-brown-06);
     --custom-background-color-disabled: #00000000;
-    --custom-border-color-default: #A4693FFF;
-    --custom-border-color-pressed: #A4693FFF;
-    --custom-border-color-disabled: #BFBFBFFF;
+    --custom-border-color-default: var(--color-brown-03);
+    --custom-border-color-pressed: var(--color-brown-02);
+    --custom-border-color-disabled: var(--color-brown-02);
     --custom-border-color-pointed: var(--color-system-01);
 
     /* === 🎨 버튼 팔레트 (Light 테마) === */
@@ -317,16 +317,16 @@
     --body3-content: var(--color-gray-14);
     
     
-    /* === 🎨 커스텀 팔레트 기본값 (Dark 테마) === */
-    --custom-content-color-default: #FFE100FF;
-    --custom-content-color-pressed: #807000FF;
-    --custom-content-color-disabled: #8C8C8CFF;
-    --custom-background-color-default: #241F00FF;
-    --custom-background-color-pressed: #FFE100FF;
+    /* === 🎨 커스텀 팔레트 기본값 (Dark 테마 - Primary1 기반) === */
+    --custom-content-color-default: var(--color-gray-01);
+    --custom-content-color-pressed: var(--color-yellow-04);
+    --custom-content-color-disabled: var(--color-yellow-03);
+    --custom-background-color-default: var(--color-yellow-03);
+    --custom-background-color-pressed: var(--color-yellow-01);
     --custom-background-color-disabled: #00000000;
-    --custom-border-color-default: #FFE100FF;
-    --custom-border-color-pressed: #FFE100FF;
-    --custom-border-color-disabled: #757575FF;
+    --custom-border-color-default: var(--color-yellow-03);
+    --custom-border-color-pressed: var(--color-yellow-04);
+    --custom-border-color-disabled: var(--color-yellow-03);
 
     /* === 🎨 버튼 팔레트 (Dark 테마) === */
     /* Primary1 팔레트 */
@@ -983,29 +983,6 @@
     }
   }
 
-  .palette-preview {
-    margin: var(--unit-sm) 0;
-    
-    & h4 { 
-      margin-bottom: var(--unit-xs); 
-      font-size: 0.8rem; 
-      color: var(--page-text-secondary); 
-    }
-    
-    & .preview-colors { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: calc(var(--unit-xs) / 2); 
-      
-      & .color-preview { 
-        width: 100%; 
-        height: 1.5rem; 
-        border: 1px solid var(--page-border-primary); 
-        border-radius: calc(var(--unit-xs) / 2); 
-        cursor: help; 
-      }
-    }
-  }
 }
 
 /* ==============================
