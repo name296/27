@@ -3,16 +3,24 @@
   📋 시스템 정보
   ============================== */
 /* 
-  프로젝트: 버튼 컴포넌트 시스템
-  버전: v1.0.0
-  최종 수정: 2025-01-27
-  HTML 종속성: #main-header, #main-content, #control-panel, #demo-area
-  CSS 종속성: @layer design-system, layout, components
-  파일 연동: index.html ↔ style.css ↔ script.js ↔ README.md
+  📋 시스템 정보
+  프로젝트: 버튼 컴포넌트 시스템 v1.0.0
+  목적: 동적 팔레트 시스템과 3D 색상 선택기
+  아키텍처: 모듈형 시스템 (CSSOM + 3D Graphics)
+  
+  🏗️ 모듈 구조:
+  ├── ColorSystem: 색상 변환 (RGB ↔ HSV ↔ HSL ↔ HEX)
+  ├── SphericalDynamics: 구면 역학 (좌표계 + 회전 + 상호작용)
+  ├── ColorSphereSystem: 색상 구체 (구면좌표 → RGB 매핑 + 렌더링)
+  ├── AppUtils: 공통 유틸리티 (SVG, CSS 주입)
+  ├── ButtonSystem: 버튼 컴포넌트 관리
+  └── CustomPaletteManager: 커스텀 팔레트 UI
+  
+  🔗 종속성: index.html ↔ style.css ↔ script.js
 */
 
 /* ==============================
-  🛠️ 유틸리티 모듈
+  🎨 색상 시스템 모듈
   ============================== */
 
 // 색상 시스템 공통 모듈
@@ -122,9 +130,15 @@ const ColorSystem = {
   }
 };
 
-// 구면 역학 시스템 (구면좌표계 + 3D 회전)
+/* ==============================
+  🌍 구면 역학 시스템 모듈
+  ============================== */
+
+// 구면 역학 시스템 (구면좌표계 + 3D 회전 + 상호작용)
 const SphericalDynamics = {
-  // === 쿼터니언 회전 ===
+  // ========================================
+  // 🔄 쿼터니언 회전 시스템
+  // ========================================
   
   // 범용 정규화 (3D 벡터 또는 4D 쿼터니언)
   normalize(v) {
@@ -218,7 +232,9 @@ const SphericalDynamics = {
     return this.fromAxisAngle(axis, angle);
   },
   
-  // === 구면좌표계 ===
+  // ========================================
+  // 📐 구면좌표계 시스템
+  // ========================================
   
   // 직교좌표 → 구면좌표 변환
   cartesianToSpherical(x, y, z) {
@@ -256,7 +272,9 @@ const SphericalDynamics = {
     return { theta: 0, phi: 0 }; // 못 찾으면 북극
   },
   
-  // === 3D 구체 상호작용 ===
+  // ========================================
+  // 🎮 3D 구체 상호작용 시스템
+  // ========================================
   
   // 3D 캔버스 상호작용 설정
   setupCanvasInteraction(canvas, sphereState, onUpdate) {
@@ -324,7 +342,8 @@ const SphericalDynamics = {
       // 고화질 최종 렌더링
       requestAnimationFrame(() => {
         const ctx = canvas.getContext('2d');
-        ColorSphereSystem.render3D(ctx, sphereState);
+        const currentAlpha = this.getCurrentAlpha(canvas);
+        ColorSphereSystem.render3D(ctx, sphereState, currentAlpha);
       });
     });
     
@@ -355,11 +374,11 @@ const SphericalDynamics = {
         const newHex = currentHex.substr(0, 6) + alpha.toString(16).padStart(2, '0').toUpperCase();
         panelHexInput.value = '#' + newHex;
         
-        // 이벤트 트리거
+        // 이벤트 트리거 (기존 방식 유지)
         panelHexInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
     });
-  },
+    },
   
   // 부드러운 쿼터니언 애니메이션
   animateToQuaternion(sphereState, targetQ, canvas) {
@@ -389,8 +408,16 @@ const SphericalDynamics = {
   }
 };
 
-// 색상 구체 시스템 (구면좌표 → 색상 매핑)
+/* ==============================
+  🎨 색상 구체 시스템 모듈
+  ============================== */
+
+// 색상 구체 시스템 (구면좌표 → RGB 매핑 + 3D 렌더링)
 const ColorSphereSystem = {
+  // ========================================
+  // 🎨 색상 매핑 시스템
+  // ========================================
+  
   // 구면좌표에서 색상 계산
   calculateColor(theta, phi) {
     // 정확한 구간 설정: 극지방 6도 (좌우 3도씩), 적도 6도
@@ -463,6 +490,10 @@ const ColorSphereSystem = {
     return { r, g, b };
   },
   
+  // ========================================
+  // 🖼️ 3D 렌더링 시스템
+  // ========================================
+  
   // 3D 구체 렌더링
   render3D(ctx, sphereState) {
     const width = ctx.canvas.width;
@@ -510,7 +541,7 @@ const ColorSphereSystem = {
           const color = this.calculateColor(theta, phi);
           const { r, g, b } = color;
           
-          // 픽셀 채우기 (건너뛴 픽셀도 같은 색으로)
+          // 픽셀 채우기
           for (let py = y; py < Math.min(y + pixelStep, height); py++) {
             for (let px = x; px < Math.min(x + pixelStep, width); px++) {
               const index = (py * width + px) * 4;
@@ -526,7 +557,7 @@ const ColorSphereSystem = {
     
     ctx.putImageData(imageData, 0, 0);
     
-    // 중심점 표시
+    // 중심점 표시 (항상 불투명)
     if (sphereState.selectedColor) {
       const { r, g, b } = sphereState.selectedColor;
       ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
@@ -542,6 +573,10 @@ const ColorSphereSystem = {
     }
   }
 };
+
+/* ==============================
+  🛠️ 공통 유틸리티 모듈
+  ============================== */
 
 const AppUtils = {
   SVGLoader: {
@@ -575,7 +610,7 @@ const AppUtils = {
 };
 
 /* ==============================
-  🎨 버튼 시스템 코어
+  🔘 버튼 시스템 코어 모듈
   ============================== */
 
 const ButtonSystem = {
@@ -756,14 +791,42 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       return observer;
     },
     
-    // 명도대비 계산 함수
+    // 명도대비 계산 함수 (WCAG 2.1 표준)
     calculateContrast(color1, color2) {
-      // RGB 값 추출 및 상대 휘도 계산
+      // RGB 값 추출 (다양한 색상 형식 지원)
       const getRGB = (color) => {
-        const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        return match ? [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] : [0, 0, 0];
+        // 빈 문자열이나 null 처리
+        if (!color || color === 'transparent') {
+          return [255, 255, 255]; // 기본값: 흰색
+        }
+        
+        // hex 색상 처리 (#RRGGBBAA 또는 #RRGGBB)
+        if (color.startsWith('#')) {
+          const hex = color.replace('#', '');
+          if (hex.length >= 6) {
+            return [
+              parseInt(hex.substr(0, 2), 16),
+              parseInt(hex.substr(2, 2), 16),
+              parseInt(hex.substr(4, 2), 16)
+            ];
+          }
+        }
+        
+        // rgb/rgba 색상 처리 (소수점 포함)
+        const rgbMatch = color.match(/rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)/);
+        if (rgbMatch) {
+          return [
+            Math.round(parseFloat(rgbMatch[1])),
+            Math.round(parseFloat(rgbMatch[2])),
+            Math.round(parseFloat(rgbMatch[3]))
+          ];
+        }
+        
+        // 기본값 반환 (파싱 실패시)
+        return [128, 128, 128]; // 회색
       };
       
+      // 상대 휘도 계산 (WCAG 2.1 표준 공식)
       const getLuminance = (r, g, b) => {
         const [rs, gs, bs] = [r, g, b].map(c => {
           c = c / 255;
@@ -774,11 +837,17 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       
       const [r1, g1, b1] = getRGB(color1);
       const [r2, g2, b2] = getRGB(color2);
+      
       const lum1 = getLuminance(r1, g1, b1);
       const lum2 = getLuminance(r2, g2, b2);
+      
+      // WCAG 2.1 명도대비 공식: (밝은 색 + 0.05) / (어두운 색 + 0.05)
+      // 값이 클수록 대비가 높음 (1:1 ~ 21:1)
       const brightest = Math.max(lum1, lum2);
       const darkest = Math.min(lum1, lum2);
-      return (brightest + 0.05) / (darkest + 0.05);
+      const contrastRatio = (brightest + 0.05) / (darkest + 0.05);
+      
+      return contrastRatio;
     },
     
     updateButtonLabelsWithContrast() {
@@ -797,7 +866,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
           const backgroundStyle = getComputedStyle(background);
           const contentStyle = getComputedStyle(content);
           const backgroundColor = backgroundStyle.backgroundColor;
-                      const textColor = contentStyle.color;
+          const textColor = contentStyle.color;
           
           const contrast = this.calculateContrast(textColor, backgroundColor);
           const contrastRatio = contrast.toFixed(2);
@@ -805,7 +874,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
           // 기존 라벨에서 대비값 부분 제거
           let labelText = label.innerHTML.split('<br>')[0];
           
-          // 대비값만 숫자로 표시
+          // 간단하게 숫자만 표시 (소숫점 두 자리)
           label.innerHTML = `${labelText}<br>${contrastRatio}`;
         }
       });
@@ -1220,12 +1289,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+/* ==============================
+  🎛️ 커스텀 팔레트 시스템 모듈
+  ============================== */
+
   const CustomPaletteManager = {
     CUSTOM_PALETTE_NAME: 'custom',
     _domCache: { lightInputs: {}, darkInputs: {}, resetBtn: null, previewColors: {}, testButtons: null },
     currentPalette: { name: 'custom' },
     
-          // 커스텀 컬러피커 시스템
+/* ==============================
+  🌈 3D 색상 선택기 모듈
+  ============================== */
+
       CustomColorPicker: {
         // 3D 구체 상태 관리 (쿼터니언 기반)
         sphereState: {
@@ -1238,6 +1314,10 @@ window.addEventListener('DOMContentLoaded', async () => {
           isDragging: false
         },
       
+      // ========================================
+      // 🚀 초기화 시스템
+      // ========================================
+      
       init() {
         this.generateLightThemePickers();
         this.generateDarkThemePickers();
@@ -1245,6 +1325,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         this.setup3DCanvasInteraction();
         this.setupHexInputs();
       },
+      
+      // ========================================
+      // 🎨 UI 생성 시스템
+      // ========================================
       
       generateLightThemePickers() {
         const lightContainer = document.getElementById('light-color-pickers');
@@ -1329,6 +1413,10 @@ window.addEventListener('DOMContentLoaded', async () => {
           darkContainer.innerHTML += html;
                   });
       },
+      
+      // ========================================
+      // 🎛️ 상호작용 설정 시스템
+      // ========================================
       
       setupColorDisplays() {
         document.querySelectorAll('.color-display').forEach(display => {
@@ -1453,7 +1541,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             
             this.updateColorInputs(targetId, rgb, alpha, hexColor);
             
-            // 구체 다시 그리기 (선택점 업데이트)
+            // 구체 다시 그리기 (선택점 업데이트, 투명도 반영)
             const ctx = canvas.getContext('2d');
             ColorSphereSystem.render3D(ctx, this.sphereState);
           }
@@ -1598,6 +1686,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
       },
       
+      // ========================================
+      // 📝 입력 처리 시스템
+      // ========================================
+      
       setupHexInputs() {
         // 패널 내 Hex 입력 - 8자리 헥스코드 처리
         document.querySelectorAll('.panel-hex-input').forEach(hexInput => {
@@ -1631,10 +1723,11 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
           });
         });
-      },
-
+            },
       
-
+      // ========================================
+      // 🔄 상태 업데이트 시스템
+      // ========================================
       
       updateColorInputs(targetId, rgb, alpha, hexColor) {
         const picker = document.querySelector(`[data-target="${targetId}"]`);
@@ -1794,9 +1887,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       };
       this._domCache.resetBtn = document.querySelector('.palette-reset-btn');
       this._domCache.previewColors = {
-        lightBg: document.getElementById('preview-light-bg'),
+        lightBackground: document.getElementById('preview-light-background'),
         lightText: document.getElementById('preview-light-text'),
-        darkBg: document.getElementById('preview-dark-bg'),
+        darkBackground: document.getElementById('preview-dark-background'),
         darkText: document.getElementById('preview-dark-text')
       };
       this._domCache.testButtons = document.querySelectorAll('.button.custom');
@@ -1836,7 +1929,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         colorInput.addEventListener('input', (e) => {
           const hexInput = e.target.nextElementSibling;
           if (hexInput && hexInput.classList.contains('hex-input')) {
-            const alpha = e.target.id.includes('disabled') && e.target.id.includes('bg') ? '00' : 'FF';
+            const alpha = e.target.id.includes('disabled') && e.target.id.includes('background') ? '00' : 'FF';
             hexInput.value = e.target.value + alpha;
             this.updatePreview();
             this.generateAndApplyPalette(); // 즉시 실시간 적용!
@@ -1851,19 +1944,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
     
     updatePreview() {
-      const lightBg = this._domCache.lightInputs.backgroundDefault?.value || '#A4693F';
+      const lightBackground = this._domCache.lightInputs.backgroundDefault?.value || '#A4693F';
       const lightText = this._domCache.lightInputs.contentDefault?.value || '#252525';
-      const darkBg = this._domCache.darkInputs.backgroundDefault?.value || '#241F00';
+      const darkBackground = this._domCache.darkInputs.backgroundDefault?.value || '#241F00';
       const darkText = this._domCache.darkInputs.contentDefault?.value || '#FFE100';
       
-      if (this._domCache.previewColors.lightBg) {
-        this._domCache.previewColors.lightBg.style.backgroundColor = lightBg;
+      if (this._domCache.previewColors.lightBackground) {
+        this._domCache.previewColors.lightBackground.style.backgroundColor = lightBackground;
       }
       if (this._domCache.previewColors.lightText) {
         this._domCache.previewColors.lightText.style.backgroundColor = lightText;
       }
-      if (this._domCache.previewColors.darkBg) {
-        this._domCache.previewColors.darkBg.style.backgroundColor = darkBg;
+      if (this._domCache.previewColors.darkBackground) {
+        this._domCache.previewColors.darkBackground.style.backgroundColor = darkBackground;
       }
       if (this._domCache.previewColors.darkText) {
         this._domCache.previewColors.darkText.style.backgroundColor = darkText;
@@ -1963,6 +2056,16 @@ window.addEventListener('DOMContentLoaded', async () => {
           input.value = colorValue;
           const hexInput = input.nextElementSibling;
           if (hexInput) hexInput.value = hexValue;
+          
+          // 3D 색상 선택기 UI 업데이트
+          const targetId = `light-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+          const picker = document.querySelector(`[data-target="${targetId}"]`);
+          if (picker) {
+            const colorDisplay = picker.querySelector('.color-display');
+            const panelHexInput = picker.querySelector('.panel-hex-input');
+            if (colorDisplay) colorDisplay.style.background = hexValue;
+            if (panelHexInput) panelHexInput.value = hexValue;
+          }
         }
       });
       
@@ -1985,21 +2088,106 @@ window.addEventListener('DOMContentLoaded', async () => {
           input.value = colorValue;
           const hexInput = input.nextElementSibling;
           if (hexInput) hexInput.value = hexValue;
+          
+          // 3D 색상 선택기 UI 업데이트
+          const targetId = `dark-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+          const picker = document.querySelector(`[data-target="${targetId}"]`);
+          if (picker) {
+            const colorDisplay = picker.querySelector('.color-display');
+            const panelHexInput = picker.querySelector('.panel-hex-input');
+            if (colorDisplay) colorDisplay.style.background = hexValue;
+            if (panelHexInput) panelHexInput.value = hexValue;
+          }
         }
       });
       
+      // 3D 구체들을 기본 위치로 초기화
+      this.reset3DSpheresToDefaults();
+      
       this.updatePreview();
       setTimeout(() => this.generateAndApplyPalette(), 100);
+    },
+    
+    // 3D 구체들을 기본 위치로 초기화하는 메서드
+    reset3DSpheresToDefaults() {
+      // 모든 3D 색상 선택기를 기본 위치로 초기화
+      document.querySelectorAll('.color-canvas-3d').forEach((canvas, index) => {
+        const picker = canvas.closest('.custom-color-picker');
+        if (!picker) return;
+        
+        const targetId = picker.dataset.target;
+        const panelHexInput = picker.querySelector('.panel-hex-input');
+        
+        if (panelHexInput && panelHexInput.value) {
+          const hexValue = panelHexInput.value.replace('#', '').toUpperCase();
+          
+          // 8자리 헥스코드인 경우에만 처리
+          if (hexValue.length === 8 && /^[0-9A-F]{8}$/.test(hexValue)) {
+            const r = parseInt(hexValue.substr(0, 2), 16);
+            const g = parseInt(hexValue.substr(2, 2), 16);
+            const b = parseInt(hexValue.substr(4, 2), 16);
+            
+            // 구체 위치 찾기 및 이동
+            const position = SphericalDynamics.findPosition('#' + hexValue.substr(0, 6));
+            if (position) {
+              // 각 구체마다 독립적인 sphereState 생성 (기존 상태 복사)
+              const independentSphereState = {
+                dragging: false,
+                v0: null,
+                Q: [1, 0, 0, 0], // 기본 쿼터니언으로 초기화
+                last: [0, 0],
+                zoom: this.CustomColorPicker.sphereState.zoom,
+                selectedColor: { r, g, b },
+                isDragging: false
+              };
+              
+              // 해당 위치로 구체 회전 계산
+              const targetVector = SphericalDynamics.sphericalToCartesian(1, position.theta, position.phi);
+              const currentVector = [0, 0, 1]; // 기본 중심점
+              
+              // 회전 축과 각도 계산
+              const axis = [
+                currentVector[1] * targetVector[2] - currentVector[2] * targetVector[1],
+                currentVector[2] * targetVector[0] - currentVector[0] * targetVector[2],
+                currentVector[0] * targetVector[1] - currentVector[1] * targetVector[0]
+              ];
+              
+              const dot = currentVector[0] * targetVector[0] + currentVector[1] * targetVector[1] + currentVector[2] * targetVector[2];
+              const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
+              
+              if (angle > 0.01) { // 의미있는 회전이 필요한 경우
+                const normalizedAxis = SphericalDynamics.normalize(axis);
+                const targetQ = SphericalDynamics.fromAxisAngle(normalizedAxis, angle);
+                
+                // 독립적인 상태로 애니메이션 (지연 시간 추가로 순차 실행)
+                setTimeout(() => {
+                  SphericalDynamics.animateToQuaternion(
+                    independentSphereState, 
+                    targetQ, 
+                    canvas
+                  );
+                }, index * 100); // 각 구체마다 100ms씩 지연
+              } else {
+                // 회전이 필요 없는 경우 즉시 렌더링
+                setTimeout(() => {
+                  const ctx = canvas.getContext('2d');
+                  ColorSphereSystem.render3D(ctx, independentSphereState);
+                }, index * 50);
+              }
+            }
+          }
+        }
+      });
+      
+      // 공유 sphereState도 기본값으로 초기화
+      this.CustomColorPicker.sphereState.Q = [1, 0, 0, 0];
+      this.CustomColorPicker.sphereState.selectedColor = { r: 255, g: 0, b: 0 };
     }
   };
 
-  /* ==============================
-    🚀 메인 초기화 체인
-    ============================== */
-  
-  /* ==============================
-    🚀 시스템 무결성 검증 및 초기화
-    ============================== */
+/* ==============================
+  🚀 시스템 초기화 및 무결성 검증
+  ============================== */
   
   // HTML 구조 검증
   const requiredElements = ['#main-header', '#main-content', '#control-panel', '#demo-area'];
@@ -2031,9 +2219,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     throw error;
   }
   
-  /* ==============================
-    🎮 이벤트 시스템
-    ============================== */
+/* ==============================
+  🎮 글로벌 이벤트 시스템
+  ============================== */
 
   let resizeScheduled = false;
   window.addEventListener("resize", () => {
