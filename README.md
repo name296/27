@@ -291,9 +291,9 @@ const KeyboardNavigation = {
 
 ```
 📦 버튼 컴포넌트 시스템 v1.0.0 (2025-09-18 업데이트)
-├── 📄 index.html          # 메인 HTML (426줄) - 시맨틱 구조, 접근성 최적화
-├── 🎨 style.css           # 통합 CSS (1,016줄) - 6개 팔레트 + 이중 배경 시스템
-├── ⚡ script.js           # JavaScript (2,347줄) - 3D 색상 선택기 + 모듈 시스템
+├── 📄 index.html          # 메인 HTML (477줄) - 6개 팔레트 + 시맨틱 구조
+├── 🎨 style.css           # 통합 CSS (993줄) - 이중 배경 시스템 + CSSOM 연동
+├── ⚡ script.js           # JavaScript (2,466줄) - 3D 색상 선택기 + 동적 CSSOM
 ├── 🖼️ icon.svg            # 기본 아이콘 (HTML 종속성)
 ├── ✅ selected.svg        # 선택 상태 아이콘 (JS 종속성)
 ├── 🔖 favicon.ico         # 파비콘 (HTML preload)
@@ -302,14 +302,14 @@ const KeyboardNavigation = {
 
 🔗 파일 간 종속성:
    HTML → CSS (--color-* 변수, 6개 팔레트 클래스)
-   HTML → JS (DOM 선택자, 3D 캔버스 참조) 
-   CSS → JS (--color-* 변수 동적 생성 및 검증)
-   MD → ALL (새로운 색상 시스템 문서화)
+   HTML → JS (DOM 클래스 네이밍 → CSSOM 동적 조작) 
+   CSS → JS (--color-* 변수 토큰 → 동적 스타일 생성)
+   MD → ALL (완전한 시스템 문서화)
    
-💡 새로운 색상 시스템 성과:
-   - --color-* 표준 네이밍 컨벤션 적용
-   - Primary3/Secondary3 이중 배경 시스템 구현
-   - 3D 색상 선택기와 완벽 연동
+💡 CSSOM 동적 조작 시스템:
+   - JavaScript가 DOM 클래스를 스캔하여 CSS 자동 생성
+   - Primary3/Secondary3 이중 배경 시스템 지원
+   - transparent 키워드로 투명도 표준화
    - 25개 원시 색상 + 6개 완전한 팔레트
 ```
 
@@ -391,15 +391,15 @@ const KeyboardNavigation = {
 - **스크린 리더**: 완전 호환
 - **색상 대비**: 4.5:1 이상
 
-### 🚀 **성능 (2025-09-18 색상 시스템 확장)**
+### 🚀 **성능 (2025-09-18 CSSOM 동적 조작 시스템)**
 
-- **CSS 파일**: 993 라인 (6개 팔레트 + 이중 배경 시스템)
-- **JavaScript 파일**: 2,466 라인 (3D 색상 선택기 + 모듈 시스템)  
-- **HTML 파일**: 461 라인 (Primary3/Secondary3 추가, 접근성 강화)
-- **총 프로젝트**: 3,920+ 라인 (고급 색상 시스템 구현)
+- **CSS 파일**: 993 라인 (이중 배경 시스템 + 원시 색상 토큰)
+- **JavaScript 파일**: 2,466 라인 (CSSOM 동적 조작 + 3D 색상 선택기)  
+- **HTML 파일**: 477 라인 (6개 팔레트 + 시맨틱 구조)
+- **총 프로젝트**: 3,936+ 라인 (CSSOM 동적 조작 시스템)
 - **색상 변수**: 25개 원시 색상 + 6개 완전한 팔레트
-- **투명도**: `transparent` 키워드로 통일
-- **종속성**: HTML ↔ CSS ↔ JS ↔ MD 완전 무결화
+- **투명도**: `transparent` 키워드로 완전 통일
+- **아키텍처**: DOM 클래스 → JavaScript → CSSOM 동적 생성
 
 ---
 

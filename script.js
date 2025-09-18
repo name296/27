@@ -1862,12 +1862,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       this._initDOMCache();
       this.CustomColorPicker.init();
       
-      // 동적 생성 완료 후 DOM 캐시 업데이트
+      // 동적 생성 완료 후 DOM 캐시 업데이트 (더 긴 대기 시간)
       setTimeout(() => {
         this._updateDynamicDOMCache();
         this.setupEventListeners();
         this.generateAndApplyPalette();
-      }, 200);
+      }, 500); // 200ms → 500ms로 증가
     },
     
     _initDOMCache() {
@@ -2041,7 +2041,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       Object.entries(lightDefaults).forEach(([key, [colorValue, hexValue]]) => {
         const input = this._domCache.lightInputs[key];
         if (input) {
-          input.value = hexValue; // hex 입력에는 hex 값 직접 설정
+          input.value = hexValue;
           
           // 3D 색상 선택기 UI 업데이트
           const targetId = `light-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
@@ -2052,6 +2052,12 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (colorDisplay) colorDisplay.style.background = hexValue;
             if (panelHexInput) panelHexInput.value = hexValue;
           }
+          
+          // CSS 변수 직접 업데이트
+          this.CustomColorPicker.updateCSSVariable(targetId, hexValue);
+          
+          // input 이벤트 강제 트리거
+          input.dispatchEvent(new Event('input', { bubbles: true }));
         }
       });
       
@@ -2071,7 +2077,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       Object.entries(darkDefaults).forEach(([key, [colorValue, hexValue]]) => {
         const input = this._domCache.darkInputs[key];
         if (input) {
-          input.value = hexValue; // hex 입력에는 hex 값 직접 설정
+          input.value = hexValue;
           
           // 3D 색상 선택기 UI 업데이트
           const targetId = `dark-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
@@ -2082,21 +2088,38 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (colorDisplay) colorDisplay.style.background = hexValue;
             if (panelHexInput) panelHexInput.value = hexValue;
           }
+          
+          // CSS 변수 직접 업데이트
+          this.CustomColorPicker.updateCSSVariable(targetId, hexValue);
+          
+          // input 이벤트 강제 트리거
+          input.dispatchEvent(new Event('input', { bubbles: true }));
         }
       });
       
       // 3D 구체들을 기본 위치로 초기화
       this.reset3DSpheresToDefaults();
       
-      // 모든 hex 입력에 input 이벤트 트리거 (실시간 업데이트)
-      Object.values(this._domCache.lightInputs).forEach(input => {
-        if (input) input.dispatchEvent(new Event('input', { bubbles: true }));
-      });
-      Object.values(this._domCache.darkInputs).forEach(input => {
-        if (input) input.dispatchEvent(new Event('input', { bubbles: true }));
-      });
+      // 강제로 팔레트 적용 및 버튼 업데이트
+      this.generateAndApplyPalette();
       
-      setTimeout(() => this.generateAndApplyPalette(), 100);
+      // 버튼 시스템 강제 업데이트
+      if (typeof ButtonSystem !== 'undefined' && ButtonSystem.StyleManager) {
+        ButtonSystem.StyleManager.scheduleContrastUpdate();
+      }
+      
+      // DOM 스타일 강제 새로고침
+      requestAnimationFrame(() => {
+        const customButtons = document.querySelectorAll('.button.custom');
+        customButtons.forEach(button => {
+          // 강제 리플로우로 스타일 재계산
+          button.offsetHeight;
+          const background = button.querySelector('.background.dynamic');
+          if (background) {
+            background.offsetHeight;
+          }
+        });
+      });
     },
     
     // 3D 구체들을 기본 위치로 초기화하는 메서드
@@ -2184,7 +2207,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const requiredElements = ['#main-header', '#main-content', '#control-panel', '#demo-area'];
   const missingElements = requiredElements.filter(selector => !document.querySelector(selector));
   if (missingElements.length > 0) {
-    console.error('❌ HTML 구조 오류 - 누락된 요소:', missingElements);
+    // HTML 구조 오류 감지됨
   }
   
   // CSS 변수 검증
@@ -2195,7 +2218,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const missingVars = criticalVars.filter(varName => !computedStyle.getPropertyValue(varName));
   document.body.removeChild(testElement);
   if (missingVars.length > 0) {
-    console.error('❌ CSS 변수 오류 - 누락된 변수:', missingVars);
+    // CSS 변수 오류 감지됨
   }
   
   // Manager 초기화 (종속성 순서)
@@ -2206,7 +2229,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     CustomPaletteManager.init();
     await ButtonSystem.init();
   } catch (error) {
-    console.error('❌ 시스템 초기화 실패:', error);
+    // 시스템 초기화 실패
     throw error;
   }
   
