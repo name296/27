@@ -291,9 +291,9 @@ const KeyboardNavigation = {
 
 ```
 📦 버튼 컴포넌트 시스템 v1.0.0 (2025-09-18 업데이트)
-├── 📄 index.html          # 메인 HTML (477줄) - 6개 팔레트 + 시맨틱 구조
-├── 🎨 style.css           # 통합 CSS (993줄) - 이중 배경 시스템 + CSSOM 연동
-├── ⚡ script.js           # JavaScript (2,466줄) - 3D 색상 선택기 + 동적 CSSOM
+├── 📄 index.html          # 메인 HTML (463줄) - 6개 팔레트 + 시맨틱 구조
+├── 🎨 style.css           # 통합 CSS (970줄) - 이중 배경 시스템 + CSSOM 연동
+├── ⚡ script.js           # JavaScript (2,370줄) - 3D 색상 선택기 + 동적 CSSOM
 ├── 🖼️ icon.svg            # 기본 아이콘 (HTML 종속성)
 ├── ✅ selected.svg        # 선택 상태 아이콘 (JS 종속성)
 ├── 🔖 favicon.ico         # 파비콘 (HTML preload)
@@ -393,10 +393,10 @@ const KeyboardNavigation = {
 
 ### 🚀 **성능 (2025-09-18 CSSOM 동적 조작 시스템)**
 
-- **CSS 파일**: 993 라인 (이중 배경 시스템 + 원시 색상 토큰)
-- **JavaScript 파일**: 2,466 라인 (CSSOM 동적 조작 + 3D 색상 선택기)  
-- **HTML 파일**: 477 라인 (6개 팔레트 + 시맨틱 구조)
-- **총 프로젝트**: 3,936+ 라인 (CSSOM 동적 조작 시스템)
+- **CSS 파일**: 970 라인 (이중 배경 시스템 + 원시 색상 토큰)
+- **JavaScript 파일**: 2,370 라인 (CSSOM 동적 조작 + 3D 색상 선택기)  
+- **HTML 파일**: 463 라인 (6개 팔레트 + 시맨틱 구조)
+- **총 프로젝트**: 3,803+ 라인 (CSSOM 동적 조작 시스템)
 - **색상 변수**: 25개 원시 색상 + 6개 완전한 팔레트
 - **투명도**: `transparent` 키워드로 완전 통일
 - **아키텍처**: DOM 클래스 → JavaScript → CSSOM 동적 생성
