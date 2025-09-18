@@ -2025,6 +2025,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       // 동적 생성된 DOM 요소들 다시 캐시
       this._updateDynamicDOMCache();
       
+      // 현재 테마 상태 확인
+      const isDarkTheme = document.documentElement.classList.contains('dark');
+      
       // Light 테마 기본값 (Primary1 팔레트 기반)
       const lightDefaults = {
         contentDefault: ['#FFFFFF', '#FFFFFFFF'],    // color-gray-14
@@ -2032,34 +2035,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         contentDisabled: ['#8C532C', '#8C532CFF'],   // color-brown-02
         backgroundDefault: ['#A4693F', '#A4693FFF'], // color-brown-03
         backgroundPressed: ['#EEDCD2', '#EEDCD2FF'], // color-brown-06
-        backgroundDisabled: ['transparent', '#00000000'], // transparent
+        backgroundDisabled: ['transparent', 'transparent'], // transparent
         borderDefault: ['#A4693F', '#A4693FFF'],     // color-brown-03
         borderPressed: ['#8C532C', '#8C532CFF'],     // color-brown-02
         borderDisabled: ['#8C532C', '#8C532CFF']     // color-brown-02
       };
-      
-      Object.entries(lightDefaults).forEach(([key, [colorValue, hexValue]]) => {
-        const input = this._domCache.lightInputs[key];
-        if (input) {
-          input.value = hexValue;
-          
-          // 3D 색상 선택기 UI 업데이트
-          const targetId = `light-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-          const picker = document.querySelector(`[data-target="${targetId}"]`);
-          if (picker) {
-            const colorDisplay = picker.querySelector('.color-display');
-            const panelHexInput = picker.querySelector('.panel-hex-input');
-            if (colorDisplay) colorDisplay.style.background = hexValue;
-            if (panelHexInput) panelHexInput.value = hexValue;
-          }
-          
-          // CSS 변수 직접 업데이트
-          this.CustomColorPicker.updateCSSVariable(targetId, hexValue);
-          
-          // input 이벤트 강제 트리거
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-      });
       
       // Dark 테마 기본값 (Primary1 팔레트 기반)
       const darkDefaults = {
@@ -2068,19 +2048,24 @@ window.addEventListener('DOMContentLoaded', async () => {
         contentDisabled: ['#FFE100', '#FFE100FF'],   // color-yellow-03
         backgroundDefault: ['#FFE100', '#FFE100FF'], // color-yellow-03
         backgroundPressed: ['#241F00', '#241F00FF'], // color-yellow-01
-        backgroundDisabled: ['transparent', '#00000000'], // transparent
+        backgroundDisabled: ['transparent', 'transparent'], // transparent
         borderDefault: ['#FFE100', '#FFE100FF'],     // color-yellow-03
         borderPressed: ['#FFEF80', '#FFEF80FF'],     // color-yellow-04
         borderDisabled: ['#FFE100', '#FFE100FF']     // color-yellow-03
       };
       
-      Object.entries(darkDefaults).forEach(([key, [colorValue, hexValue]]) => {
-        const input = this._domCache.darkInputs[key];
+      // 현재 테마에 따라 해당 기본값만 적용
+      const currentDefaults = isDarkTheme ? darkDefaults : lightDefaults;
+      const inputCache = isDarkTheme ? this._domCache.darkInputs : this._domCache.lightInputs;
+      const themePrefix = isDarkTheme ? 'dark' : 'light';
+      
+      Object.entries(currentDefaults).forEach(([key, [colorValue, hexValue]]) => {
+        const input = inputCache[key];
         if (input) {
           input.value = hexValue;
           
           // 3D 색상 선택기 UI 업데이트
-          const targetId = `dark-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+          const targetId = `${themePrefix}-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
           const picker = document.querySelector(`[data-target="${targetId}"]`);
           if (picker) {
             const colorDisplay = picker.querySelector('.color-display');
