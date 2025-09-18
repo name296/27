@@ -19,6 +19,14 @@
 - ⚡ **실시간 전환**: 버튼 클릭 또는 키보드 단축키로 즉시 전환
 - 💾 **설정 유지**: 로컬 스토리지를 통한 사용자 설정 저장
 
+### 🔍 **명도대비 분석 시스템**
+
+- 📊 **실시간 분석**: 렌더링된 색상 기반 정확한 명도대비 계산
+- 🎯 **WCAG 준수**: AA/AAA 기준 자동 검사
+- 🔍 **다중 요소**: 텍스트, 아이콘, 테두리 색상 모두 분석
+- ⚡ **성능 최적화**: 복잡한 CSS 계산 없이 렌더링된 색상만 사용
+- 📈 **요약 리포트**: 전체 버튼의 접근성 준수율 제공
+
 ### 📏 **큰글씨 모드**
 
 - 📎 **기본 모드**: 표준 크기 (2.5rem 기준)
@@ -391,15 +399,56 @@ const KeyboardNavigation = {
 - **스크린 리더**: 완전 호환
 - **색상 대비**: 4.5:1 이상
 
-### 🚀 **성능 (2025-09-18 CSSOM 동적 조작 시스템)**
+### 🔍 **명도대비 분석 사용법**
+
+#### **기본 사용법**
+```javascript
+// 전체 버튼 명도대비 분석
+const results = checkAllContrast();
+
+// 특정 팔레트 분석
+const primary1Results = checkPaletteContrast('primary1');
+
+// 단일 버튼 분석
+const buttonElement = document.querySelector('.button.primary1');
+const result = checkContrast(buttonElement);
+```
+
+#### **고급 사용법**
+```javascript
+// 상세 분석
+const analyzer = new ContrastAnalyzer();
+const analysis = analyzer.analyzeAllButtons();
+const summary = analyzer.summarizeResults(analysis);
+
+console.log('접근성 준수율:', summary.complianceRate + '%');
+console.log('WCAG 미달 버튼:', summary.nonCompliant + '개');
+
+// 실시간 모니터링
+const monitor = new ContrastMonitor();
+monitor.startMonitoring(); // 실시간 모니터링 시작
+monitor.stopMonitoring();  // 모니터링 중지
+```
+
+#### **개발자 도구 통합**
+```javascript
+// 브라우저 콘솔에서 사용 가능한 함수들
+window.checkContrast(element)        // 단일 버튼 검사
+window.checkAllContrast()            // 전체 버튼 검사  
+window.checkPaletteContrast(palette) // 특정 팔레트 검사
+```
+
+### 🚀 **성능 (2025-09-18 CSSOM 동적 조작 시스템 + 명도대비 분석)**
 
 - **CSS 파일**: 970 라인 (이중 배경 시스템 + 원시 색상 토큰)
 - **JavaScript 파일**: 2,370 라인 (CSSOM 동적 조작 + 3D 색상 선택기)  
+- **명도대비 모듈**: 400+ 라인 (렌더링된 색상 기반 분석)
 - **HTML 파일**: 463 라인 (6개 팔레트 + 시맨틱 구조)
-- **총 프로젝트**: 3,803+ 라인 (CSSOM 동적 조작 시스템)
+- **총 프로젝트**: 4,200+ 라인 (CSSOM 동적 조작 + 명도대비 분석 시스템)
 - **색상 변수**: 25개 원시 색상 + 6개 완전한 팔레트
 - **투명도**: `transparent` 키워드로 완전 통일
 - **아키텍처**: DOM 클래스 → JavaScript → CSSOM 동적 생성
+- **명도대비**: 렌더링된 색상 기반 실시간 분석
 
 ---
 
