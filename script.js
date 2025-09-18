@@ -2593,6 +2593,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   class ButtonColorExtractor {
     /**
      * 버튼의 렌더링된 색상들 추출
+     * - getComputedStyle()로 가져온 색상은 이미 투명도가 적용된 최종 렌더링된 색상
      */
     extractButtonColors(buttonElement) {
       const background = buttonElement.querySelector('.background.dynamic');
@@ -2747,7 +2748,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       this.observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && 
-              (mutation.attributeName === 'class' || mutation.attributeName === 'style')) {
+              (mutation.attributeName === 'class' || 
+               mutation.attributeName === 'style' ||
+               mutation.attributeName === 'aria-disabled')) {
             this.checkElementContrast(mutation.target);
           }
         });
@@ -2756,11 +2759,64 @@ window.addEventListener('DOMContentLoaded', async () => {
       this.observer.observe(document.body, {
         attributes: true,
         subtree: true,
-        attributeFilter: ['class', 'style']
+        attributeFilter: ['class', 'style', 'aria-disabled']
       });
 
+      // CSS 변수 변화 감지를 위한 추가 모니터링
+      this.startCSSVariableMonitoring();
+
       this.isMonitoring = true;
-      console.log('🎯 명도대비 모니터링 시작');
+      console.log('🎯 명도대비 모니터링 시작 (투명도 변화 감지 포함)');
+    }
+
+    /**
+     * CSS 변수 변화 감지
+     */
+    startCSSVariableMonitoring() {
+      // CSS 변수 변화를 감지하기 위한 주기적 체크
+      this.cssCheckInterval = setInterval(() => {
+        this.checkAllButtonsForChanges();
+      }, 100); // 100ms마다 체크
+    }
+
+    /**
+     * 모든 버튼의 변화 체크
+     */
+    checkAllButtonsForChanges() {
+      const buttons = document.querySelectorAll('.button');
+      buttons.forEach(button => {
+        const currentColors = this.analyzer.extractor.extractButtonColors(button);
+        const buttonId = button.getAttribute('data-button-id') || this.generateButtonId(button);
+        
+        // 이전 색상과 비교
+        if (!this.previousColors) this.previousColors = new Map();
+        const previousColors = this.previousColors.get(buttonId);
+        
+        if (previousColors && this.hasColorChanged(previousColors, currentColors)) {
+          this.checkElementContrast(button);
+        }
+        
+        this.previousColors.set(buttonId, currentColors);
+      });
+    }
+
+    /**
+     * 버튼 ID 생성
+     */
+    generateButtonId(button) {
+      const classes = Array.from(button.classList).sort().join('-');
+      const index = Array.from(button.parentElement.children).indexOf(button);
+      return `${classes}-${index}`;
+    }
+
+    /**
+     * 색상 변화 감지
+     */
+    hasColorChanged(previous, current) {
+      return previous.surfaceColor !== current.surfaceColor ||
+             previous.textColor !== current.textColor ||
+             previous.iconColor !== current.iconColor ||
+             previous.borderColor !== current.borderColor;
     }
 
     /**
@@ -2771,8 +2827,15 @@ window.addEventListener('DOMContentLoaded', async () => {
         this.observer.disconnect();
         this.observer = null;
       }
+      
+      if (this.cssCheckInterval) {
+        clearInterval(this.cssCheckInterval);
+        this.cssCheckInterval = null;
+      }
+      
+      this.previousColors = null;
       this.isMonitoring = false;
-      console.log('⏹️ 명도대비 모니터링 중지');
+      console.log('⏹️ 명도대비 모니터링 중지 (투명도 변화 감지 포함)');
     }
 
     /**
@@ -2798,7 +2861,8 @@ window.addEventListener('DOMContentLoaded', async () => {
           textContrast: analysis.contrast.text,
           iconContrast: analysis.contrast.icon,
           textCompliant: textCompliant,
-          iconCompliant: iconCompliant
+          iconCompliant: iconCompliant,
+          colors: analysis.colors
         });
       }
     }
@@ -2826,9 +2890,31 @@ window.addEventListener('DOMContentLoaded', async () => {
     return window.ContrastAnalyzer.analyzePalette(palette);
   };
 
+  // 투명도 테스트 함수 (렌더링된 색상 기반)
+  window.testOpacityChange = (buttonElement, opacity = 0.5) => {
+    if (buttonElement && buttonElement.classList.contains('button')) {
+      const originalOpacity = buttonElement.style.opacity;
+      buttonElement.style.opacity = opacity;
+      
+      setTimeout(() => {
+        const analysis = window.ContrastAnalyzer.analyzeButton(buttonElement);
+        console.log('투명도 변화 테스트 (렌더링된 색상 기반):', {
+          originalOpacity: originalOpacity,
+          newOpacity: opacity,
+          renderedColors: analysis.colors,
+          contrast: analysis.contrast
+        });
+        
+        // 원래 투명도로 복원
+        buttonElement.style.opacity = originalOpacity;
+      }, 100);
+    }
+  };
+
   console.log('🎯 명도대비 계산 모듈 리빌딩 완료!');
   console.log('사용법:');
   console.log('- checkContrast(element): 단일 버튼 검사');
   console.log('- checkAllContrast(): 전체 버튼 검사');
   console.log('- checkPaletteContrast(palette): 특정 팔레트 검사');
+  console.log('- testOpacityChange(element, opacity): 투명도 변화 테스트');
 });
