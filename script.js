@@ -1340,7 +1340,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           { id: 'light-content-disabled', label: '콘텐츠(비활성)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 },
           { id: 'light-background-default', label: '배경(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
           { id: 'light-background-pressed', label: '배경(눌림)', color: '#EEDCD2', hex: '#EEDCD2FF', hue: 25, alpha: 255 },
-          { id: 'light-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
+          { id: 'light-background-disabled', label: '배경(비활성)', color: 'transparent', hex: '#00000000', hue: 0, alpha: 0 },
           { id: 'light-border-default', label: '테두리(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
           { id: 'light-border-pressed', label: '테두리(눌림)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 },
           { id: 'light-border-disabled', label: '테두리(비활성)', color: '#8C532C', hex: '#8C532CFF', hue: 25, alpha: 255 }
@@ -1382,7 +1382,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           { id: 'dark-content-disabled', label: '콘텐츠(비활성)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
           { id: 'dark-background-default', label: '배경(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
           { id: 'dark-background-pressed', label: '배경(눌림)', color: '#241F00', hex: '#241F00FF', hue: 54, alpha: 255 },
-          { id: 'dark-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
+          { id: 'dark-background-disabled', label: '배경(비활성)', color: 'transparent', hex: '#00000000', hue: 0, alpha: 0 },
           { id: 'dark-border-default', label: '테두리(기본)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 },
           { id: 'dark-border-pressed', label: '테두리(눌림)', color: '#FFEF80', hex: '#FFEF80FF', hue: 54, alpha: 255 },
           { id: 'dark-border-disabled', label: '테두리(비활성)', color: '#FFE100', hex: '#FFE100FF', hue: 54, alpha: 255 }
@@ -2027,7 +2027,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         contentDisabled: ['#8C532C', '#8C532CFF'],   // color-brown-02
         backgroundDefault: ['#A4693F', '#A4693FFF'], // color-brown-03
         backgroundPressed: ['#EEDCD2', '#EEDCD2FF'], // color-brown-06
-        backgroundDisabled: ['#000000', '#00000000'], // transparent
+        backgroundDisabled: ['transparent', '#00000000'], // transparent
         borderDefault: ['#A4693F', '#A4693FFF'],     // color-brown-03
         borderPressed: ['#8C532C', '#8C532CFF'],     // color-brown-02
         borderDisabled: ['#8C532C', '#8C532CFF']     // color-brown-02
@@ -2057,7 +2057,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         contentDisabled: ['#FFE100', '#FFE100FF'],   // color-yellow-03
         backgroundDefault: ['#FFE100', '#FFE100FF'], // color-yellow-03
         backgroundPressed: ['#241F00', '#241F00FF'], // color-yellow-01
-        backgroundDisabled: ['#000000', '#00000000'], // transparent
+        backgroundDisabled: ['transparent', '#00000000'], // transparent
         borderDefault: ['#FFE100', '#FFE100FF'],     // color-yellow-03
         borderPressed: ['#FFEF80', '#FFEF80FF'],     // color-yellow-04
         borderDisabled: ['#FFE100', '#FFE100FF']     // color-yellow-03
