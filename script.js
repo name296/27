@@ -645,7 +645,7 @@ const ButtonSystem = {
       let lightThemeCSS = '', darkThemeCSS = '', selectorsCSS = '';
       
       discoveredPalettes.forEach(palette => {
-        const isExisting = ['primary1', 'primary2', 'secondary1', 'secondary2'].includes(palette);
+        const isExisting = ['primary1', 'primary2', 'primary3', 'secondary1', 'secondary2', 'secondary3', 'custom'].includes(palette);
         
         [
           { name: 'default', selector: '', disabled: false },
@@ -671,10 +671,15 @@ const ButtonSystem = {
     }`;
           }
           
+          // Primary3, Secondary3는 이중 배경 시스템 사용
+          const backgroundProperty = (palette === 'primary3' || palette === 'secondary3') 
+            ? `var(--${palette}-background1-color-${state})` 
+            : `var(--${palette}-background-color-${state})`;
+          
           selectorsCSS += `
     ${paletteSelector} {
       & .background.dynamic {
-        background: var(--${palette}-background-color-${state});
+        background: ${backgroundProperty};
         outline-color: var(--${palette}-border-color-${state});
         ${state === 'default' ? 'outline-style: var(--border-style-default);' : ''}
         ${state === 'pressed' ? 'outline-style: var(--border-style-pressed); outline-width: var(--border-style-pressed);' : ''}
