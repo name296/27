@@ -376,6 +376,13 @@ const SphericalDynamics = {
         
         // 이벤트 트리거 (기존 방식 유지)
         panelHexInput.dispatchEvent(new Event('input', { bubbles: true }));
+        
+        // 투명도 변화 후 명도대비 업데이트
+        setTimeout(() => {
+          if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
+            window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+          }
+        }, 50);
       }
     });
     },
@@ -1685,6 +1692,13 @@ window.addEventListener('DOMContentLoaded', async () => {
                 const b = parseInt(rgb.substr(4, 2), 16);
                 
                 this.updateColorInputs(targetId, {r, g, b}, newAlpha, newHex);
+                
+                // 투명도 변화 후 명도대비 업데이트
+                setTimeout(() => {
+                  if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
+                    window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+                  }
+                }, 50);
               }
             }
           });
@@ -1795,6 +1809,12 @@ window.addEventListener('DOMContentLoaded', async () => {
             AppUtils.CSSInjector.inject('custom-dark-variable', `.dark { ${cssVariable}: ${hexColor}; }`, 'Dark 커스텀 변수');
           }
           
+          // CSS 변수 업데이트 후 명도대비 업데이트
+          setTimeout(() => {
+            if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
+              window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+            }
+          }, 50);
         }
       },
 
