@@ -460,7 +460,6 @@
 
     <!-- 스크립트 로딩 -->
     <script src="script.js" defer></script>
-    <script src="contrast-calculator.js" defer></script>
     
     <!-- 시스템 초기화 확인 -->
     <script>
@@ -468,16 +467,6 @@
         console.log('🎆 버튼 컴포넌트 시스템 v1.0.0 로드 완료');
         if (typeof ButtonSystem !== 'undefined') {
           console.log('✅ 모든 모듈 정상 로드됨');
-          
-          // 명도대비 분석 실행 (약간의 지연 후)
-          setTimeout(() => {
-            if (window.ContrastAnalyzer) {
-              const summary = window.ContrastAnalyzer.summarizeResults(
-                window.ContrastAnalyzer.analyzeAllButtons()
-              );
-              console.log('📊 명도대비 분석 완료:', summary);
-            }
-          }, 1000);
         } else {
           console.error('❌ ButtonSystem 로드 실패');
         }
