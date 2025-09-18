@@ -130,9 +130,9 @@
     
     /* Body2 - 내비게이션 색상 */
     --body2-background: var(--color-gray-03);
-    --body2-primary: var(--color-brown-05);
+    --body2-primary1: var(--color-brown-05);
     --body2-primary2: var(--color-brown-03);
-    --body2-secondary: var(--color-gray-14);
+    --body2-secondary1: var(--color-gray-14);
     --body2-secondary2: var(--color-gray-08);
     
     /* Body2-Progress - 진행 상태 색상 */
@@ -205,32 +205,38 @@
     --primary2-border-color-disabled: var(--color-gray-06);
     
     /* Primary3 팔레트 (이중 배경 시스템) */
-    /* 첫 번째 배경 (z-index 낮음, 기본 배경) */
+    /* Background1 (기본 배경) */
     --primary3-background1-color-default: var(--color-gray-14);
     --primary3-background1-color-pressed: var(--color-brown-02);
     --primary3-background1-color-disabled: var(--color-gray-14);
     
-    /* 두 번째 배경 (z-index 높음, 그라데이션 레이어) */
-    --primary3-background2-color-default-g000: #E8E8E800; /* 그라데이션 기준점 (0% 투명) */
-    --primary3-background2-color-default-g015: #E8E8E8E6; /* 90% 불투명도 */
-    --primary3-background2-color-default-g043: #E8E8E8FF; /* 완전 불투명 */
-    --primary3-background2-color-default-g100: #E8E8E8FF; /* 완전 불투명 */
+    /* Background2 (그라데이션 레이어) - Default */
+    --primary3-background2-color-default-g000: #E8E8E800;
+    --primary3-background2-color-default-g015: #E8E8E8E6;
+    --primary3-background2-color-default-g043: #E8E8E8FF;
+    --primary3-background2-color-default-g100: #E8E8E8FF;
     
-    --primary3-background2-color-pressed-g000: #A4693F00; /* 그라데이션 기준점 (0% 투명) */
-    --primary3-background2-color-pressed-g015: #A4693FE6; /* 90% 불투명도 */
-    --primary3-background2-color-pressed-g043: #A4693FFF; /* 완전 불투명 */
-    --primary3-background2-color-pressed-g100: #A4693FFF; /* 완전 불투명 */
+    /* Background2 (그라데이션 레이어) - Pressed */
+    --primary3-background2-color-pressed-g000: #A4693F00;
+    --primary3-background2-color-pressed-g015: #A4693FE6;
+    --primary3-background2-color-pressed-g043: #A4693FFF;
+    --primary3-background2-color-pressed-g100: #A4693FFF;
     
-    --primary3-background2-color-disabled: transparent; /* 비활성시 투명 */
+    /* Background2 (그라데이션 레이어) - Disabled */
+    --primary3-background2-color-disabled: transparent;
     
-    --primary3-content-color-default: var(--color-gray-03);
-    --primary3-content-color-default2: var(--color-brown-02);
-    --primary3-content-color-pressed: var(--color-gray-14);
-    --primary3-content-color-pressed2: var(--color-brown-03);
-    --primary3-content-color-disabled: var(--color-gray-03);
-    --primary3-content-color-disabled2: var(--color-brown-02);
-    --primary3-content-color-disabled-soldout: var(--color-system-02);
+    /* Content2 (background2 내부 HTML 요소) */
+    --primary3-content2-color-default1: var(--color-gray-03);
+    --primary3-content2-color-default2: var(--color-brown-02);
+    --primary3-content2-color-pressed1: var(--color-gray-14);
+    --primary3-content2-color-pressed2: var(--color-brown-03);
+    --primary3-content2-color-disabled1: var(--color-gray-03);
+    --primary3-content2-color-disabled2: var(--color-brown-02);
     
+    /* Content3 (별도 특별 HTML 요소) */
+    --primary3-content3-color-disabled: var(--color-system-02);
+    
+    /* Border */
     --primary3-border-color-default: var(--color-gray-09);
     --primary3-border-color-pressed: var(--color-brown-03);
     --primary3-border-color-disabled: var(--color-gray-09);
@@ -261,22 +267,24 @@
     --secondary2-border-color-pressed: var(--color-gray-07);
     --secondary2-border-color-disabled: var(--color-gray-06);
     
-    /* Secondary3 팔레트 (이중 배경 시스템 - 그라데이션 없음) */
-    /* 첫 번째 배경 (z-index 낮음, 기본 버튼 배경) */
+    /* Secondary3 팔레트 (이중 배경 시스템 - 아이콘 전용) */
+    /* Background1 (기본 버튼 배경) */
     --secondary3-background1-color-default: var(--color-gray-14);
     --secondary3-background1-color-pressed: var(--color-gray-07);
     --secondary3-background1-color-disabled: transparent;
     
-    /* 두 번째 배경 (z-index 높음, 아이콘 전용 배경) */
-    --secondary3-background2-color-default-icon: var(--color-gray-01);
-    --secondary3-background2-color-pressed-icon: var(--color-gray-07); /* pressed 상태에서는 동일 */
-    --secondary3-background2-color-disabled-icon: transparent;
+    /* Background2 (아이콘 전용 배경) */
+    --secondary3-background2-color-default: var(--color-gray-01);
     
-    --secondary3-content-color-default: var(--color-gray-01);
-    --secondary3-content-color-default-icon: var(--color-gray-14);
-    --secondary3-content-color-pressed: var(--color-gray-14);
-    --secondary3-content-color-disabled: var(--color-gray-06);
+    /* Content1 (background1 내부 HTML 요소) */
+    --secondary3-content1-color-default: var(--color-gray-01);
+    --secondary3-content1-color-pressed: var(--color-gray-14);
+    --secondary3-content1-color-disabled: var(--color-gray-06);
     
+    /* Content2 (background2 내부 HTML 요소 - 아이콘) */
+    --secondary3-content2-color-default: var(--color-gray-14);
+    
+    /* Border */
     --secondary3-border-color-default: var(--color-gray-09);
     --secondary3-border-color-pressed: var(--color-gray-07);
     --secondary3-border-color-disabled: var(--color-gray-06);
@@ -303,9 +311,9 @@
     
     /* Body2 - 내비게이션 색상 */
     --body2-background: var(--color-gray-03);
-    --body2-primary: var(--color-brown-05);
+    --body2-primary1: var(--color-brown-05);
     --body2-primary2: var(--color-yellow-02);
-    --body2-secondary: var(--color-gray-14);
+    --body2-secondary1: var(--color-gray-14);
     --body2-secondary2: var(--color-gray-14);
     
     /* Body2-Progress - 진행 상태 색상 */
@@ -356,32 +364,38 @@
     --primary2-border-color-disabled: var(--color-gray-07);
     
     /* Primary3 팔레트 (이중 배경 시스템) */
-    /* 첫 번째 배경 (z-index 낮음, 기본 배경) */
+    /* Background1 (기본 배경) */
     --primary3-background1-color-default: var(--color-gray-14);
     --primary3-background1-color-pressed: var(--color-yellow-03);
     --primary3-background1-color-disabled: var(--color-gray-03);
     
-    /* 두 번째 배경 (z-index 높음, 그라데이션 레이어) */
-    --primary3-background2-color-default-g000: #25252500; /* 그라데이션 기준점 (0% 투명) */
-    --primary3-background2-color-default-g015: #252525E6; /* 90% 불투명도 */
-    --primary3-background2-color-default-g043: #252525FF; /* 완전 불투명 */
-    --primary3-background2-color-default-g100: #252525FF; /* 완전 불투명 */
+    /* Background2 (그라데이션 레이어) - Default */
+    --primary3-background2-color-default-g000: #25252500;
+    --primary3-background2-color-default-g015: #252525E6;
+    --primary3-background2-color-default-g043: #252525FF;
+    --primary3-background2-color-default-g100: #252525FF;
     
-    --primary3-background2-color-pressed-g000: #FFE10000; /* 그라데이션 기준점 (0% 투명) */
-    --primary3-background2-color-pressed-g015: #FFE100E6; /* 90% 불투명도 */
-    --primary3-background2-color-pressed-g043: #FFE100FF; /* 완전 불투명 */
-    --primary3-background2-color-pressed-g100: #FFE100FF; /* 완전 불투명 */
+    /* Background2 (그라데이션 레이어) - Pressed */
+    --primary3-background2-color-pressed-g000: #FFE10000;
+    --primary3-background2-color-pressed-g015: #FFE100E6;
+    --primary3-background2-color-pressed-g043: #FFE100FF;
+    --primary3-background2-color-pressed-g100: #FFE100FF;
     
-    --primary3-background2-color-disabled: transparent; /* 비활성시 투명 */
+    /* Background2 (그라데이션 레이어) - Disabled */
+    --primary3-background2-color-disabled: transparent;
     
-    --primary3-content-color-default: var(--color-gray-12);
-    --primary3-content-color-default2: var(--color-yellow-03);
-    --primary3-content-color-pressed: var(--color-gray-01);
-    --primary3-content-color-pressed2: var(--color-yellow-03);
-    --primary3-content-color-disabled: var(--color-gray-12);
-    --primary3-content-color-disabled2: var(--color-yellow-03);
-    --primary3-content-color-disabled-soldout: var(--color-system-04);
+    /* Content2 (background2 내부 HTML 요소) */
+    --primary3-content2-color-default1: var(--color-gray-12);
+    --primary3-content2-color-default2: var(--color-yellow-03);
+    --primary3-content2-color-pressed1: var(--color-gray-01);
+    --primary3-content2-color-pressed2: var(--color-yellow-03);
+    --primary3-content2-color-disabled1: var(--color-gray-12);
+    --primary3-content2-color-disabled2: var(--color-yellow-03);
     
+    /* Content3 (별도 특별 HTML 요소) */
+    --primary3-content3-color-disabled: var(--color-system-04);
+    
+    /* Border */
     --primary3-border-color-default: var(--color-gray-07);
     --primary3-border-color-pressed: var(--color-yellow-03);
     --primary3-border-color-disabled: var(--color-gray-07);
@@ -413,22 +427,24 @@
     --secondary2-border-color-disabled: var(--color-gray-07);
     --secondary2-border-color-pointed: var(--color-system-01);
     
-    /* Secondary3 팔레트 (이중 배경 시스템 - 그라데이션 없음) */
-    /* 첫 번째 배경 (z-index 낮음, 기본 버튼 배경) */
+    /* Secondary3 팔레트 (이중 배경 시스템 - 아이콘 전용) */
+    /* Background1 (기본 버튼 배경) */
     --secondary3-background1-color-default: var(--color-gray-14);
     --secondary3-background1-color-pressed: var(--color-gray-07);
     --secondary3-background1-color-disabled: transparent;
     
-    /* 두 번째 배경 (z-index 높음, 아이콘 전용 배경) */
-    --secondary3-background2-color-default-icon: var(--color-gray-01);
-    --secondary3-background2-color-pressed-icon: var(--color-gray-07); /* pressed 상태에서는 동일 */
-    --secondary3-background2-color-disabled-icon: transparent;
+    /* Background2 (아이콘 전용 배경) */
+    --secondary3-background2-color-default: var(--color-gray-01);
     
-    --secondary3-content-color-default: var(--color-gray-01);
-    --secondary3-content-color-default-icon: var(--color-gray-14);
-    --secondary3-content-color-pressed: var(--color-gray-14);
-    --secondary3-content-color-disabled: var(--color-gray-07);
+    /* Content1 (background1 내부 HTML 요소) */
+    --secondary3-content1-color-default: var(--color-gray-01);
+    --secondary3-content1-color-pressed: var(--color-gray-14);
+    --secondary3-content1-color-disabled: var(--color-gray-07);
     
+    /* Content2 (background2 내부 HTML 요소 - 아이콘) */
+    --secondary3-content2-color-default: var(--color-gray-14);
+    
+    /* Border */
     --secondary3-border-color-default: var(--color-gray-09);
     --secondary3-border-color-pressed: var(--color-gray-07);
     --secondary3-border-color-disabled: var(--color-gray-07);
@@ -685,7 +701,7 @@
               }
 
               &:focus {
-        outline: 2px solid var(--color-system-pointed); 
+        outline: 2px solid var(--color-system-01); 
                 outline-offset: 2px;
               }
             }
@@ -707,7 +723,7 @@
       } 
       
       &:focus { 
-        outline: 2px solid var(--color-system-pointed); 
+        outline: 2px solid var(--color-system-01); 
         outline-offset: 2px; 
       } 
     }
@@ -977,7 +993,7 @@
       } 
       
       &:focus { 
-        outline: 2px solid var(--color-system-pointed); 
+        outline: 2px solid var(--color-system-01); 
         outline-offset: 2px; 
       } 
     }
