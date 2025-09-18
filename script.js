@@ -1337,7 +1337,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         const lightPickers = [
           { id: 'light-content-default', label: '콘텐츠(기본)', color: '#252525', hex: '#252525FF', hue: 0, alpha: 255 },
           { id: 'light-content-pressed', label: '콘텐츠(눌림)', color: '#FFFFFF', hex: '#FFFFFFFF', hue: 0, alpha: 255 },
-          { id: 'light-content-disabled', label: '콘텐츠(비활성)', color: '#8C8C8C', hex: '#8C8C8CFF', hue: 0, alpha: 140 },
+          { id: 'light-content-disabled', label: '콘텐츠(비활성)', color: '#8C8C8C', hex: '#8C8C8CFF', hue: 0, alpha: 255 },
           { id: 'light-background-default', label: '배경(기본)', color: '#A4693F', hex: '#A4693FFF', hue: 25, alpha: 255 },
           { id: 'light-background-pressed', label: '배경(눌림)', color: '#EEDCD2', hex: '#EEDCD2FF', hue: 25, alpha: 255 },
           { id: 'light-background-disabled', label: '배경(비활성)', color: '#000000', hex: '#00000000', hue: 0, alpha: 0 },
@@ -2037,17 +2037,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
     
     resetToDefaults() {
-      // Light 테마 기본값 (9개)
+      // Light 테마 기본값 (새로운 색상 시스템 반영)
       const lightDefaults = {
-        contentDefault: ['#252525', '#252525FF'],
-        contentPressed: ['#FFFFFF', '#FFFFFFFF'],
-        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],
-        backgroundDefault: ['#A4693F', '#A4693FFF'],
-        backgroundPressed: ['#EEDCD2', '#EEDCD2FF'],
-        backgroundDisabled: ['#000000', '#00000000'],
-        borderDefault: ['#A4693F', '#A4693FFF'],
-        borderPressed: ['#A4693F', '#A4693FFF'],
-        borderDisabled: ['#BFBFBF', '#BFBFBFFF']
+        contentDefault: ['#252525', '#252525FF'],    // color-gray-03
+        contentPressed: ['#FFFFFF', '#FFFFFFFF'],    // color-gray-14
+        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],   // color-gray-08
+        backgroundDefault: ['#A4693F', '#A4693FFF'], // color-brown-03
+        backgroundPressed: ['#EEDCD2', '#EEDCD2FF'], // color-brown-06
+        backgroundDisabled: ['#000000', '#00000000'], // transparent
+        borderDefault: ['#A4693F', '#A4693FFF'],     // color-brown-03
+        borderPressed: ['#A4693F', '#A4693FFF'],     // color-brown-03
+        borderDisabled: ['#BFBFBF', '#BFBFBFFF']     // color-gray-09
       };
       
       Object.entries(lightDefaults).forEach(([key, [colorValue, hexValue]]) => {
@@ -2069,17 +2069,17 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
       });
       
-      // Dark 테마 기본값 (9개)
+      // Dark 테마 기본값 (새로운 색상 시스템 반영)
       const darkDefaults = {
-        contentDefault: ['#FFE100', '#FFE100FF'],
-        contentPressed: ['#807000', '#807000FF'],
-        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],
-        backgroundDefault: ['#241F00', '#241F00FF'],
-        backgroundPressed: ['#FFE100', '#FFE100FF'],
-        backgroundDisabled: ['#000000', '#00000000'],
-        borderDefault: ['#FFE100', '#FFE100FF'],
-        borderPressed: ['#FFE100', '#FFE100FF'],
-        borderDisabled: ['#757575', '#757575FF']
+        contentDefault: ['#FFE100', '#FFE100FF'],    // color-yellow-03
+        contentPressed: ['#807000', '#807000FF'],    // color-yellow-02
+        contentDisabled: ['#8C8C8C', '#8C8C8CFF'],   // color-gray-08
+        backgroundDefault: ['#241F00', '#241F00FF'], // color-yellow-01
+        backgroundPressed: ['#FFE100', '#FFE100FF'], // color-yellow-03
+        backgroundDisabled: ['#000000', '#00000000'], // transparent
+        borderDefault: ['#FFE100', '#FFE100FF'],     // color-yellow-03
+        borderPressed: ['#FFE100', '#FFE100FF'],     // color-yellow-03
+        borderDisabled: ['#757575', '#757575FF']     // color-gray-07
       };
       
       Object.entries(darkDefaults).forEach(([key, [colorValue, hexValue]]) => {
@@ -2200,7 +2200,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const testElement = document.createElement('div');
   document.body.appendChild(testElement);
   const computedStyle = getComputedStyle(testElement);
-  const criticalVars = ['--primary1-background-color-default', '--system-pointed', '--font-family'];
+  const criticalVars = ['--primary1-background-color-default', '--color-system-01', '--font-family'];
   const missingVars = criticalVars.filter(varName => !computedStyle.getPropertyValue(varName));
   document.body.removeChild(testElement);
   if (missingVars.length > 0) {
