@@ -101,41 +101,41 @@
      ======================================== */
     /* 원시 팔레트 (Primitive Palette) */
     /* Brown 계열 (6개) */
-    --color-brown-01: #4C3F37FF;
-    --color-brown-02: #8C532CFF;
-    --color-brown-03: #A4693FFF;
-    --color-brown-04: #C4895FFF;
-    --color-brown-05: #EB9B63FF;
-    --color-brown-06: #EEDCD2FF;
+    --color-brown-01: rgba(76, 63, 55, 1);
+    --color-brown-02: rgba(140, 83, 44, 1);
+    --color-brown-03: rgba(164, 105, 63, 1);
+    --color-brown-04: rgba(196, 137, 95, 1);
+    --color-brown-05: rgba(235, 155, 99, 1);
+    --color-brown-06: rgba(238, 220, 210, 1);
     
     /* Yellow 계열 (4개) */
-    --color-yellow-01: #241F00FF;
-    --color-yellow-02: #807000FF;
-    --color-yellow-03: #FFE100FF;
-    --color-yellow-04: #FFEF80FF;
+    --color-yellow-01: rgba(36, 31, 0, 1);
+    --color-yellow-02: rgba(128, 112, 0, 1);
+    --color-yellow-03: rgba(255, 225, 0, 1);
+    --color-yellow-04: rgba(255, 239, 128, 1);
     
     /* Gray 계열 (14개) */
-    --color-gray-01: #000000FF;
-    --color-gray-02: #1F1F1FFF;
-    --color-gray-03: #252525FF;
-    --color-gray-04: #4C4C4CFF;
-    --color-gray-05: #606060FF;
-    --color-gray-06: #737373FF;
-    --color-gray-07: #757575FF;
-    --color-gray-08: #8C8C8CFF;
-    --color-gray-09: #BFBFBFFF;
-    --color-gray-10: #DBDBDBFF;
-    --color-gray-11: #E8E8E8FF;
-    --color-gray-12: #F2F2F2FF;
-    --color-gray-13: #FAFAFAFF;
-    --color-gray-14: #FFFFFFFF;
+    --color-gray-01: rgba(0, 0, 0, 1);
+    --color-gray-02: rgba(31, 31, 31, 1);
+    --color-gray-03: rgba(37, 37, 37, 1);
+    --color-gray-04: rgba(76, 76, 76, 1);
+    --color-gray-05: rgba(96, 96, 96, 1);
+    --color-gray-06: rgba(115, 115, 115, 1);
+    --color-gray-07: rgba(117, 117, 117, 1);
+    --color-gray-08: rgba(140, 140, 140, 1);
+    --color-gray-09: rgba(191, 191, 191, 1);
+    --color-gray-10: rgba(219, 219, 219, 1);
+    --color-gray-11: rgba(232, 232, 232, 1);
+    --color-gray-12: rgba(242, 242, 242, 1);
+    --color-gray-13: rgba(250, 250, 250, 1);
+    --color-gray-14: rgba(255, 255, 255, 1);
     
     /* System 계열 (5개) */
-    --color-system-01: #FF00E1FF;
-    --color-system-02: #B81A00FF;
-    --color-system-03: #751200FF;
-    --color-system-04: #FF4800FF;
-    --color-system-05: #00000099;
+    --color-system-01: rgba(255, 0, 225, 1);
+    --color-system-02: rgba(184, 26, 0, 1);
+    --color-system-03: rgba(117, 18, 0, 1);
+    --color-system-04: rgba(255, 72, 0, 1);
+    --color-system-05: rgba(0, 0, 0, 0.6);
 
     /* 참조 팔레트 (Reference Palette) */
     /* Body 참조 팔레트 */
@@ -195,22 +195,22 @@
     --primary3-border-color-disabled: var(--color-gray-09);
     
     /* Background2 (그라데이션 레이어) - Default */
-    --primary3-background2-color-default-g000: #E8E8E800;
-    --primary3-background2-color-default-g015: #E8E8E8E6;
-    --primary3-background2-color-default-g043: #E8E8E8FF;
-    --primary3-background2-color-default-g100: #E8E8E8FF;
+    --primary3-background2-color-default-g000: rgba(232, 232, 232, 0);
+    --primary3-background2-color-default-g015: rgba(232, 232, 232, 0.9);
+    --primary3-background2-color-default-g043: rgba(232, 232, 232, 1);
+    --primary3-background2-color-default-g100: rgba(232, 232, 232, 1);
     
     /* Background2 (그라데이션 레이어) - Pressed */
-    --primary3-background2-color-pressed-g000: #A4693F00;
-    --primary3-background2-color-pressed-g015: #A4693FE6;
-    --primary3-background2-color-pressed-g043: #A4693FFF;
-    --primary3-background2-color-pressed-g100: #A4693FFF;
+    --primary3-background2-color-pressed-g000: rgba(164, 105, 63, 0);
+    --primary3-background2-color-pressed-g015: rgba(164, 105, 63, 0.9);
+    --primary3-background2-color-pressed-g043: rgba(164, 105, 63, 1);
+    --primary3-background2-color-pressed-g100: rgba(164, 105, 63, 1);
     
     /* Background2 (그라데이션 레이어) - Disabled */
-    --primary3-background2-color-disabled-g000: #E8E8E800;
-    --primary3-background2-color-disabled-g015: #E8E8E8E6;
-    --primary3-background2-color-disabled-g043: #E8E8E8FF;
-    --primary3-background2-color-disabled-g100: #E8E8E8FF;
+    --primary3-background2-color-disabled-g000: rgba(232, 232, 232, 0);
+    --primary3-background2-color-disabled-g015: rgba(232, 232, 232, 0.9);
+    --primary3-background2-color-disabled-g043: rgba(232, 232, 232, 1);
+    --primary3-background2-color-disabled-g100: rgba(232, 232, 232, 1);
     
     /* Content2 (background2 내부 HTML 요소) */
     --primary3-content2-color-default1: var(--color-gray-03);
@@ -330,22 +330,22 @@
     --primary3-border-color-disabled: var(--color-gray-07);
     
     /* Background2 (그라데이션 레이어) - Default */
-    --primary3-background2-color-default-g000: #00000000;
-    --primary3-background2-color-default-g015: #000000E6;
-    --primary3-background2-color-default-g043: #000000FF;
-    --primary3-background2-color-default-g100: #000000FF;
+    --primary3-background2-color-default-g000: rgba(0, 0, 0, 0);
+    --primary3-background2-color-default-g015: rgba(0, 0, 0, 0.9);
+    --primary3-background2-color-default-g043: rgba(0, 0, 0, 1);
+    --primary3-background2-color-default-g100: rgba(0, 0, 0, 1);
     
     /* Background2 (그라데이션 레이어) - Pressed */
-    --primary3-background2-color-pressed-g000: #FFE10000;
-    --primary3-background2-color-pressed-g015: #FFE100E6;
-    --primary3-background2-color-pressed-g043: #FFE100FF;
-    --primary3-background2-color-pressed-g100: #FFE100FF;
+    --primary3-background2-color-pressed-g000: rgba(255, 225, 0, 0);
+    --primary3-background2-color-pressed-g015: rgba(255, 225, 0, 0.9);
+    --primary3-background2-color-pressed-g043: rgba(255, 225, 0, 1);
+    --primary3-background2-color-pressed-g100: rgba(255, 225, 0, 1);
     
     /* Background2 (그라데이션 레이어) - Disabled */
-    --primary3-background2-color-disabled-g000: #00000000;
-    --primary3-background2-color-disabled-g015: #000000E6;
-    --primary3-background2-color-disabled-g043: #000000FF;
-    --primary3-background2-color-disabled-g100: #000000FF;
+    --primary3-background2-color-disabled-g000: rgba(0, 0, 0, 0);
+    --primary3-background2-color-disabled-g015: rgba(0, 0, 0, 0.9);
+    --primary3-background2-color-disabled-g043: rgba(0, 0, 0, 1);
+    --primary3-background2-color-disabled-g100: rgba(0, 0, 0, 1);
     
     /* Content2 (background2 내부 HTML 요소) */
     --primary3-content2-color-default1: var(--color-gray-03);
@@ -784,7 +784,7 @@
                 background: var(--page-accent-primary);
                 border: 2px solid var(--page-background-primary);
                 border-radius: 50%;
-                box-shadow: 0 2px 4px #00000033;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                 cursor: pointer;
               }
 
@@ -794,7 +794,7 @@
                 background: var(--page-accent-primary);
                 border: 2px solid var(--page-background-primary);
                 border-radius: 50%;
-                box-shadow: 0 2px 4px #00000033;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                 cursor: pointer;
               }
 
@@ -1023,5 +1023,60 @@
   🛠️ 유틸리티 클래스
   ============================== */
 @layer utilities {
-  /* 향후 유틸리티 클래스들이 필요할 때 추가 */
+/* === 🎨 명도대비 표시 시스템 === */
+.contrast-indicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.contrast-indicator.wcag-aaa {
+  background-color: rgba(34, 197, 94, 1);
+}
+
+.contrast-indicator.wcag-aa {
+  background-color: rgba(245, 158, 11, 1);
+}
+
+.contrast-indicator.wcag-fail {
+  background-color: rgba(239, 68, 68, 1);
+}
+
+/* 명도대비 정보를 CSS 변수로 표시 */
+.button::after {
+  content: attr(data-contrast-ratio);
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  font-size: 10px;
+  color: var(--contents-color);
+  opacity: 0.7;
+}
+
+.button[data-wcag-compliance="aaa"]::after {
+  color: rgba(34, 197, 94, 1);
+}
+
+.button[data-wcag-compliance="aa"]::after {
+  color: rgba(245, 158, 11, 1);
+}
+
+.button[data-wcag-compliance="fail"]::after {
+  color: rgba(239, 68, 68, 1);
+}
+
+  /* === 🎨 커스텀 팔레트 생성기 UI === */
+  .palette-input-group {
+    display: flex; 
+    align-items: center; 
+    gap: var(--unit-xs); 
+    margin-bottom: var(--unit-xs);
+  }
 }

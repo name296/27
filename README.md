@@ -151,14 +151,14 @@
   --icon-size: var(--font-size);
   
   /* Light 테마 색상 */
-  --page-bg-primary: #FAFAFAFF;
-  --page-text-primary: #252525FF;
+  --page-bg-primary: rgba(250, 250, 250, 1);
+  --page-text-primary: rgba(37, 37, 37, 1);
 }
 
 .dark {
   /* Dark 테마 색상만 재정의 */
-  --page-bg-primary: #1F1F1FFF;
-  --page-text-primary: #FFFFFFFF;
+  --page-bg-primary: rgba(31, 31, 31, 1);
+  --page-text-primary: rgba(255, 255, 255, 1);
 }
 
 .large {
@@ -221,28 +221,28 @@ const KeyboardNavigation = {
 #### 🎨 **원시 색상 팔레트 (--color-* 네이밍)**
 
 **Brown 계열 (6개)**
-- `--color-brown-01`: `#4C3F37FF` (가장 어두운 브라운)
-- `--color-brown-02`: `#8C532CFF` (어두운 브라운)
-- `--color-brown-03`: `#A4693FFF` (기본 브라운)
-- `--color-brown-04`: `#C4895FFF` (밝은 브라운)
-- `--color-brown-05`: `#EB9B63FF` (매우 밝은 브라운)
-- `--color-brown-06`: `#EEDCD2FF` (가장 밝은 브라운)
+- `--color-brown-01`: `rgba(76, 63, 55, 1)` (가장 어두운 브라운)
+- `--color-brown-02`: `rgba(140, 83, 44, 1)` (어두운 브라운)
+- `--color-brown-03`: `rgba(164, 105, 63, 1)` (기본 브라운)
+- `--color-brown-04`: `rgba(196, 137, 95, 1)` (밝은 브라운)
+- `--color-brown-05`: `rgba(235, 155, 99, 1)` (매우 밝은 브라운)
+- `--color-brown-06`: `rgba(238, 220, 210, 1)` (가장 밝은 브라운)
 
 **Yellow 계열 (4개)**
-- `--color-yellow-01`: `#241F00FF` (가장 어두운 옐로우)
-- `--color-yellow-02`: `#807000FF` (어두운 옐로우)
-- `--color-yellow-03`: `#FFE100FF` (기본 옐로우)
-- `--color-yellow-04`: `#FFEF80FF` (밝은 옐로우)
+- `--color-yellow-01`: `rgba(36, 31, 0, 1)` (가장 어두운 옐로우)
+- `--color-yellow-02`: `rgba(128, 112, 0, 1)` (어두운 옐로우)
+- `--color-yellow-03`: `rgba(255, 225, 0, 1)` (기본 옐로우)
+- `--color-yellow-04`: `rgba(255, 239, 128, 1)` (밝은 옐로우)
 
 **Gray 계열 (14개)**
-- `--color-gray-01` ~ `--color-gray-14`: `#000000FF` ~ `#FFFFFFFF`
+- `--color-gray-01` ~ `--color-gray-14`: `rgba(0, 0, 0, 1)` ~ `rgba(255, 255, 255, 1)`
 
 **System 계열 (5개)**
-- `--color-system-01`: `#FF00E1FF` (포인트 핑크)
-- `--color-system-02`: `#B81A00FF` (에러 빨강)
-- `--color-system-03`: `#751200FF` (경고 어두운 빨강)
-- `--color-system-04`: `#FF4800FF` (경고 주황)
-- `--color-system-05`: `#00000099` (투명 검정, 60% 불투명도)
+- `--color-system-01`: `rgba(255, 0, 225, 1)` (포인트 핑크)
+- `--color-system-02`: `rgba(184, 26, 0, 1)` (에러 빨강)
+- `--color-system-03`: `rgba(117, 18, 0, 1)` (경고 어두운 빨강)
+- `--color-system-04`: `rgba(255, 72, 0, 1)` (경고 주황)
+- `--color-system-05`: `rgba(0, 0, 0, 0.6)` (투명 검정, 60% 불투명도)
 
 #### 🏗️ **이중 배경 시스템**
 
