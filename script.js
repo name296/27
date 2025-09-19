@@ -4,7 +4,10 @@
 const chromaScript = document.createElement('script');
 chromaScript.src = 'https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/dist/chroma.min.js';
 chromaScript.onload = () => {
-  console.log('🎨 Chroma.js 로드 완료!');
+  console.log('🎨 Chroma.js 로드 완료!', typeof chroma);
+};
+chromaScript.onerror = () => {
+  console.error('❌ Chroma.js 로드 실패!');
 };
 document.head.appendChild(chromaScript);
 /* ==============================
@@ -2568,8 +2571,5 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.LargeTextManager = LargeTextManager;
   window.SizeControlManager = SizeControlManager;
   window.CustomPaletteManager = CustomPaletteManager;
-
-  // 전역 인스턴스 생성
-  window.ContrastAnalyzer = new ContrastAnalyzer();
 
 });
