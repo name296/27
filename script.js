@@ -1,4 +1,12 @@
 /* 버튼 컴포넌트 시스템 - 시스테매틱 모듈 구조 */
+
+// Chroma.js CDN 로딩
+const chromaScript = document.createElement('script');
+chromaScript.src = 'https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/dist/chroma.min.js';
+chromaScript.onload = () => {
+  console.log('🎨 Chroma.js 로드 완료!');
+};
+document.head.appendChild(chromaScript);
 /* ==============================
   📋 시스템 정보
   ============================== */
@@ -23,16 +31,20 @@
   🎨 색상 시스템 모듈
   ============================== */
 
-// 색상 시스템 공통 모듈
+// 색상 시스템 공통 모듈 (chroma.js 로드 후 실행)
 const ColorSystem = {
   // 8자리 헥스코드 변환
   rgbaToHex(r, g, b, a = 255) {
-    const clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
-    return "#" + 
-      clamp(r).toString(16).padStart(2, '0').toUpperCase() +
-      clamp(g).toString(16).padStart(2, '0').toUpperCase() +
-      clamp(b).toString(16).padStart(2, '0').toUpperCase() +
-      clamp(a).toString(16).padStart(2, '0').toUpperCase();
+    if (typeof chroma === 'undefined') {
+      // chroma.js가 로드되지 않은 경우 기본 구현 사용
+      const clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
+      return "#" + 
+        clamp(r).toString(16).padStart(2, '0').toUpperCase() +
+        clamp(g).toString(16).padStart(2, '0').toUpperCase() +
+        clamp(b).toString(16).padStart(2, '0').toUpperCase() +
+        clamp(a).toString(16).padStart(2, '0').toUpperCase();
+    }
+    return chroma.rgb(r, g, b).alpha(a / 255).hex();
   },
   
   // RGBA 직접 생성 (파싱 오버헤드 없음)
@@ -42,95 +54,133 @@ const ColorSystem = {
 
   // 8자리 헥스코드 파싱 (최후의 수단으로만 사용)
   hexToRgba(hex) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16),
-      a: result[4] ? parseInt(result[4], 16) : 255
-    } : { r: 0, g: 0, b: 0, a: 255 };
+    if (typeof chroma === 'undefined') {
+      // chroma.js가 로드되지 않은 경우 기본 구현 사용
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+        a: result[4] ? parseInt(result[4], 16) : 255
+      } : { r: 0, g: 0, b: 0, a: 255 };
+    }
+    const color = chroma(hex);
+    const rgb = color.rgb();
+    return {
+      r: rgb[0],
+      g: rgb[1],
+      b: rgb[2],
+      a: Math.round(color.alpha() * 255)
+    };
   },
   
   // HSV → RGB 변환
   hsvToRgb(h, s, v) {
-    h = h % 360;
-    if (h < 0) h += 360;
-    s /= 100;
-    v /= 100;
-    
-    const c = v * s;
-    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-    const m = v - c;
-    
-    let r, g, b;
-    if (h < 60) { r = c; g = x; b = 0; }
-    else if (h < 120) { r = x; g = c; b = 0; }
-    else if (h < 180) { r = 0; g = c; b = x; }
-    else if (h < 240) { r = 0; g = x; b = c; }
-    else if (h < 300) { r = x; g = 0; b = c; }
-    else { r = c; g = 0; b = x; }
-    
+    if (typeof chroma === 'undefined') {
+      // chroma.js가 로드되지 않은 경우 기본 구현 사용
+      h = h % 360;
+      if (h < 0) h += 360;
+      s /= 100;
+      v /= 100;
+      
+      const c = v * s;
+      const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+      const m = v - c;
+      
+      let r, g, b;
+      if (h < 60) { r = c; g = x; b = 0; }
+      else if (h < 120) { r = x; g = c; b = 0; }
+      else if (h < 180) { r = 0; g = c; b = x; }
+      else if (h < 240) { r = 0; g = x; b = c; }
+      else if (h < 300) { r = x; g = 0; b = c; }
+      else { r = c; g = 0; b = x; }
+      
+      return {
+        r: Math.round((r + m) * 255),
+        g: Math.round((g + m) * 255),
+        b: Math.round((b + m) * 255)
+      };
+    }
+    const rgb = chroma.hsv(h, s, v).rgb();
     return {
-      r: Math.round((r + m) * 255),
-      g: Math.round((g + m) * 255),
-      b: Math.round((b + m) * 255)
+      r: rgb[0],
+      g: rgb[1],
+      b: rgb[2]
     };
   },
   
   // RGB → HSL 변환
   rgbToHsl(r, g, b) {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
-    
-    if (max === min) {
-      h = s = 0; // 무채색
-    } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
+    if (typeof chroma === 'undefined') {
+      // chroma.js가 로드되지 않은 경우 기본 구현 사용
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      
+      if (max === min) {
+        h = s = 0; // 무채색
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
       }
-      h /= 6;
+      
+      return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100)
+      };
     }
-    
+    const hsl = chroma.rgb(r, g, b).hsl();
     return {
-      h: Math.round(h * 360),
-      s: Math.round(s * 100),
-      l: Math.round(l * 100)
+      h: Math.round(hsl[0] || 0),
+      s: Math.round(hsl[1] * 100),
+      l: Math.round(hsl[2] * 100)
     };
   },
   
   // HSL → RGB 변환
   hslToRgb(h, s, l) {
-    h /= 360; s /= 100; l /= 100;
-    
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-      return p;
-    };
-    
-    let r, g, b;
-    if (s === 0) {
-      r = g = b = l; // 무채색
-    } else {
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
+    if (typeof chroma === 'undefined') {
+      // chroma.js가 로드되지 않은 경우 기본 구현 사용
+      h /= 360; s /= 100; l /= 100;
+      
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      };
+      
+      let r, g, b;
+      if (s === 0) {
+        r = g = b = l; // 무채색
+      } else {
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      
+      return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+      };
     }
-    
+    const rgb = chroma.hsl(h, s, l).rgb();
     return {
-      r: Math.round(r * 255),
-      g: Math.round(g * 255),
-      b: Math.round(b * 255)
+      r: rgb[0],
+      g: rgb[1],
+      b: rgb[2]
     };
   }
 };
@@ -326,7 +376,7 @@ const SphericalDynamics = {
       // 중심점 색상 업데이트
       if (onUpdate) onUpdate(canvas);
       
-      // 렌더링 스로틀링
+      // 스로틀링
       if (!renderPending) {
         renderPending = true;
         requestAnimationFrame(() => {
@@ -382,10 +432,10 @@ const SphericalDynamics = {
         // 이벤트 트리거 (기존 방식 유지)
         panelHexInput.dispatchEvent(new Event('input', { bubbles: true }));
         
-        // 투명도 변화 후 명도대비 업데이트 (성능 최적화)
+        // 투명도 변화 후 업데이트 (성능 최적화)
         setTimeout(() => {
           if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
-            window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+            window.ButtonSystem.StyleManager.scheduleUpdate();
           }
         }, 100);
       }
@@ -739,11 +789,11 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
   },
   
   StyleManager: {
-    // 상태 변경 후 명도대비 업데이트 (공통 함수)
-    scheduleContrastUpdate() {
+    // 상태 변경 후 업데이트 (공통 함수)
+    scheduleUpdate() {
       // 렌더링 완료 후 실행하는 Promise 기반 방식
       this.waitForRenderCompletion().then(() => {
-        this.updateButtonLabelsWithContrast();
+        this.updateButtonLabels();
       });
     },
     
@@ -764,7 +814,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
     },
     
     // 모든 버튼 상태 변경을 감지하는 통합 이벤트 매니저
-    setupContrastUpdateManager() {
+    setupUpdateManager() {
       // MutationObserver로 클래스 및 스타일 변경 감지
       const observer = new MutationObserver((mutations) => {
         let needsUpdate = false;
@@ -788,7 +838,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
         });
         
         if (needsUpdate) {
-          this.scheduleContrastUpdate();
+          this.scheduleUpdate();
         }
       });
       
@@ -808,12 +858,12 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       return observer;
     },
     
-    // 명도대비 계산 함수 (WCAG 2.1 표준)
+    // 명도대비 계산 함수
     /**
      * RGBA 기반 명도대비 계산 (파싱 오버헤드 없음)
      */
     calculateContrastRGBA(r1, g1, b1, r2, g2, b2) {
-      // 상대 휘도 계산 (WCAG 2.1 표준 공식)
+      // 상대 휘도 계산
       const getLuminance = (r, g, b) => {
         const [rs, gs, bs] = [r, g, b].map(c => {
           c = c / 255;
@@ -825,7 +875,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       const lum1 = getLuminance(r1, g1, b1);
       const lum2 = getLuminance(r2, g2, b2);
       
-      // WCAG 2.1 명도대비 공식: (밝은 색 + 0.05) / (어두운 색 + 0.05)
+      // 명도대비 공식: (밝은 색 + 0.05) / (어두운 색 + 0.05)
       const brightest = Math.max(lum1, lum2);
       const darkest = Math.min(lum1, lum2);
       const contrastRatio = (brightest + 0.05) / (darkest + 0.05);
@@ -877,7 +927,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       return this.calculateContrastRGBA(r1, g1, b1, r2, g2, b2);
     },
     
-    updateButtonLabelsWithContrast() {
+    updateButtonLabels() {
       const allButtons = document.querySelectorAll('.button');
       
       allButtons.forEach(button => {
@@ -965,7 +1015,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       
       
       // 명도대비 라벨 업데이트
-      this.updateButtonLabelsWithContrast();
+      this.updateButtonLabels();
     },
     
     async setupIconInjection() {
@@ -1020,8 +1070,8 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
     // 4단계: 동적 스타일 적용
     this.StyleManager.applyDynamicStyles();
     
-    // 5단계: 명도대비 자동 업데이트 매니저 설정
-    this.StyleManager.setupContrastUpdateManager();
+    // 5단계: 자동 업데이트 매니저 설정
+    this.StyleManager.setupUpdateManager();
   }
 };
 
@@ -1709,10 +1759,10 @@ window.addEventListener('DOMContentLoaded', async () => {
                 
                 this.updateColorInputs(targetId, {r, g, b}, newAlpha, newHex);
                 
-                // 투명도 변화 후 명도대비 업데이트 (성능 최적화)
+                // 투명도 변화 후 업데이트 (성능 최적화)
                 setTimeout(() => {
                   if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
-                    window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+                    window.ButtonSystem.StyleManager.scheduleUpdate();
                   }
                 }, 100);
               }
@@ -1783,7 +1833,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         // 실시간 CSS 변수 업데이트
         this.updateCSSVariable(targetId, hexColor);
         
-        // 버튼 적용 및 명도대비 업데이트
+        // 버튼 적용 및 업데이트
         if (typeof CustomPaletteManager !== 'undefined') {
           CustomPaletteManager.generateAndApplyPalette();
         }
@@ -1826,10 +1876,10 @@ window.addEventListener('DOMContentLoaded', async () => {
             AppUtils.CSSInjector.inject('custom-dark-variable', `.dark { ${cssVariable}: ${hexColor}; }`, 'Dark 커스텀 변수');
           }
           
-          // CSS 변수 업데이트 후 명도대비 업데이트 (성능 최적화)
+          // CSS 변수 업데이트 후 업데이트 (성능 최적화)
           setTimeout(() => {
             if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
-              window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+              window.ButtonSystem.StyleManager.scheduleUpdate();
             }
           }, 100);
         }
@@ -2039,10 +2089,10 @@ window.addEventListener('DOMContentLoaded', async () => {
       
       this.applyToTestButtons();
       
-      // 커스텀 팔레트 변경 후 명도대비 강제 업데이트 (성능 최적화)
+      // 커스텀 팔레트 변경 후 강제 업데이트 (성능 최적화)
       setTimeout(() => {
         if (window.ButtonSystem && window.ButtonSystem.StyleManager) {
-          window.ButtonSystem.StyleManager.scheduleContrastUpdate();
+          window.ButtonSystem.StyleManager.scheduleUpdate();
         }
       }, 200);
     },
@@ -2131,7 +2181,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       
       // 버튼 시스템 강제 업데이트
       if (typeof ButtonSystem !== 'undefined' && ButtonSystem.StyleManager) {
-        ButtonSystem.StyleManager.scheduleContrastUpdate();
+        ButtonSystem.StyleManager.scheduleUpdate();
       }
       
       // DOM 스타일 강제 새로고침
@@ -2477,8 +2527,8 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
       button.classList.remove('pressed');
         
-        // 상태 변경 후 명도대비 업데이트
-        ButtonSystem.StyleManager.scheduleContrastUpdate();
+      // 상태 변경 후 업데이트
+      ButtonSystem.StyleManager.scheduleUpdate();
       }
     }
   }, true);
@@ -2519,1233 +2569,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.SizeControlManager = SizeControlManager;
   window.CustomPaletteManager = CustomPaletteManager;
 
-  // ========================================
-  // 🔍 명도대비 계산 모듈 (리빌딩)
-  // ========================================
-  
-  /**
-   * 🎯 렌더링된 색상 기반 명도대비 계산기
-   * - 복잡한 CSS 속성 계산 없이 렌더링된 색상만 사용
-   * - 정확하고 간단한 명도대비 계산
-   */
-  class RenderedColorContrastCalculator {
-    constructor() {
-      this.wcagThresholds = {
-        normal: { AA: 4.5, AAA: 7 },
-        large: { AA: 3, AAA: 4.5 }
-      };
-    }
-
-    /**
-     * RGBA 색상을 직접 생성 (파싱 오버헤드 없음)
-     */
-    createRGBA(r, g, b, a = 255) {
-      return { r, g, b, a };
-    }
-
-    /**
-     * CSS 색상을 RGBA 객체로 변환 (RGBA 우선 사용)
-     */
-    parseCSSColor(cssColor) {
-      if (!cssColor || cssColor === 'transparent' || cssColor === 'rgba(0, 0, 0, 0)') {
-        return null;
-      }
-
-      // rgba 형식 파싱 (RGBA 우선 - 성능 최적화)
-      const rgbaMatch = cssColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-      if (rgbaMatch) {
-        return {
-          r: parseInt(rgbaMatch[1]),
-          g: parseInt(rgbaMatch[2]),
-          b: parseInt(rgbaMatch[3]),
-          a: rgbaMatch[4] ? Math.round(parseFloat(rgbaMatch[4]) * 255) : 255
-        };
-      }
-
-      // hex 형식은 최후의 수단으로만 사용 (성능상 비추천)
-      if (cssColor.startsWith('#')) {
-        const hex = cssColor.slice(1);
-        if (hex.length === 3) {
-          return {
-            r: parseInt(hex[0] + hex[0], 16),
-            g: parseInt(hex[1] + hex[1], 16),
-            b: parseInt(hex[2] + hex[2], 16),
-            a: 255
-          };
-        } else if (hex.length === 6) {
-          return {
-            r: parseInt(hex.substr(0, 2), 16),
-            g: parseInt(hex.substr(2, 2), 16),
-            b: parseInt(hex.substr(4, 2), 16),
-            a: 255
-          };
-        } else if (hex.length === 8) {
-          return {
-            r: parseInt(hex.substr(0, 2), 16),
-            g: parseInt(hex.substr(2, 2), 16),
-            b: parseInt(hex.substr(4, 2), 16),
-            a: parseInt(hex.substr(6, 2), 16)
-          };
-        }
-      }
-
-      return null;
-    }
-
-    /**
-     * 상대 휘도 계산 (WCAG 기준)
-     */
-    getLuminance(rgb) {
-      const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(c => {
-        c = c / 255;
-        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-      });
-
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    }
-
-    /**
-     * 명도대비 비율 계산
-     */
-    /**
-     * 명도대비 비율 계산 (실제 렌더링된 색상 기반)
-     * - 실제 픽셀 색상이므로 투명도 블렌딩 불필요
-     */
-    /**
-     * RGBA 기반 명도대비 계산 (파싱 오버헤드 없음)
-     */
-    calculateContrastRGBA(r1, g1, b1, r2, g2, b2) {
-      const lum1 = this.getLuminance({ r: r1, g: g1, b: b1 });
-      const lum2 = this.getLuminance({ r: r2, g: g2, b: b2 });
-
-      const lighter = Math.max(lum1, lum2);
-      const darker = Math.min(lum1, lum2);
-
-      return (lighter + 0.05) / (darker + 0.05);
-    }
-
-    /**
-     * CSS 색상 기반 명도대비 계산 (기존 호환성 유지)
-     */
-    calculateContrast(color1, color2) {
-      if (!color1 || !color2) return null;
-
-      const rgb1 = this.parseCSSColor(color1);
-      const rgb2 = this.parseCSSColor(color2);
-
-      if (!rgb1 || !rgb2) return null;
-
-      // RGBA 기반 계산 사용
-      return this.calculateContrastRGBA(rgb1.r, rgb1.g, rgb1.b, rgb2.r, rgb2.g, rgb2.b);
-    }
-
-    /**
-     * WCAG 기준 확인
-     */
-    checkWCAGCompliance(contrastRatio, textSize = 'normal') {
-      if (!contrastRatio) return { AA: false, AAA: false, ratio: 0 };
-
-      const thresholds = this.wcagThresholds[textSize] || this.wcagThresholds.normal;
-
-      return {
-        AA: contrastRatio >= thresholds.AA,
-        AAA: contrastRatio >= thresholds.AAA,
-        ratio: contrastRatio,
-        thresholds: thresholds
-      };
-    }
-  }
-
-  /**
-   * 🎨 버튼 색상 추출기
-   * - 현재 프로젝트의 버튼 구조에 맞춤
-   * - 렌더링된 색상만 추출
-   */
-  class ButtonColorExtractor {
-    /**
-     * 버튼의 원본 색상들 추출 (앨리어싱 전)
-     * - CSS에서 정의된 원본 색상 + 모든 블렌딩 기능 고려
-     */
-    /**
-     * RGBA 기반 버튼 색상 추출 (파싱 오버헤드 없음)
-     */
-    extractButtonColorsRGBA(buttonElement) {
-      const background = buttonElement.querySelector('.background.dynamic');
-      const content = buttonElement.querySelector('.content');
-      const icon = buttonElement.querySelector('.content.icon svg');
-
-      // RGBA 기반 원본 색상 추출
-      const originalSurfaceColor = background ? this.getOriginalColorRGBA(background, 'backgroundColor') : null;
-      const originalTextColor = content ? this.getOriginalColorRGBA(content, 'color') : null;
-      const originalIconColor = icon ? this.getOriginalColorRGBA(icon, 'fill') : null;
-      const originalBorderColor = background ? this.getOriginalColorRGBA(background, 'outlineColor') : null;
-
-      // 요소 투명도 추출
-      const surfaceOpacity = background ? this.getElementOpacity(background) : 1;
-      const textOpacity = content ? this.getElementOpacity(content) : 1;
-      const iconOpacity = icon ? this.getElementOpacity(icon) : 1;
-      const borderOpacity = background ? this.getElementOpacity(background) : 1;
-
-      // 모든 블렌딩 기능 추출
-      const textBlendMode = content ? this.getMixBlendMode(content) : 'normal';
-      const iconBlendMode = icon ? this.getMixBlendMode(icon) : 'normal';
-      const surfaceBlendMode = background ? this.getMixBlendMode(background) : 'normal';
-
-      // RGBA 기반 색상 믹싱
-      let surfaceColor = originalSurfaceColor;
-      let textColor = originalTextColor;
-      let iconColor = originalIconColor;
-      let borderColor = originalBorderColor;
-
-      // 텍스트 색상 믹싱
-      if (originalTextColor && originalSurfaceColor) {
-        textColor = this.mixRGBA(
-          originalTextColor.r, originalTextColor.g, originalTextColor.b, originalTextColor.a,
-          originalSurfaceColor.r, originalSurfaceColor.g, originalSurfaceColor.b, originalSurfaceColor.a,
-          textOpacity, textBlendMode
-        );
-      }
-
-      // 아이콘 색상 믹싱
-      if (originalIconColor && originalSurfaceColor) {
-        iconColor = this.mixRGBA(
-          originalIconColor.r, originalIconColor.g, originalIconColor.b, originalIconColor.a,
-          originalSurfaceColor.r, originalSurfaceColor.g, originalSurfaceColor.b, originalSurfaceColor.a,
-          iconOpacity, iconBlendMode
-        );
-      }
-
-      return {
-        surfaceColor: surfaceColor,
-        textColor: textColor,
-        iconColor: iconColor,
-        borderColor: borderColor,
-        // 디버깅용 원본 색상, 투명도, 블렌딩 기능도 포함
-        originalSurfaceColor: originalSurfaceColor,
-        originalTextColor: originalTextColor,
-        originalIconColor: originalIconColor,
-        originalBorderColor: originalBorderColor,
-        surfaceOpacity: surfaceOpacity,
-        textOpacity: textOpacity,
-        iconOpacity: iconOpacity,
-        borderOpacity: borderOpacity,
-        textBlendMode: textBlendMode,
-        iconBlendMode: iconBlendMode,
-        surfaceBlendMode: surfaceBlendMode
-      };
-    }
-
-    /**
-     * CSS 색상 기반 버튼 색상 추출 (기존 호환성 유지)
-     */
-    extractButtonColors(buttonElement) {
-      const background = buttonElement.querySelector('.background.dynamic');
-      const content = buttonElement.querySelector('.content');
-      const icon = buttonElement.querySelector('.content.icon svg');
-
-      // 원본 색상 추출
-      const originalSurfaceColor = background ? this.getOriginalColor(background, 'backgroundColor') : null;
-      const originalTextColor = content ? this.getOriginalColor(content, 'color') : null;
-      const originalIconColor = icon ? this.getOriginalColor(icon, 'fill') : null;
-      const originalBorderColor = background ? this.getOriginalColor(background, 'outlineColor') : null;
-
-      // 요소 투명도 추출
-      const surfaceOpacity = background ? this.getElementOpacity(background) : 1;
-      const textOpacity = content ? this.getElementOpacity(content) : 1;
-      const iconOpacity = icon ? this.getElementOpacity(icon) : 1;
-      const borderOpacity = background ? this.getElementOpacity(background) : 1;
-
-      // 모든 블렌딩 기능 추출
-      const textBlendMode = content ? this.getMixBlendMode(content) : 'normal';
-      const iconBlendMode = icon ? this.getMixBlendMode(icon) : 'normal';
-      const surfaceBlendMode = background ? this.getMixBlendMode(background) : 'normal';
-      const textBackgroundBlendMode = content ? this.getBackgroundBlendMode(content) : 'normal';
-      const iconBackgroundBlendMode = icon ? this.getBackgroundBlendMode(icon) : 'normal';
-      const surfaceBackgroundBlendMode = background ? this.getBackgroundBlendMode(background) : 'normal';
-      const textIsolation = content ? this.getIsolation(content) : 'auto';
-      const iconIsolation = icon ? this.getIsolation(icon) : 'auto';
-      const surfaceIsolation = background ? this.getIsolation(background) : 'auto';
-      const textFilters = content ? this.getColorFilters(content) : null;
-      const iconFilters = icon ? this.getColorFilters(icon) : null;
-      const surfaceFilters = background ? this.getColorFilters(background) : null;
-      const textBackdropFilter = content ? this.getBackdropFilter(content) : 'none';
-      const iconBackdropFilter = icon ? this.getBackdropFilter(icon) : 'none';
-      const surfaceBackdropFilter = background ? this.getBackdropFilter(background) : 'none';
-
-      // 투명도와 모든 블렌딩 기능을 고려한 실제 보이는 색상 계산
-      const surfaceColor = originalSurfaceColor;
-      const textColor = this.getActualVisibleColor(originalTextColor, originalSurfaceColor, textOpacity, textBlendMode);
-      const iconColor = this.getActualVisibleColor(originalIconColor, originalSurfaceColor, iconOpacity, iconBlendMode);
-      const borderColor = originalBorderColor;
-
-      return {
-        surfaceColor: surfaceColor,
-        textColor: textColor,
-        iconColor: iconColor,
-        borderColor: borderColor,
-        // 디버깅용 원본 색상, 투명도, 모든 블렌딩 기능도 포함
-        originalSurfaceColor: originalSurfaceColor,
-        originalTextColor: originalTextColor,
-        originalIconColor: originalIconColor,
-        originalBorderColor: originalBorderColor,
-        surfaceOpacity: surfaceOpacity,
-        textOpacity: textOpacity,
-        iconOpacity: iconOpacity,
-        borderOpacity: borderOpacity,
-        textBlendMode: textBlendMode,
-        iconBlendMode: iconBlendMode,
-        surfaceBlendMode: surfaceBlendMode,
-        textBackgroundBlendMode: textBackgroundBlendMode,
-        iconBackgroundBlendMode: iconBackgroundBlendMode,
-        surfaceBackgroundBlendMode: surfaceBackgroundBlendMode,
-        textIsolation: textIsolation,
-        iconIsolation: iconIsolation,
-        surfaceIsolation: surfaceIsolation,
-        textFilters: textFilters,
-        iconFilters: iconFilters,
-        surfaceFilters: surfaceFilters,
-        textBackdropFilter: textBackdropFilter,
-        iconBackdropFilter: iconBackdropFilter,
-        surfaceBackdropFilter: surfaceBackdropFilter
-      };
-    }
-
-    /**
-     * RGBA 기반 색상 믹싱 (파싱 오버헤드 없음)
-     */
-    mixRGBA(fgR, fgG, fgB, fgA, bgR, bgG, bgB, bgA, elementOpacity = 1, blendMode = 'normal') {
-      // mix-blend-mode 적용 (간단한 구현)
-      let blendedR = fgR, blendedG = fgG, blendedB = fgB, blendedA = fgA;
-      
-      if (blendMode !== 'normal') {
-        // 간단한 블렌딩 모드 구현 (실제로는 더 복잡할 수 있음)
-        switch (blendMode) {
-          case 'multiply':
-            blendedR = Math.round(fgR * bgR / 255);
-            blendedG = Math.round(fgG * bgG / 255);
-            blendedB = Math.round(fgB * bgB / 255);
-            break;
-          case 'screen':
-            blendedR = Math.round(255 - (255 - fgR) * (255 - bgR) / 255);
-            blendedG = Math.round(255 - (255 - fgG) * (255 - bgG) / 255);
-            blendedB = Math.round(255 - (255 - fgB) * (255 - bgB) / 255);
-            break;
-          case 'overlay':
-            blendedR = bgR < 128 ? Math.round(2 * fgR * bgR / 255) : Math.round(255 - 2 * (255 - fgR) * (255 - bgR) / 255);
-            blendedG = bgG < 128 ? Math.round(2 * fgG * bgG / 255) : Math.round(255 - 2 * (255 - fgG) * (255 - bgG) / 255);
-            blendedB = bgB < 128 ? Math.round(2 * fgB * bgB / 255) : Math.round(255 - 2 * (255 - fgB) * (255 - bgB) / 255);
-            break;
-        }
-      }
-      
-      // 총 투명도 = CSS 색상 투명도 × HTML 요소 투명도
-      const totalAlpha = (blendedA / 255) * elementOpacity;
-      
-      // 투명도가 없으면 블렌딩된 색상 반환
-      if (totalAlpha >= 1) {
-        return { r: blendedR, g: blendedG, b: blendedB, a: 255 };
-      }
-      
-      // 투명도가 있으면 배경색과 블렌딩
-      const invAlpha = 1 - totalAlpha;
-      
-      const finalR = Math.round(blendedR * totalAlpha + bgR * invAlpha);
-      const finalG = Math.round(blendedG * totalAlpha + bgG * invAlpha);
-      const finalB = Math.round(blendedB * totalAlpha + bgB * invAlpha);
-      
-      return { r: finalR, g: finalG, b: finalB, a: 255 };
-    }
-    /**
-     * RGBA 기반 원본 색상 추출 (파싱 오버헤드 없음)
-     */
-    getOriginalColorRGBA(element, property) {
-      if (!element) return null;
-      
-      const computedStyle = getComputedStyle(element);
-      const colorValue = computedStyle[property];
-      
-      if (!colorValue || colorValue === 'transparent' || colorValue === 'rgba(0, 0, 0, 0)') {
-        return null;
-      }
-      
-      // RGBA 형식 우선 처리 (성능 최적화)
-      const rgbaMatch = colorValue.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-      if (rgbaMatch) {
-        return {
-          r: parseInt(rgbaMatch[1]),
-          g: parseInt(rgbaMatch[2]),
-          b: parseInt(rgbaMatch[3]),
-          a: rgbaMatch[4] ? Math.round(parseFloat(rgbaMatch[4]) * 255) : 255
-        };
-      }
-      
-      // hex 형식은 최후의 수단으로만 사용
-      if (colorValue.startsWith('#')) {
-        const hex = colorValue.slice(1);
-        if (hex.length === 3) {
-          return {
-            r: parseInt(hex[0] + hex[0], 16),
-            g: parseInt(hex[1] + hex[1], 16),
-            b: parseInt(hex[2] + hex[2], 16),
-            a: 255
-          };
-        } else if (hex.length === 6) {
-          return {
-            r: parseInt(hex.substr(0, 2), 16),
-            g: parseInt(hex.substr(2, 2), 16),
-            b: parseInt(hex.substr(4, 2), 16),
-            a: 255
-          };
-        } else if (hex.length === 8) {
-          return {
-            r: parseInt(hex.substr(0, 2), 16),
-            g: parseInt(hex.substr(2, 2), 16),
-            b: parseInt(hex.substr(4, 2), 16),
-            a: parseInt(hex.substr(6, 2), 16)
-          };
-        }
-      }
-      
-      return null;
-    }
-
-    /**
-     * CSS 색상 기반 원본 색상 추출 (기존 호환성 유지)
-     */
-    getOriginalColor(element, property) {
-      if (!element) return null;
-      
-      const computedStyle = getComputedStyle(element);
-      const colorValue = computedStyle[property];
-      
-      if (!colorValue || colorValue === 'transparent' || colorValue === 'rgba(0, 0, 0, 0)') {
-        return null;
-      }
-      
-      return colorValue;
-    }
-
-    /**
-     * 요소의 background-blend-mode 추출
-     * - CSS background-blend-mode 속성 확인
-     */
-    getBackgroundBlendMode(element) {
-      if (!element) return 'normal';
-      
-      const computedStyle = getComputedStyle(element);
-      const backgroundBlendMode = computedStyle.backgroundBlendMode;
-      
-      return backgroundBlendMode || 'normal';
-    }
-
-    /**
-     * 요소의 isolation 추출
-     * - CSS isolation 속성 확인 (새로운 스택킹 컨텍스트 생성)
-     */
-    getIsolation(element) {
-      if (!element) return 'auto';
-      
-      const computedStyle = getComputedStyle(element);
-      const isolation = computedStyle.isolation;
-      
-      return isolation || 'auto';
-    }
-
-    /**
-     * 요소의 filter 추출 (색상 관련)
-     * - CSS filter 속성 중 색상에 영향을 주는 것들만 추출
-     */
-    getColorFilters(element) {
-      if (!element) return null;
-      
-      const computedStyle = getComputedStyle(element);
-      const filter = computedStyle.filter;
-      
-      if (!filter || filter === 'none') return null;
-      
-      // 색상에 영향을 주는 필터들만 추출
-      const colorFilters = [];
-      const filterRegex = /(brightness|contrast|saturate|hue-rotate|invert|sepia|grayscale)\([^)]+\)/g;
-      let match;
-      
-      while ((match = filterRegex.exec(filter)) !== null) {
-        colorFilters.push(match[0]);
-      }
-      
-      return colorFilters.length > 0 ? colorFilters : null;
-    }
-
-    /**
-     * 요소의 backdrop-filter 추출
-     * - CSS backdrop-filter 속성 확인
-     */
-    getBackdropFilter(element) {
-      if (!element) return 'none';
-      
-      const computedStyle = getComputedStyle(element);
-      const backdropFilter = computedStyle.backdropFilter;
-      
-      return backdropFilter || 'none';
-    }
-
-    /**
-     * 요소의 mix-blend-mode 추출
-     * - CSS mix-blend-mode 속성 확인
-     */
-    getMixBlendMode(element) {
-      if (!element) return 'normal';
-      
-      const computedStyle = getComputedStyle(element);
-      const mixBlendMode = computedStyle.mixBlendMode;
-      
-      return mixBlendMode || 'normal';
-    }
-
-    /**
-     * mix-blend-mode를 고려한 색상 계산
-     * - 다양한 블렌딩 모드 지원
-     */
-    applyMixBlendMode(foregroundColor, backgroundColor, blendMode) {
-      if (blendMode === 'normal' || !foregroundColor || !backgroundColor) {
-        return foregroundColor;
-      }
-      
-      const fgRgb = this.parseCSSColor(foregroundColor);
-      const bgRgb = this.parseCSSColor(backgroundColor);
-      
-      if (!fgRgb || !bgRgb) return foregroundColor;
-      
-      let resultRgb;
-      
-      switch (blendMode) {
-        case 'multiply':
-          resultRgb = {
-            r: Math.round(fgRgb.r * bgRgb.r / 255),
-            g: Math.round(fgRgb.g * bgRgb.g / 255),
-            b: Math.round(fgRgb.b * bgRgb.b / 255),
-            a: fgRgb.a
-          };
-          break;
-          
-        case 'screen':
-          resultRgb = {
-            r: Math.round(255 - (255 - fgRgb.r) * (255 - bgRgb.r) / 255),
-            g: Math.round(255 - (255 - fgRgb.g) * (255 - bgRgb.g) / 255),
-            b: Math.round(255 - (255 - fgRgb.b) * (255 - bgRgb.b) / 255),
-            a: fgRgb.a
-          };
-          break;
-          
-        case 'overlay':
-          resultRgb = {
-            r: bgRgb.r < 128 ? Math.round(2 * fgRgb.r * bgRgb.r / 255) : Math.round(255 - 2 * (255 - fgRgb.r) * (255 - bgRgb.r) / 255),
-            g: bgRgb.g < 128 ? Math.round(2 * fgRgb.g * bgRgb.g / 255) : Math.round(255 - 2 * (255 - fgRgb.g) * (255 - bgRgb.g) / 255),
-            b: bgRgb.b < 128 ? Math.round(2 * fgRgb.b * bgRgb.b / 255) : Math.round(255 - 2 * (255 - fgRgb.b) * (255 - bgRgb.b) / 255),
-            a: fgRgb.a
-          };
-          break;
-          
-        case 'difference':
-          resultRgb = {
-            r: Math.abs(fgRgb.r - bgRgb.r),
-            g: Math.abs(fgRgb.g - bgRgb.g),
-            b: Math.abs(fgRgb.b - bgRgb.b),
-            a: fgRgb.a
-          };
-          break;
-          
-        case 'exclusion':
-          resultRgb = {
-            r: fgRgb.r + bgRgb.r - 2 * fgRgb.r * bgRgb.r / 255,
-            g: fgRgb.g + bgRgb.g - 2 * fgRgb.g * bgRgb.g / 255,
-            b: fgRgb.b + bgRgb.b - 2 * fgRgb.b * bgRgb.b / 255,
-            a: fgRgb.a
-          };
-          break;
-          
-        default:
-          return foregroundColor;
-      }
-      
-      return `rgba(${resultRgb.r}, ${resultRgb.g}, ${resultRgb.b}, ${resultRgb.a})`;
-    }
-    /**
-     * RGBA 기반 색상 믹싱 (파싱 오버헤드 없음)
-     */
-    mixRGBA(fgR, fgG, fgB, fgA, bgR, bgG, bgB, bgA, elementOpacity = 1, blendMode = 'normal') {
-      // mix-blend-mode 적용 (간단한 구현)
-      let blendedR = fgR, blendedG = fgG, blendedB = fgB, blendedA = fgA;
-      
-      if (blendMode !== 'normal') {
-        // 간단한 블렌딩 모드 구현 (실제로는 더 복잡할 수 있음)
-        switch (blendMode) {
-          case 'multiply':
-            blendedR = Math.round(fgR * bgR / 255);
-            blendedG = Math.round(fgG * bgG / 255);
-            blendedB = Math.round(fgB * bgB / 255);
-            break;
-          case 'screen':
-            blendedR = Math.round(255 - (255 - fgR) * (255 - bgR) / 255);
-            blendedG = Math.round(255 - (255 - fgG) * (255 - bgG) / 255);
-            blendedB = Math.round(255 - (255 - fgB) * (255 - bgB) / 255);
-            break;
-          case 'overlay':
-            blendedR = bgR < 128 ? Math.round(2 * fgR * bgR / 255) : Math.round(255 - 2 * (255 - fgR) * (255 - bgR) / 255);
-            blendedG = bgG < 128 ? Math.round(2 * fgG * bgG / 255) : Math.round(255 - 2 * (255 - fgG) * (255 - bgG) / 255);
-            blendedB = bgB < 128 ? Math.round(2 * fgB * bgB / 255) : Math.round(255 - 2 * (255 - fgB) * (255 - bgB) / 255);
-            break;
-        }
-      }
-      
-      // 총 투명도 = CSS 색상 투명도 × HTML 요소 투명도
-      const totalAlpha = (blendedA / 255) * elementOpacity;
-      
-      // 투명도가 없으면 블렌딩된 색상 반환
-      if (totalAlpha >= 1) {
-        return { r: blendedR, g: blendedG, b: blendedB, a: 255 };
-      }
-      
-      // 투명도가 있으면 배경색과 블렌딩
-      const invAlpha = 1 - totalAlpha;
-      
-      const finalR = Math.round(blendedR * totalAlpha + bgR * invAlpha);
-      const finalG = Math.round(blendedG * totalAlpha + bgG * invAlpha);
-      const finalB = Math.round(blendedB * totalAlpha + bgB * invAlpha);
-      
-      return { r: finalR, g: finalG, b: finalB, a: 255 };
-    }
-
-    /**
-     * CSS 색상 기반 색상 믹싱 (기존 호환성 유지)
-     */
-    getActualVisibleColor(foregroundColor, backgroundColor, elementOpacity = 1, blendMode = 'normal') {
-      if (!foregroundColor || !backgroundColor) return foregroundColor;
-      
-      const fgRgb = this.parseCSSColor(foregroundColor);
-      const bgRgb = this.parseCSSColor(backgroundColor);
-      
-      if (!fgRgb || !bgRgb) return foregroundColor;
-      
-      // RGBA 기반 믹싱 사용
-      const mixed = this.mixRGBA(fgRgb.r, fgRgb.g, fgRgb.b, fgRgb.a, bgRgb.r, bgRgb.g, bgRgb.b, bgRgb.a, elementOpacity, blendMode);
-      
-      return `rgb(${mixed.r}, ${mixed.g}, ${mixed.b})`;
-    }
-
-    /**
-     * CSS 색상을 RGB 객체로 변환
-     */
-    parseCSSColor(cssColor) {
-      if (!cssColor || cssColor === 'transparent' || cssColor === 'rgba(0, 0, 0, 0)') {
-        return null;
-      }
-
-      // rgba 형식 파싱
-      const rgbaMatch = cssColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-      if (rgbaMatch) {
-        return {
-          r: parseInt(rgbaMatch[1]),
-          g: parseInt(rgbaMatch[2]),
-          b: parseInt(rgbaMatch[3]),
-          a: rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1
-        };
-      }
-
-      // hex 형식 파싱
-      if (cssColor.startsWith('#')) {
-        const hex = cssColor.slice(1);
-        if (hex.length === 3) {
-          return {
-            r: parseInt(hex[0] + hex[0], 16),
-            g: parseInt(hex[1] + hex[1], 16),
-            b: parseInt(hex[2] + hex[2], 16),
-            a: 1
-          };
-        } else if (hex.length === 6) {
-          return {
-            r: parseInt(hex.substr(0, 2), 16),
-            g: parseInt(hex.substr(2, 2), 16),
-            b: parseInt(hex.substr(4, 2), 16),
-            a: 1
-          };
-        }
-      }
-
-      return null;
-    }
-
-    /**
-     * 대안 방법: 요소의 실제 렌더링된 색상 추출
-     */
-    getRenderedColorAlternative(element, property) {
-      // 요소를 임시로 화면에 표시
-      const originalDisplay = element.style.display;
-      const originalVisibility = element.style.visibility;
-      const originalPosition = element.style.position;
-      
-      element.style.display = 'block';
-      element.style.visibility = 'visible';
-      element.style.position = 'absolute';
-      element.style.top = '-9999px';
-      element.style.left = '-9999px';
-      
-      // 강제 리플로우
-      element.offsetHeight;
-      
-      // 임시 캔버스 생성
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = 1;
-      canvas.height = 1;
-      
-      // 요소의 스타일을 캔버스에 적용
-      const computedStyle = getComputedStyle(element);
-      const colorValue = computedStyle[property];
-      
-      if (!colorValue || colorValue === 'transparent' || colorValue === 'rgba(0, 0, 0, 0)') {
-        // 원래 스타일 복원
-        element.style.display = originalDisplay;
-        element.style.visibility = originalVisibility;
-        element.style.position = originalPosition;
-        return null;
-      }
-      
-      // 캔버스에 색상 그리기
-      ctx.fillStyle = colorValue;
-      ctx.fillRect(0, 0, 1, 1);
-      const pixelData = ctx.getImageData(0, 0, 1, 1).data;
-      
-      // 원래 스타일 복원
-      element.style.display = originalDisplay;
-      element.style.visibility = originalVisibility;
-      element.style.position = originalPosition;
-      
-      return `rgba(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]}, ${pixelData[3]/255})`;
-    }
-
-
-    /**
-     * 모든 버튼의 렌더링된 색상 추출
-     */
-    extractAllButtonColors() {
-      const buttons = document.querySelectorAll('.button');
-      return Array.from(buttons).map(button => ({
-        element: button,
-        className: button.className,
-        colors: this.extractButtonColors(button)
-      }));
-    }
-
-    /**
-     * 특정 팔레트의 버튼들만 추출
-     */
-    extractPaletteColors(palette) {
-      const buttons = document.querySelectorAll(`.button.${palette}`);
-      return Array.from(buttons).map(button => ({
-        element: button,
-        className: button.className,
-        colors: this.extractButtonColors(button)
-      }));
-    }
-  }
-
-  /**
-   * 🔍 명도대비 분석기
-   * - 버튼의 명도대비를 종합적으로 분석
-   * - WCAG 기준 자동 검사
-   */
-  class ContrastAnalyzer {
-    constructor() {
-      this.calculator = new RenderedColorContrastCalculator();
-      this.extractor = new ButtonColorExtractor();
-    }
-
-    /**
-     * 단일 버튼의 명도대비 분석
-     */
-    analyzeButton(buttonElement) {
-      const colors = this.extractor.extractButtonColors(buttonElement);
-      
-      // 디버깅용 로깅 (원본 색상 + 모든 블렌딩 기능 기반)
-      console.log('🎨 원본 색상 + 모든 블렌딩 기능 기반 추출:', {
-        element: buttonElement.className,
-        originalSurfaceColor: colors.originalSurfaceColor,
-        originalTextColor: colors.originalTextColor,
-        originalIconColor: colors.originalIconColor,
-        originalBorderColor: colors.originalBorderColor,
-        surfaceOpacity: colors.surfaceOpacity,
-        textOpacity: colors.textOpacity,
-        iconOpacity: colors.iconOpacity,
-        borderOpacity: colors.borderOpacity,
-        textBlendMode: colors.textBlendMode,
-        iconBlendMode: colors.iconBlendMode,
-        surfaceBlendMode: colors.surfaceBlendMode,
-        textBackgroundBlendMode: colors.textBackgroundBlendMode,
-        iconBackgroundBlendMode: colors.iconBackgroundBlendMode,
-        surfaceBackgroundBlendMode: colors.surfaceBackgroundBlendMode,
-        textIsolation: colors.textIsolation,
-        iconIsolation: colors.iconIsolation,
-        surfaceIsolation: colors.surfaceIsolation,
-        textFilters: colors.textFilters,
-        iconFilters: colors.iconFilters,
-        surfaceFilters: colors.surfaceFilters,
-        textBackdropFilter: colors.textBackdropFilter,
-        iconBackdropFilter: colors.iconBackdropFilter,
-        surfaceBackdropFilter: colors.surfaceBackdropFilter,
-        actualSurfaceColor: colors.surfaceColor,
-        actualTextColor: colors.textColor,
-        actualIconColor: colors.iconColor,
-        actualBorderColor: colors.borderColor,
-        timestamp: new Date().toISOString()
-      });
-      
-      const result = {
-        element: buttonElement,
-        className: buttonElement.className,
-        colors: colors,
-        contrast: {},
-        compliance: {}
-      };
-
-      // 텍스트 명도대비
-      if (colors.surfaceColor && colors.textColor) {
-        const textContrast = this.calculator.calculateContrast(colors.surfaceColor, colors.textColor);
-        result.contrast.text = textContrast;
-        result.compliance.text = this.calculator.checkWCAGCompliance(textContrast);
-        
-        console.log('📊 텍스트 명도대비 (원본 색상 + 모든 블렌딩 기능 기반):', {
-          originalTextColor: colors.originalTextColor,
-          textOpacity: colors.textOpacity,
-          textBlendMode: colors.textBlendMode,
-          textBackgroundBlendMode: colors.textBackgroundBlendMode,
-          textIsolation: colors.textIsolation,
-          textFilters: colors.textFilters,
-          textBackdropFilter: colors.textBackdropFilter,
-          actualTextColor: colors.textColor,
-          surfaceColor: colors.surfaceColor,
-          contrast: textContrast,
-          compliance: result.compliance.text
-        });
-      }
-
-      // 아이콘 명도대비
-      if (colors.surfaceColor && colors.iconColor) {
-        const iconContrast = this.calculator.calculateContrast(colors.surfaceColor, colors.iconColor);
-        result.contrast.icon = iconContrast;
-        result.compliance.icon = this.calculator.checkWCAGCompliance(iconContrast);
-        
-        console.log('📊 아이콘 명도대비 (앨리어싱 고려):', {
-          surfaceColor: colors.surfaceColor + ' (중앙 픽셀)',
-          iconColor: colors.iconColor + ' (평균 색상)',
-          contrast: iconContrast,
-          compliance: result.compliance.icon
-        });
-      }
-
-      // 테두리 명도대비
-      if (colors.surfaceColor && colors.borderColor) {
-        const borderContrast = this.calculator.calculateContrast(colors.surfaceColor, colors.borderColor);
-        result.contrast.border = borderContrast;
-        result.compliance.border = this.calculator.checkWCAGCompliance(borderContrast);
-      }
-
-      return result;
-    }
-
-    /**
-     * 모든 버튼의 명도대비 분석
-     */
-    analyzeAllButtons() {
-      const buttons = document.querySelectorAll('.button');
-      return Array.from(buttons).map(button => this.analyzeButton(button));
-    }
-
-    /**
-     * 특정 팔레트의 명도대비 분석
-     */
-    analyzePalette(palette) {
-      const buttons = document.querySelectorAll(`.button.${palette}`);
-      return Array.from(buttons).map(button => this.analyzeButton(button));
-    }
-
-    /**
-     * WCAG 기준 미달 버튼들 필터링
-     */
-    filterNonCompliantButtons(analysisResults) {
-      return analysisResults.filter(result => {
-        const textCompliant = result.compliance.text ? result.compliance.text.AA : true;
-        const iconCompliant = result.compliance.icon ? result.compliance.icon.AA : true;
-        return !textCompliant || !iconCompliant;
-      });
-    }
-
-    /**
-     * 분석 결과 요약
-     */
-    summarizeResults(analysisResults) {
-      const total = analysisResults.length;
-      const nonCompliant = this.filterNonCompliantButtons(analysisResults).length;
-      const compliant = total - nonCompliant;
-
-      return {
-        total: total,
-        compliant: compliant,
-        nonCompliant: nonCompliant,
-        complianceRate: total > 0 ? (compliant / total * 100).toFixed(1) : 0,
-        results: analysisResults
-      };
-    }
-  }
-
-  /**
-   * 📊 실시간 모니터링
-   * - 버튼 상태 변화 시 자동 명도대비 검사
-   * - 개발자 도구 통합
-   */
-  class ContrastMonitor {
-    constructor() {
-      this.analyzer = new ContrastAnalyzer();
-      this.isMonitoring = false;
-      this.observer = null;
-    }
-
-    /**
-     * 실시간 모니터링 시작
-     */
-    startMonitoring() {
-      if (this.isMonitoring) return;
-
-      this.observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && 
-              (mutation.attributeName === 'class' || 
-               mutation.attributeName === 'style' ||
-               mutation.attributeName === 'aria-disabled')) {
-            this.checkElementContrast(mutation.target);
-          }
-        });
-      });
-
-      this.observer.observe(document.body, {
-        attributes: true,
-        subtree: true,
-        attributeFilter: ['class', 'style', 'aria-disabled']
-      });
-
-      // CSS 변수 변화 감지를 위한 추가 모니터링
-      this.startCSSVariableMonitoring();
-
-      this.isMonitoring = true;
-      console.log('🎯 명도대비 모니터링 시작 (투명도 변화 감지 포함)');
-    }
-
-    /**
-     * CSS 변수 변화 감지 (투명도 포함, 빠른 반응)
-     */
-    startCSSVariableMonitoring() {
-      // CSS 변수 변화를 감지하기 위한 주기적 체크 (100ms마다로 변경)
-      this.cssCheckInterval = setInterval(() => {
-        this.checkAllButtonsForChanges();
-      }, 100); // 100ms마다 체크로 투명도 변화 빠른 감지
-    }
-
-    /**
-     * 모든 버튼의 변화 체크
-     */
-    checkAllButtonsForChanges() {
-      const buttons = document.querySelectorAll('.button');
-      buttons.forEach(button => {
-        const currentColors = this.analyzer.extractor.extractButtonColors(button);
-        const buttonId = button.getAttribute('data-button-id') || this.generateButtonId(button);
-        
-        // 이전 색상과 비교
-        if (!this.previousColors) this.previousColors = new Map();
-        const previousColors = this.previousColors.get(buttonId);
-        
-        if (previousColors && this.hasColorChanged(previousColors, currentColors)) {
-          console.log('🔄 투명도/블렌딩 변화 감지:', {
-            buttonId: buttonId,
-            element: button.className,
-            previousOpacity: {
-              surface: previousColors.surfaceOpacity,
-              text: previousColors.textOpacity,
-              icon: previousColors.iconOpacity,
-              border: previousColors.borderOpacity
-            },
-            currentOpacity: {
-              surface: currentColors.surfaceOpacity,
-              text: currentColors.textOpacity,
-              icon: currentColors.iconOpacity,
-              border: currentColors.borderOpacity
-            },
-            previousBlendModes: {
-              text: previousColors.textBlendMode,
-              icon: previousColors.iconBlendMode,
-              surface: previousColors.surfaceBlendMode
-            },
-            currentBlendModes: {
-              text: currentColors.textBlendMode,
-              icon: currentColors.iconBlendMode,
-              surface: currentColors.surfaceBlendMode
-            },
-            timestamp: new Date().toISOString()
-          });
-          
-          this.checkElementContrast(button);
-        }
-        
-        this.previousColors.set(buttonId, currentColors);
-      });
-    }
-
-    /**
-     * 버튼 ID 생성
-     */
-    generateButtonId(button) {
-      const classes = Array.from(button.classList).sort().join('-');
-      const index = Array.from(button.parentElement.children).indexOf(button);
-      return `${classes}-${index}`;
-    }
-
-    /**
-     * 색상 변화 감지 (투명도 및 모든 블렌딩 기능 포함)
-     */
-    hasColorChanged(previous, current) {
-      if (!previous || !current) return true;
-      
-      // 기본 색상 변화 감지
-      const basicColorChanged = 
-        previous.surfaceColor !== current.surfaceColor ||
-        previous.textColor !== current.textColor ||
-        previous.iconColor !== current.iconColor ||
-        previous.borderColor !== current.borderColor;
-      
-      // 투명도 변화 감지
-      const opacityChanged = 
-        previous.surfaceOpacity !== current.surfaceOpacity ||
-        previous.textOpacity !== current.textOpacity ||
-        previous.iconOpacity !== current.iconOpacity ||
-        previous.borderOpacity !== current.borderOpacity;
-      
-      // 블렌딩 모드 변화 감지
-      const blendModeChanged = 
-        previous.textBlendMode !== current.textBlendMode ||
-        previous.iconBlendMode !== current.iconBlendMode ||
-        previous.surfaceBlendMode !== current.surfaceBlendMode ||
-        previous.textBackgroundBlendMode !== current.textBackgroundBlendMode ||
-        previous.iconBackgroundBlendMode !== current.iconBackgroundBlendMode ||
-        previous.surfaceBackgroundBlendMode !== current.surfaceBackgroundBlendMode;
-      
-      // 필터 변화 감지
-      const filterChanged = 
-        JSON.stringify(previous.textFilters) !== JSON.stringify(current.textFilters) ||
-        JSON.stringify(previous.iconFilters) !== JSON.stringify(current.iconFilters) ||
-        JSON.stringify(previous.surfaceFilters) !== JSON.stringify(current.surfaceFilters);
-      
-      // isolation 변화 감지
-      const isolationChanged = 
-        previous.textIsolation !== current.textIsolation ||
-        previous.iconIsolation !== current.iconIsolation ||
-        previous.surfaceIsolation !== current.surfaceIsolation;
-      
-      // backdrop-filter 변화 감지
-      const backdropFilterChanged = 
-        previous.textBackdropFilter !== current.textBackdropFilter ||
-        previous.iconBackdropFilter !== current.iconBackdropFilter ||
-        previous.surfaceBackdropFilter !== current.surfaceBackdropFilter;
-      
-      return basicColorChanged || opacityChanged || blendModeChanged || filterChanged || isolationChanged || backdropFilterChanged;
-    }
-
-    /**
-     * 모니터링 중지
-     */
-    stopMonitoring() {
-      if (this.observer) {
-        this.observer.disconnect();
-        this.observer = null;
-      }
-      
-      if (this.cssCheckInterval) {
-        clearInterval(this.cssCheckInterval);
-        this.cssCheckInterval = null;
-      }
-      
-      this.previousColors = null;
-      this.isMonitoring = false;
-      console.log('⏹️ 명도대비 모니터링 중지 (투명도 변화 감지 포함)');
-    }
-
-    /**
-     * 요소의 명도대비 검사
-     */
-    checkElementContrast(element) {
-      if (element.classList.contains('button')) {
-        const analysis = this.analyzer.analyzeButton(element);
-        this.logContrastResult(analysis);
-      }
-    }
-
-    /**
-     * 명도대비 결과 로깅
-     */
-    logContrastResult(analysis) {
-      const textCompliant = analysis.compliance.text ? analysis.compliance.text.AA : true;
-      const iconCompliant = analysis.compliance.icon ? analysis.compliance.icon.AA : true;
-
-      if (!textCompliant || !iconCompliant) {
-        console.warn('⚠️ 접근성 경고:', {
-          element: analysis.className,
-          textContrast: analysis.contrast.text,
-          iconContrast: analysis.contrast.icon,
-          textCompliant: textCompliant,
-          iconCompliant: iconCompliant,
-          colors: analysis.colors
-        });
-      }
-    }
-  }
-
   // 전역 인스턴스 생성
-  window.ContrastCalculator = new RenderedColorContrastCalculator();
-  window.ButtonColorExtractor = new ButtonColorExtractor();
   window.ContrastAnalyzer = new ContrastAnalyzer();
-  window.ContrastMonitor = new ContrastMonitor();
-  
-  // 명도대비 모니터링 자동 시작 (성능 최적화)
-  setTimeout(() => {
-    if (window.ContrastMonitor) {
-      window.ContrastMonitor.startMonitoring();
-      console.log('🎯 명도대비 모니터링 자동 시작됨');
-    }
-  }, 3000); // 3초 후 시작으로 성능 최적화
 
-  // 개발자 도구용 헬퍼 함수
-  window.checkContrast = (element) => {
-    if (element && element.classList.contains('button')) {
-      return window.ContrastAnalyzer.analyzeButton(element);
-    }
-    return null;
-  };
-
-  window.checkAllContrast = () => {
-    return window.ContrastAnalyzer.analyzeAllButtons();
-  };
-
-  window.checkPaletteContrast = (palette) => {
-    return window.ContrastAnalyzer.analyzePalette(palette);
-  };
-
-  // background-blend-mode 테스트 함수
-  window.testBackgroundBlendMode = (buttonElement, blendMode = 'multiply') => {
-    if (buttonElement && buttonElement.classList.contains('button')) {
-      const background = buttonElement.querySelector('.background.dynamic');
-      if (background) {
-        const originalBlendMode = background.style.backgroundBlendMode;
-        background.style.backgroundBlendMode = blendMode;
-        
-        setTimeout(() => {
-          const analysis = window.ContrastAnalyzer.analyzeButton(buttonElement);
-          console.log('🎨 background-blend-mode 변화 테스트:', {
-            originalBlendMode: originalBlendMode,
-            newBlendMode: blendMode,
-            surfaceBackgroundBlendMode: analysis.colors.surfaceBackgroundBlendMode,
-            renderedColors: analysis.colors,
-            contrast: analysis.contrast
-          });
-          
-          // 원래 블렌딩 모드로 복원
-          background.style.backgroundBlendMode = originalBlendMode;
-        }, 100);
-      }
-    }
-  };
-
-  // filter 테스트 함수
-  window.testColorFilter = (buttonElement, filter = 'brightness(1.2)') => {
-    if (buttonElement && buttonElement.classList.contains('button')) {
-      const content = buttonElement.querySelector('.content');
-      if (content) {
-        const originalFilter = content.style.filter;
-        content.style.filter = filter;
-        
-        setTimeout(() => {
-          const analysis = window.ContrastAnalyzer.analyzeButton(buttonElement);
-          console.log('🎨 color-filter 변화 테스트:', {
-            originalFilter: originalFilter,
-            newFilter: filter,
-            textFilters: analysis.colors.textFilters,
-            renderedColors: analysis.colors,
-            contrast: analysis.contrast
-          });
-          
-          // 원래 필터로 복원
-          content.style.filter = originalFilter;
-        }, 100);
-      }
-    }
-  };
-
-  // isolation 테스트 함수
-  window.testIsolation = (buttonElement, isolation = 'isolate') => {
-    if (buttonElement && buttonElement.classList.contains('button')) {
-      const content = buttonElement.querySelector('.content');
-      if (content) {
-        const originalIsolation = content.style.isolation;
-        content.style.isolation = isolation;
-        
-        setTimeout(() => {
-          const analysis = window.ContrastAnalyzer.analyzeButton(buttonElement);
-          console.log('🎨 isolation 변화 테스트:', {
-            originalIsolation: originalIsolation,
-            newIsolation: isolation,
-            textIsolation: analysis.colors.textIsolation,
-            renderedColors: analysis.colors,
-            contrast: analysis.contrast
-          });
-          
-          // 원래 isolation으로 복원
-          content.style.isolation = originalIsolation;
-        }, 100);
-      }
-    }
-  };
-
-  // 색상 추출 디버깅 함수 (실제 렌더링된 색상 확인)
-  window.debugColorExtraction = (buttonElement) => {
-    if (buttonElement && buttonElement.classList.contains('button')) {
-      const extractor = window.ButtonColorExtractor;
-      const renderedColors = extractor.extractButtonColors(buttonElement);
-      
-      // getComputedStyle과 비교
-      const background = buttonElement.querySelector('.background.dynamic');
-      const content = buttonElement.querySelector('.content');
-      
-      const computedBg = background ? getComputedStyle(background).backgroundColor : null;
-      const computedText = content ? getComputedStyle(content).color : null;
-      
-      console.log('🔍 실제 렌더링된 색상 vs getComputedStyle:', {
-        element: buttonElement.className,
-        renderedColors: renderedColors,
-        computedStyle: {
-          backgroundColor: computedBg,
-          color: computedText
-        },
-        comparison: {
-          surfaceSame: renderedColors.surfaceColor === computedBg,
-          textSame: renderedColors.textColor === computedText
-        }
-      });
-      
-      return { renderedColors, computedStyle: { backgroundColor: computedBg, color: computedText } };
-    }
-  };
-
-  console.log('🎯 명도대비 계산 모듈 리빌딩 완료!');
-  console.log('사용법:');
-  console.log('- checkContrast(element): 단일 버튼 검사');
-  console.log('- checkAllContrast(): 전체 버튼 검사');
-  console.log('- checkPaletteContrast(palette): 특정 팔레트 검사');
-  console.log('- testOpacityChange(element, opacity): 투명도 변화 테스트');
-  console.log('- debugColorExtraction(element): 색상 추출 디버깅');
 });
