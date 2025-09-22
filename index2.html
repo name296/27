@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" class="no-js">
+  <head>
+    <!-- 기본 메타 정보 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>3D 색상 구체 선택기</title>
+    
+    <!-- SEO 최적화 -->
+    <meta name="description" content="3D 색상 구체를 이용한 직관적인 색상 선택기">
+    <meta name="keywords" content="색상, 구체, 3D, 선택기, 인터랙티브">
+    <meta name="author" content="이강철">
+    
+    <!-- 접근성 메타데이터 -->
+    <meta name="theme-color" content="rgba(164, 105, 63, 1)" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="rgba(255, 225, 0, 1)" media="(prefers-color-scheme: dark)">
+    
+    <!-- 리소스 로딩 최적화 -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 폰트 최적화 -->
+    <link rel="preload" href="PretendardGOV-Regular.otf" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="PretendardGOV-SemiBold.otf" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="PretendardGOV-Bold.otf" as="font" type="font/otf" crossorigin>
+    
+    <!-- 구조화 데이터 -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "3D 색상 구체 선택기",
+      "description": "3D 색상 구체를 이용한 직관적인 색상 선택기",
+      "applicationCategory": "WebApplication",
+      "operatingSystem": "Web Browser",
+      "programmingLanguage": ["HTML", "CSS", "JavaScript"],
+      "keywords": "색상, 구체, 3D, 선택기, 인터랙티브",
+      "author": {
+        "@type": "Organization",
+        "name": "이강철"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+    </script>
+  </head>
+  <body data-system-version="v1.0.0" data-last-updated="2025-01-27">
+    <!-- 페이지 헤더 -->
+    <header role="banner" id="main-header">
+      <section>
+        <h1>3D 색상 구체 선택기</h1>
+        <p>직관적인 3D 색상 구체를 통해 원하는 색상을 선택하세요.</p>
+      </section>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main role="main" id="main-content">
+      <!-- 색상구체 캔버스 -->
+      <div id="color-sphere-overlay">
+        <div class="canvas-container">
+          <canvas id="color-sphere-canvas" class="color-canvas-3d" width="600" height="600" aria-label="3D 색상 구체 선택기"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <!-- 접근성 라이브 영역 -->
+    <div id="color-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+    <!-- 페이지 푸터 -->
+    <footer role="contentinfo" id="main-footer" class="site-footer">
+      <div class="footer-info">
+        <p class="footer-copyright">
+          <span>&copy; 이강철 / 2025 / 3D 색상 구체 선택기 v1.0.0</span>
+          <span class="footer-separator" aria-hidden="true"> • </span>
+          <span class="footer-tech">크롬 기준 현대 CSS/JS</span>
+        </p>
+        
+        <div class="footer-accessibility-info">
+          <p><strong>접근성 정보:</strong> 이 데모는 웹 접근성 가이드라인(WCAG 2.1 AA)을 준수합니다</p>
+          <ul>
+            <li>키보드 전용 네비게이션 지원</li>
+            <li>스크린 리더 호환성</li>
+            <li>충분한 색상 대비 (4.5:1 이상)</li>
+            <li>현대 CSS 기능 활용 (Nesting, Container Queries, color-mix)</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 스크립트 로딩 -->
+    <script src="script.js" defer></script>
+
+  </body>
+</html>

@@ -1,15 +1,72 @@
 /* 버튼 컴포넌트 시스템 - 시스테매틱 모듈 구조 */
 
-// Chroma.js CDN 로딩
+// Chroma.js 로컬 로딩
 const chromaScript = document.createElement('script');
-chromaScript.src = 'https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/dist/chroma.min.js';
+chromaScript.src = './chroma.min.js';
 chromaScript.onload = () => {
   console.log('🎨 Chroma.js 로드 완료!', typeof chroma);
+  
+  // 모든 색상 관련 기능 초기화
+  initializeColorFeatures();
 };
 chromaScript.onerror = () => {
-  console.error('❌ Chroma.js 로드 실패!');
+  console.error('❌ Chroma.js 로드 실패! 색상 기능을 사용할 수 없습니다.');
+  // 색상 기능 비활성화
+  document.body.classList.add('color-disabled');
 };
 document.head.appendChild(chromaScript);
+
+// 색상 기능 초기화 함수
+function initializeColorFeatures() {
+  // 색상구체 캔버스가 있는 경우에만 초기화
+  if (document.querySelector('#color-sphere-canvas')) {
+    initializeColorSphere();
+  }
+  
+  // 컬러피커 초기화
+  if (typeof ButtonSystem !== 'undefined' && ButtonSystem.CustomColorPicker) {
+    ButtonSystem.CustomColorPicker.init();
+  }
+  
+  console.log('🎨 모든 색상 기능 초기화 완료!');
+}
+
+/* ==============================
+  🎨 색상구체 초기화
+  ============================== */
+function initializeColorSphere(selector = '#color-sphere-canvas', onUpdate = null) {
+  const canvas = document.querySelector(selector);
+  if (!canvas) {
+    console.error('❌ 색상구체 캔버스를 찾을 수 없습니다.');
+    return;
+  }
+
+  // 상태 객체 생성
+  const sphereState = {
+    dragging: false,
+    v0: null,
+    Q: [0, 0, 0, 1],  // 북극점 중심 정렬
+    last: [0, 0],
+    zoom: 1.0,
+    selectedColor: { h: 0, s: 0, l: 100 }, // 북극점 색상 (흰색)
+    isDragging: false
+  };
+  
+  // 렌더링 및 인터랙션 설정
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ColorSphereSystem.render3D(ctx, sphereState);
+  
+  // 인터랙션 설정
+  SphericalDynamics.setupCanvasInteraction(
+    canvas, 
+    sphereState, 
+    onUpdate || ((canvas) => {
+      console.log('색상 업데이트:', canvas);
+    })
+  );
+}
+
 /* ==============================
   📋 시스템 정보
   ============================== */
@@ -20,7 +77,7 @@ document.head.appendChild(chromaScript);
   아키텍처: 모듈형 시스템 (CSSOM + 3D Graphics)
   
   🏗️ 모듈 구조:
-  ├── ColorSystem: 색상 변환 (RGB ↔ HSV ↔ HSL ↔ HEX)
+  ├── ColorConverter: 색상 변환 (RGB ↔ HSV ↔ HSL ↔ HEX)
   ├── SphericalDynamics: 구면 역학 (좌표계 + 회전 + 상호작용)
   ├── ColorSphereSystem: 색상 구체 (구면좌표 → RGB 매핑 + 렌더링)
   ├── AppUtils: 공통 유틸리티 (SVG, CSS 주입)
@@ -31,23 +88,14 @@ document.head.appendChild(chromaScript);
 */
 
 /* ==============================
-  🎨 색상 시스템 모듈
+  🎨 색상 컨버터 모듈
   ============================== */
 
-// 색상 시스템 공통 모듈 (chroma.js 로드 후 실행)
-const ColorSystem = {
+// 색상 컨버터 공통 모듈 (chroma.js 로드 후 실행)
+const ColorConverter = {
   // 8자리 헥스코드 변환
   rgbaToHex(r, g, b, a = 255) {
-    if (typeof chroma === 'undefined') {
-      // chroma.js가 로드되지 않은 경우 기본 구현 사용
-      const clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
-      return "#" + 
-        clamp(r).toString(16).padStart(2, '0').toUpperCase() +
-        clamp(g).toString(16).padStart(2, '0').toUpperCase() +
-        clamp(b).toString(16).padStart(2, '0').toUpperCase() +
-        clamp(a).toString(16).padStart(2, '0').toUpperCase();
-    }
-    return chroma.rgb(r, g, b).alpha(a / 255).hex();
+    return chroma.rgb(r, g, b).alpha(a / 255).hex('rgba').toUpperCase();
   },
   
   // RGBA 직접 생성 (파싱 오버헤드 없음)
@@ -55,18 +103,8 @@ const ColorSystem = {
     return { r, g, b, a };
   },
 
-  // 8자리 헥스코드 파싱 (최후의 수단으로만 사용)
+  // 8자리 헥스코드 파싱
   hexToRgba(hex) {
-    if (typeof chroma === 'undefined') {
-      // chroma.js가 로드되지 않은 경우 기본 구현 사용
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-        a: result[4] ? parseInt(result[4], 16) : 255
-      } : { r: 0, g: 0, b: 0, a: 255 };
-    }
     const color = chroma(hex);
     const rgb = color.rgb();
     return {
@@ -79,31 +117,6 @@ const ColorSystem = {
   
   // HSV → RGB 변환
   hsvToRgb(h, s, v) {
-    if (typeof chroma === 'undefined') {
-      // chroma.js가 로드되지 않은 경우 기본 구현 사용
-      h = h % 360;
-      if (h < 0) h += 360;
-      s /= 100;
-      v /= 100;
-      
-      const c = v * s;
-      const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-      const m = v - c;
-      
-      let r, g, b;
-      if (h < 60) { r = c; g = x; b = 0; }
-      else if (h < 120) { r = x; g = c; b = 0; }
-      else if (h < 180) { r = 0; g = c; b = x; }
-      else if (h < 240) { r = 0; g = x; b = c; }
-      else if (h < 300) { r = x; g = 0; b = c; }
-      else { r = c; g = 0; b = x; }
-      
-      return {
-        r: Math.round((r + m) * 255),
-        g: Math.round((g + m) * 255),
-        b: Math.round((b + m) * 255)
-      };
-    }
     const rgb = chroma.hsv(h, s, v).rgb();
     return {
       r: rgb[0],
@@ -112,33 +125,13 @@ const ColorSystem = {
     };
   },
   
+  // HSV → 8자리 헥스코드 변환
+  hsvToHex(h, s, v, a = 255) {
+    return chroma.hsv(h, s, v).alpha(a / 255).hex('rgba').toUpperCase();
+  },
+  
   // RGB → HSL 변환
   rgbToHsl(r, g, b) {
-    if (typeof chroma === 'undefined') {
-      // chroma.js가 로드되지 않은 경우 기본 구현 사용
-      r /= 255; g /= 255; b /= 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      let h, s, l = (max + min) / 2;
-      
-      if (max === min) {
-        h = s = 0; // 무채색
-      } else {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-      }
-      
-      return {
-        h: Math.round(h * 360),
-        s: Math.round(s * 100),
-        l: Math.round(l * 100)
-      };
-    }
     const hsl = chroma.rgb(r, g, b).hsl();
     return {
       h: Math.round(hsl[0] || 0),
@@ -149,42 +142,17 @@ const ColorSystem = {
   
   // HSL → RGB 변환
   hslToRgb(h, s, l) {
-    if (typeof chroma === 'undefined') {
-      // chroma.js가 로드되지 않은 경우 기본 구현 사용
-      h /= 360; s /= 100; l /= 100;
-      
-      const hue2rgb = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-        return p;
-      };
-      
-      let r, g, b;
-      if (s === 0) {
-        r = g = b = l; // 무채색
-      } else {
-        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
-      }
-      
-      return {
-        r: Math.round(r * 255),
-        g: Math.round(g * 255),
-        b: Math.round(b * 255)
-      };
-    }
     const rgb = chroma.hsl(h, s, l).rgb();
     return {
       r: rgb[0],
       g: rgb[1],
       b: rgb[2]
     };
+  },
+  
+  // HSL → 8자리 헥스코드 변환
+  hslToHex(h, s, l, a = 255) {
+    return chroma.hsl(h, s, l).alpha(a / 255).hex('rgba').toUpperCase();
   }
 };
 
@@ -195,20 +163,39 @@ const ColorSystem = {
 // 구면 역학 시스템 (구면좌표계 + 3D 회전 + 상호작용)
 const SphericalDynamics = {
   // ========================================
-  // 🔄 쿼터니언 회전 시스템
+  // 📐 좌표계 변환 시스템
   // ========================================
   
-  // 범용 정규화 (3D 벡터 또는 4D 쿼터니언)
+  // 직교좌표 → 구면좌표 변환
+  cartesianToSpherical(x, y, z) {
+    const r = Math.sqrt(x * x + y * y + z * z);
+    const theta = Math.acos(Math.max(-1, Math.min(1, z / r))); // 위도각 (0 ~ π)
+    const phi = Math.atan2(y, x); // 경도각 (-π ~ π)
+    return { r, theta, phi };
+  },
+  
+  // 구면좌표 → 직교좌표 변환
+  sphericalToCartesian(r, theta, phi) {
+    const x = r * Math.sin(theta) * Math.cos(phi);
+    const y = r * Math.sin(theta) * Math.sin(phi);
+    const z = r * Math.cos(theta);
+    return { x, y, z };
+  },
+
+  // ========================================
+  // 🔄 회전 시스템  
+  // ========================================
+
+  // 벡터 정규화
   normalize(v) {
     const length = Math.sqrt(v.reduce((sum, val) => sum + val * val, 0));
     if (length === 0) {
-      // 기본값: 3D는 [0,0,1], 4D는 [0,0,0,1]
-      return v.length === 3 ? [0, 0, 1] : [0, 0, 0, 1];
+      throw new Error('영벡터는 정규화할 수 없습니다');
     }
     return v.map(val => val / length);
   },
   
-  // 축-각도에서 쿼터니언 생성
+  // 쿼터니언 생성
   fromAxisAngle(axis, angle) {
     const halfAngle = angle * 0.5;
     const s = Math.sin(halfAngle);
@@ -237,26 +224,10 @@ const SphericalDynamics = {
   // SLERP (구면 선형 보간)
   slerp(q1, q2, t) {
     let dot = q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3];
-    
-    if (dot < 0.0) {
-      q2 = [-q2[0], -q2[1], -q2[2], -q2[3]];
-      dot = -dot;
-    }
-    
-    if (dot > 0.9995) {
-      return this.normalize([
-        q1[0] + t * (q2[0] - q1[0]),
-        q1[1] + t * (q2[1] - q1[1]),
-        q1[2] + t * (q2[2] - q1[2]),
-        q1[3] + t * (q2[3] - q1[3])
-      ]);
-    }
-    
     const theta0 = Math.acos(Math.abs(dot));
     const theta = theta0 * t;
     const sinTheta0 = Math.sin(theta0);
     const sinTheta = Math.sin(theta);
-    
     const s0 = Math.cos(theta) - dot * sinTheta / sinTheta0;
     const s1 = sinTheta / sinTheta0;
     
@@ -267,8 +238,21 @@ const SphericalDynamics = {
       s0 * q1[3] + s1 * q2[3]
     ];
   },
+
+  // ========================================
+  // 🎮 3D 구체 상호작용 시스템
+  // ========================================
   
-  // 클릭 좌표에서 회전 계산 (드래그와 동일한 좌표계)
+  // 드래그 회전 계산 (트랙볼 방식)
+  fromDragRotation(dx, dy, sensitivity = 0.005) {
+    const angle = Math.sqrt(dx * dx + dy * dy) * sensitivity;
+    if (angle < 1e-6) return [1, 0, 0, 0]; // 단위 쿼터니언
+    
+    const axis = this.normalize([dy, -dx, 0]); // 범용 정규화
+    return this.fromAxisAngle(axis, angle);
+  },
+  
+  // 클릭 회전 계산 (드래그와 동일한 좌표계)
   fromClickRotation(screenX, screenY) {
     // 드래그와 동일한 방식: 클릭 거리에 비례한 회전
     const distance = Math.sqrt(screenX * screenX + screenY * screenY);
@@ -281,59 +265,33 @@ const SphericalDynamics = {
     return this.fromAxisAngle(axis, angle);
   },
   
-  // 드래그 회전 계산 (트랙볼 방식)
-  fromDragRotation(dx, dy, sensitivity = 0.005) {
-    const angle = Math.sqrt(dx * dx + dy * dy) * sensitivity;
-    if (angle < 1e-6) return [1, 0, 0, 0]; // 단위 쿼터니언
+  // 클릭 회전 애니메이션
+  animateToQuaternion(sphereState, targetQ, canvas) {
+    const startQ = [...sphereState.Q];
+    const duration = 300;
+    const startTime = Date.now();
     
-    const axis = this.normalize([dy, -dx, 0]); // 범용 정규화
-    return this.fromAxisAngle(axis, angle);
-  },
-  
-  // ========================================
-  // 📐 구면좌표계 시스템
-  // ========================================
-  
-  // 직교좌표 → 구면좌표 변환
-  cartesianToSpherical(x, y, z) {
-    const r = Math.sqrt(x * x + y * y + z * z);
-    const theta = Math.acos(Math.max(-1, Math.min(1, z / r))); // 위도각 (0 ~ π)
-    const phi = Math.atan2(y, x); // 경도각 (-π ~ π)
-    return { r, theta, phi };
-  },
-  
-  // 구면좌표 → 직교좌표 변환
-  sphericalToCartesian(r, theta, phi) {
-    const x = r * Math.sin(theta) * Math.cos(phi);
-    const y = r * Math.sin(theta) * Math.sin(phi);
-    const z = r * Math.cos(theta);
-    return { x, y, z };
-  },
-  
-  // 8자리 헥스코드에서 구면좌표 찾기
-  findPosition(hexColor) {
-    const rgba = ColorSystem.hexToRgba(hexColor);
-    const targetHex = ColorSystem.rgbaToHex(rgba.r, rgba.g, rgba.b, 255).substr(0, 7);
-    
-    // 구체 전체 검색
-    for (let theta = 0; theta <= Math.PI; theta += 0.05) {
-      for (let phi = -Math.PI; phi <= Math.PI; phi += 0.05) {
-        const color = ColorSphereSystem.calculateColor(theta, phi);
-        const testHex = ColorSystem.rgbaToHex(color.r, color.g, color.b, 255).substr(0, 7);
-        
-        if (testHex === targetHex) {
-          return { theta, phi };
-        }
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      
+      sphereState.Q = this.slerp(startQ, targetQ, easeProgress);
+      
+      // 구체 다시 그리기
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ColorSphereSystem.render3D(ctx, sphereState);
       }
-    }
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
     
-    return { theta: 0, phi: 0 }; // 못 찾으면 북극
+    requestAnimationFrame(animate);
   },
-  
-  // ========================================
-  // 🎮 3D 구체 상호작용 시스템
-  // ========================================
-  
+
   // 3D 캔버스 상호작용 설정
   setupCanvasInteraction(canvas, sphereState, onUpdate) {
     let renderPending = false;
@@ -379,15 +337,9 @@ const SphericalDynamics = {
       // 중심점 색상 업데이트
       if (onUpdate) onUpdate(canvas);
       
-      // 스로틀링
-      if (!renderPending) {
-        renderPending = true;
-        requestAnimationFrame(() => {
-          const ctx = canvas.getContext('2d');
-          ColorSphereSystem.render3D(ctx, sphereState);
-          renderPending = false;
-        });
-      }
+      // 즉시 렌더링
+      const ctx = canvas.getContext('2d');
+      ColorSphereSystem.render3D(ctx, sphereState);
     });
     
     // pointerup: 드래그 종료
@@ -405,8 +357,42 @@ const SphericalDynamics = {
       });
     });
     
-    // click: 플래그 초기화
+    // click: 클릭한 지점이 중심점으로 이동
     canvas.addEventListener('click', (e) => {
+      // 드래그가 아닌 클릭인 경우에만 중심점 이동
+      if (!hasDragged) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // 클릭한 지점의 3D 좌표 계산
+        const point = ColorSphereSystem.screenToSphere(x, y, canvas);
+        if (point) {
+          // 클릭한 지점이 중심점이 되도록 회전 계산
+          const targetVector = [point.x, point.y, point.z];
+          const currentVector = [0, 0, 1]; // 현재 중심점 (북극)
+          
+          // 회전 축과 각도 계산
+          const axis = [
+            currentVector[1] * targetVector[2] - currentVector[2] * targetVector[1],
+            currentVector[2] * targetVector[0] - currentVector[0] * targetVector[2],
+            currentVector[0] * targetVector[1] - currentVector[1] * targetVector[0]
+          ];
+          
+          const dot = currentVector[0] * targetVector[0] + currentVector[1] * targetVector[1] + currentVector[2] * targetVector[2];
+          const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
+          
+          if (angle > 0.01) {
+            const normalizedAxis = this.normalize(axis);
+            const targetQ = this.fromAxisAngle(normalizedAxis, angle);
+            
+            // 부드러운 애니메이션으로 중심점 이동
+            this.animateToQuaternion(sphereState, targetQ, canvas);
+          }
+        }
+      }
+      
+      // 플래그 초기화
       hasDragged = false;
       dragStartPos = null;
     });
@@ -443,34 +429,7 @@ const SphericalDynamics = {
         }, 100);
       }
     });
-    },
-  
-  // 부드러운 쿼터니언 애니메이션
-  animateToQuaternion(sphereState, targetQ, canvas) {
-    const startQ = [...sphereState.Q];
-    const duration = 200;
-    const startTime = Date.now();
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      
-      sphereState.Q = this.slerp(startQ, targetQ, easeProgress);
-      
-      // 구체 다시 그리기
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        ColorSphereSystem.render3D(ctx, sphereState);
-      }
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    requestAnimationFrame(animate);
-  }
+  },  
 };
 
 /* ==============================
@@ -479,9 +438,87 @@ const SphericalDynamics = {
 
 // 색상 구체 시스템 (구면좌표 → RGB 매핑 + 3D 렌더링)
 const ColorSphereSystem = {
+
   // ========================================
   // 🎨 색상 매핑 시스템
   // ========================================
+
+  // 구면좌표에서 8자리 헥스코드 찾기 (역방향) - HSL 기반 단순화
+  findColor(theta, phi, alpha = 255) {
+    // theta (위도각) → Saturation, Lightness
+    const thetaDeg = theta * 180 / Math.PI;
+    const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177);
+    const isEquatorRegion = (Math.abs(thetaDeg - 90) < 3);
+    
+    let saturation, lightness;
+    
+    if (isPolarRegion) {
+      // 극지방: 순백/순흑 (S=0)
+      saturation = 0;
+      lightness = thetaDeg < 3 ? 100 : 0; // 북극=백색, 남극=흑색
+    } else if (isEquatorRegion) {
+      // 적도: 순색 (S=100%, L=50%)
+      saturation = 100;
+      lightness = 50;
+    } else {
+      // 그라데이션 영역: 채도와 명도 스케일링
+      saturation = 100;
+      lightness = Math.round(((Math.PI - theta) / Math.PI) * 100);
+    }
+    
+    // phi (경도각) → Hue
+    const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
+    
+    return ColorConverter.hslToHex(hue, saturation, lightness, alpha);
+  },
+
+  // 화면 좌표를 구면 좌표로 변환
+  screenToSphere(screenX, screenY, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // 화면 좌표를 중심점 기준으로 변환
+    const x = screenX - centerX;
+    const y = screenY - centerY;
+    
+    // 구체 반지름 계산 (캔버스 크기에 비례)
+    const radius = Math.min(rect.width, rect.height) / 2;
+    
+    // 구체 표면으로 투영
+    const distance = Math.sqrt(x * x + y * y);
+    if (distance > radius) return null; // 구체 밖 클릭
+    
+    // Z 좌표 계산 (구체 표면)
+    const z = Math.sqrt(radius * radius - x * x - y * y);
+    
+    // 정규화된 3D 좌표 반환
+    return {
+      x: x / radius,
+      y: y / radius,
+      z: z / radius
+    };
+  },
+
+  // 8자리 헥스코드에서 구면좌표 찾기
+  findPosition(hexColor) {
+    const targetHex = chroma(hexColor).hex(); // 포매터 방식으로 6자리 변환
+    
+    // 구체 전체 검색
+    for (let theta = 0; theta <= Math.PI; theta += 0.05) {
+      for (let phi = -Math.PI; phi <= Math.PI; phi += 0.05) {
+        const color = this.calculateColor(theta, phi);
+        const testHex = chroma.rgb(color.r, color.g, color.b).hex(); // 포매터 방식으로 6자리 변환
+        
+        if (testHex === targetHex) {
+          return { theta, phi };
+        }
+      }
+    }
+    
+    // 검색 실패 시 예외 발생
+    throw new Error(`색상을 찾을 수 없습니다: ${hexColor}`);
+  },
   
   // 구면좌표에서 색상 계산
   calculateColor(theta, phi) {
@@ -894,7 +931,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
       const getRGB = (color) => {
         // 빈 문자열이나 null 처리
         if (!color || color === 'transparent') {
-          return [255, 255, 255]; // 기본값: 흰색
+          throw new Error('유효하지 않은 색상 값입니다');
         }
         
         // rgba 형식 우선 처리 (성능 최적화)
@@ -919,8 +956,8 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
           }
         }
         
-        // 기본값 반환 (파싱 실패시)
-        return [128, 128, 128]; // 회색
+        // 파싱 실패시 예외 발생
+        throw new Error(`색상 파싱 실패: ${color}`);
       };
       
       const [r1, g1, b1] = getRGB(color1);
@@ -1547,8 +1584,11 @@ window.addEventListener('DOMContentLoaded', async () => {
       initialize3DCanvas(picker) {
         const canvas3D = picker.querySelector('.color-canvas-3d');
         if (canvas3D) {
-          const ctx = canvas3D.getContext('2d');
-          ColorSphereSystem.render3D(ctx, this.sphereState);
+          // 통합 초기화 함수 사용 (컬러피커용)
+          initializeColorSphere(
+            `.custom-color-picker[data-target="${picker.dataset.target}"] .color-canvas-3d`,
+            (canvas) => this.updateCenterColorRealtime(canvas)
+          );
         }
       },
       
@@ -1618,7 +1658,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
             
             const rgb = { r, g, b };
-            const hexColor = ColorSystem.rgbaToHex(r, g, b, alpha);
+            const hexColor = ColorConverter.rgbaToHex(r, g, b, alpha);
             
             this.updateColorInputs(targetId, rgb, alpha, hexColor);
             
@@ -1696,7 +1736,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           }
           
           const rgb = { r, g, b };
-          const hexColor = ColorSystem.rgbaToHex(r, g, b, alpha);
+          const hexColor = ColorConverter.rgbaToHex(r, g, b, alpha);
           
           // UI 업데이트 (드래그 시 실시간 입력값 변경)
           requestAnimationFrame(() => {
@@ -1719,8 +1759,8 @@ window.addEventListener('DOMContentLoaded', async () => {
           
           const hue = parseInt(hueSlider?.value || 0);
           const alpha = parseInt(alphaSlider?.value || 255);
-          const rgb = ColorSystem.hsvToRgb(hue, saturation, value);
-          const hexColor = ColorSystem.rgbaToHex(rgb.r, rgb.g, rgb.b, alpha);
+          const rgb = ColorConverter.hsvToRgb(hue, saturation, value);
+          const hexColor = ColorConverter.rgbaToHex(rgb.r, rgb.g, rgb.b, alpha);
           
           this.updateColorInputs(targetId, rgb, alpha, hexColor);
         };
@@ -1737,7 +1777,12 @@ window.addEventListener('DOMContentLoaded', async () => {
             
             if (panelHexInput) {
               const currentHex = panelHexInput.value.replace('#', '');
-              let currentAlpha = 255; // 기본값
+              let currentAlpha = 255;
+              
+              // 알파값이 없으면 예외 발생
+              if (!currentHex || currentHex.length < 6) {
+                throw new Error('유효하지 않은 헥스 색상입니다');
+              }
               
               // 현재 알파값 추출 (8자리 hex인 경우)
               if (currentHex.length === 8) {
@@ -2222,7 +2267,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             const b = parseInt(hexValue.substr(4, 2), 16);
             
             // 구체 위치 찾기 및 이동
-            const position = SphericalDynamics.findPosition('#' + hexValue.substr(0, 6));
+            const position = ColorSphereSystem.findPosition('#' + hexValue.substr(0, 6));
             if (position) {
               // 각 구체마다 독립적인 sphereState 생성 (기존 상태 복사)
               const independentSphereState = {
@@ -2249,25 +2294,17 @@ window.addEventListener('DOMContentLoaded', async () => {
               const dot = currentVector[0] * targetVector[0] + currentVector[1] * targetVector[1] + currentVector[2] * targetVector[2];
               const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
               
-              if (angle > 0.01) { // 의미있는 회전이 필요한 경우
-                const normalizedAxis = SphericalDynamics.normalize(axis);
-                const targetQ = SphericalDynamics.fromAxisAngle(normalizedAxis, angle);
-                
-                // 독립적인 상태로 애니메이션 (지연 시간 추가로 순차 실행)
-                setTimeout(() => {
-                  SphericalDynamics.animateToQuaternion(
-                    independentSphereState, 
-                    targetQ, 
-                    canvas
-                  );
-                }, index * 100); // 각 구체마다 100ms씩 지연
-              } else {
-                // 회전이 필요 없는 경우 즉시 렌더링
-                setTimeout(() => {
-                  const ctx = canvas.getContext('2d');
-                  ColorSphereSystem.render3D(ctx, independentSphereState);
-                }, index * 50);
-              }
+              const normalizedAxis = SphericalDynamics.normalize(axis);
+              const targetQ = SphericalDynamics.fromAxisAngle(normalizedAxis, angle);
+              
+              // 모든 회전에 대해 부드러운 애니메이션 적용 (지연 시간 추가로 순차 실행)
+              setTimeout(() => {
+                SphericalDynamics.animateToQuaternion(
+                  independentSphereState, 
+                  targetQ, 
+                  canvas
+                );
+              }, index * 100); // 각 구체마다 100ms씩 지연
             }
           }
         }
@@ -2564,12 +2601,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       ButtonSystem.StyleManager.scheduleContrastUpdate();
     }
   }, { passive: true });
-
+/*
   window.AppUtils = AppUtils;
   window.ButtonSystem = ButtonSystem;
   window.ThemeManager = ThemeManager;
   window.LargeTextManager = LargeTextManager;
   window.SizeControlManager = SizeControlManager;
   window.CustomPaletteManager = CustomPaletteManager;
-
+*/
 });
