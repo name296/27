@@ -1,108 +1,29 @@
-/* 버튼 컴포넌트 시스템 - 시스테매틱 모듈 구조 */
-
-// Chroma.js 로컬 로딩
+/* ==============================
+  Chroma.js 로컬 로딩
+  ============================== */
 const chromaScript = document.createElement('script');
 chromaScript.src = './chroma.min.js';
 chromaScript.onload = () => {
   console.log('🎨 Chroma.js 로드 완료!', typeof chroma);
-  
-  // 모든 색상 관련 기능 초기화
-  initializeColorFeatures();
-};
-chromaScript.onerror = () => {
-  console.error('❌ Chroma.js 로드 실패! 색상 기능을 사용할 수 없습니다.');
-  // 색상 기능 비활성화
-  document.body.classList.add('color-disabled');
-};
-document.head.appendChild(chromaScript);
-
-// 색상 기능 초기화 함수
-function initializeColorFeatures() {
   // 색상구체 캔버스가 있는 경우에만 초기화
   if (document.querySelector('#color-sphere-canvas')) {
-    initializeColorSphere();
+    Mechanics.initializeColorSphere();
   }
-  
-  // 컬러피커 초기화
-  if (typeof ButtonSystem !== 'undefined' && ButtonSystem.CustomColorPicker) {
-    ButtonSystem.CustomColorPicker.init();
-  }
-  
-  console.log('🎨 모든 색상 기능 초기화 완료!');
-}
-
-/* ==============================
-  🎨 색상구체 초기화
-  ============================== */
-function initializeColorSphere(selector = '#color-sphere-canvas', onUpdate = null) {
-  const canvas = document.querySelector(selector);
-  if (!canvas) {
-    console.error('❌ 색상구체 캔버스를 찾을 수 없습니다.');
-    return;
-  }
-
-  // 상태 객체 생성
-  const sphereState = {
-    dragging: false,
-    v0: null,
-    Q: [0, 0, 0, 1],  // 북극점 중심 정렬
-    last: [0, 0],
-    zoom: 1.0,
-    selectedColor: { h: 0, s: 0, l: 100 }, // 북극점 색상 (흰색)
-    isDragging: false
-  };
-  
-  // 렌더링 및 인터랙션 설정
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ColorSphereSystem.render3D(ctx, sphereState);
-  
-  // 인터랙션 설정
-  SphericalDynamics.setupCanvasInteraction(
-    canvas, 
-    sphereState, 
-    onUpdate || ((canvas) => {
-      console.log('색상 업데이트:', canvas);
-    })
-  );
-}
-
-/* ==============================
-  📋 시스템 정보
-  ============================== */
-/* 
-  📋 시스템 정보
-  프로젝트: 버튼 컴포넌트 시스템 v1.0.0
-  목적: 동적 팔레트 시스템과 3D 색상 선택기
-  아키텍처: 모듈형 시스템 (CSSOM + 3D Graphics)
-  
-  🏗️ 모듈 구조:
-  ├── ColorConverter: 색상 변환 (RGB ↔ HSV ↔ HSL ↔ HEX)
-  ├── SphericalDynamics: 구면 역학 (좌표계 + 회전 + 상호작용)
-  ├── ColorSphereSystem: 색상 구체 (구면좌표 → RGB 매핑 + 렌더링)
-  ├── AppUtils: 공통 유틸리티 (SVG, CSS 주입)
-  ├── ButtonSystem: 버튼 컴포넌트 관리
-  └── CustomPaletteManager: 커스텀 팔레트 UI
-  
-  🔗 종속성: index.html ↔ style.css ↔ script.js
-*/
+};
+document.head.appendChild(chromaScript);
 
 /* ==============================
   🎨 색상 컨버터 모듈
   ============================== */
-
-// 색상 컨버터 공통 모듈 (chroma.js 로드 후 실행)
 const ColorConverter = {
   // 8자리 헥스코드 변환
   rgbaToHex(r, g, b, a = 255) {
     return chroma.rgb(r, g, b).alpha(a / 255).hex('rgba').toUpperCase();
   },
-  
   // RGBA 직접 생성 (파싱 오버헤드 없음)
-  createRGBA(r, g, b, a = 255) {
+  rgba(r, g, b, a = 255) {
     return { r, g, b, a };
   },
-
   // 8자리 헥스코드 파싱
   hexToRgba(hex) {
     const color = chroma(hex);
@@ -114,7 +35,6 @@ const ColorConverter = {
       a: Math.round(color.alpha() * 255)
     };
   },
-  
   // HSV → RGB 변환
   hsvToRgb(h, s, v) {
     const rgb = chroma.hsv(h, s, v).rgb();
@@ -124,12 +44,10 @@ const ColorConverter = {
       b: rgb[2]
     };
   },
-  
   // HSV → 8자리 헥스코드 변환
   hsvToHex(h, s, v, a = 255) {
     return chroma.hsv(h, s, v).alpha(a / 255).hex('rgba').toUpperCase();
   },
-  
   // RGB → HSL 변환
   rgbToHsl(r, g, b) {
     const hsl = chroma.rgb(r, g, b).hsl();
@@ -139,7 +57,6 @@ const ColorConverter = {
       l: Math.round(hsl[2] * 100)
     };
   },
-  
   // HSL → RGB 변환
   hslToRgb(h, s, l) {
     const rgb = chroma.hsl(h, s, l).rgb();
@@ -149,7 +66,6 @@ const ColorConverter = {
       b: rgb[2]
     };
   },
-  
   // HSL → 8자리 헥스코드 변환
   hslToHex(h, s, l, a = 255) {
     return chroma.hsl(h, s, l).alpha(a / 255).hex('rgba').toUpperCase();
@@ -157,49 +73,378 @@ const ColorConverter = {
 };
 
 /* ==============================
-  🌍 구면 역학 시스템 모듈
+  🌐 통합 위상 시스템 모듈
   ============================== */
 
-// 구면 역학 시스템 (구면좌표계 + 3D 회전 + 상호작용)
-const SphericalDynamics = {
+const Topology = {
   // ========================================
-  // 📐 좌표계 변환 시스템
+  // 🎯 통합 위상 정의
+  // ========================================
+  
+  // 공통 좌표계 상수
+  COORDINATE_SYSTEM: {
+    // 구면 좌표계 (3D 구체 표면)
+    SPHERICAL: {
+      NORTH_POLE: { theta: 0, phi: 0 },      // 북극 (0, 0)
+      SOUTH_POLE: { theta: Math.PI, phi: 0 }, // 남극 (π, 0)
+      EQUATOR: { theta: Math.PI/2, phi: 0 }   // 적도 (π/2, 0)
+    },
+    
+    // 직교 좌표계 (3D 공간)
+    CARTESIAN: {
+      ORIGIN: { x: 0, y: 0, z: 0 },         // 원점
+      NORTH_POLE: { x: 0, y: 0, z: 1 },    // 북극
+      SOUTH_POLE: { x: 0, y: 0, z: -1 }     // 남극
+    },
+    
+    
+    // 구체 극점 색상 정의 (정적 상수)
+    POLAR_COLORS: {
+      NORTH_POLE: { r: 255, g: 255, b: 255 }, // 북극: 하얀색
+      SOUTH_POLE: { r: 0, g: 0, b: 0 }        // 남극: 검정색
+    },
+
+    // 화면 좌표계 (2D 평면)
+    SCREEN: {
+      CENTER: { x: 0, y: 0 },                // 화면 중심
+      UNIT_RADIUS: 1                         // 단위 반지름
+    },
+  },
+
+  // ========================================
+  // 🎨 표면 색상 구성
+  // ========================================
+  
+  // 구면좌표 → 표면색상 / 구간없음
+  calculateColor(theta, phi) {
+    const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
+    const h6 = Math.floor(hue / 60) % 6;
+    const f = (hue % 60) / 60;
+    
+    const getHueColor = () => {
+      switch(h6) {
+        case 0: return { r: 255, g: Math.round(f * 255), b: 0 };
+        case 1: return { r: Math.round((1-f) * 255), g: 255, b: 0 };
+        case 2: return { r: 0, g: 255, b: Math.round(f * 255) };
+        case 3: return { r: 0, g: Math.round((1-f) * 255), b: 255 };
+        case 4: return { r: Math.round(f * 255), g: 0, b: 255 };
+        case 5: return { r: 255, g: 0, b: Math.round((1-f) * 255) };
+      }
+    };
+    
+    const thetaDeg = theta * 180 / Math.PI;
+    const lightnessRatio = thetaDeg < 90 ? 1.0 - ((thetaDeg - 3) / 84) * 0.5 : 0.5 - ((thetaDeg - 93) / 84) * 0.5;
+    const { r: baseR, g: baseG, b: baseB } = getHueColor();
+    const totalSaturation = Math.sin(theta);
+    const gray = Math.round(lightnessRatio * 255);
+    
+    return {
+      r: Math.round(gray + (baseR - gray) * totalSaturation),
+      g: Math.round(gray + (baseG - gray) * totalSaturation),
+      b: Math.round(gray + (baseB - gray) * totalSaturation)
+    };
+  },
+
+  // 구면좌표 → 색상 / 구간있음
+  calculateColor2(theta, phi) {
+    const thetaDeg = theta * 180 / Math.PI;
+    const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177);
+    const isEquatorRegion = (Math.abs(thetaDeg - 90) < 3);
+    
+    if (isPolarRegion) {
+      return thetaDeg < 3 ? this.COORDINATE_SYSTEM.POLAR_COLORS.NORTH_POLE : this.COORDINATE_SYSTEM.POLAR_COLORS.SOUTH_POLE;
+    }
+    
+    const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
+    const h6 = Math.floor(hue / 60) % 6;
+    const f = (hue % 60) / 60;
+    
+    const getHueColor = () => {
+      switch(h6) {
+        case 0: return { r: 255, g: Math.round(f * 255), b: 0 };
+        case 1: return { r: Math.round((1-f) * 255), g: 255, b: 0 };
+        case 2: return { r: 0, g: 255, b: Math.round(f * 255) };
+        case 3: return { r: 0, g: Math.round((1-f) * 255), b: 255 };
+        case 4: return { r: Math.round(f * 255), g: 0, b: 255 };
+        case 5: return { r: 255, g: 0, b: Math.round((1-f) * 255) };
+      }
+    };
+    
+    if (isEquatorRegion) {
+      return getHueColor();
+    }
+    
+    const lightnessRatio = thetaDeg < 90 ? 1.0 - ((thetaDeg - 3) / 84) * 0.5 : 0.5 - ((thetaDeg - 93) / 84) * 0.5;
+    const { r: baseR, g: baseG, b: baseB } = getHueColor();
+    const totalSaturation = Math.sin(theta);
+    const gray = Math.round(lightnessRatio * 255);
+    
+    return {
+      r: Math.round(gray + (baseR - gray) * totalSaturation),
+      g: Math.round(gray + (baseG - gray) * totalSaturation),
+      b: Math.round(gray + (baseB - gray) * totalSaturation)
+    };
+  },  
+};
+
+// 확대/축소 슬라이더 설정 함수
+function setupZoomSlider(sphereState, canvas) {
+  const zoomSlider = document.getElementById('zoom-slider');
+  const zoomValue = document.querySelector('.zoom-value');
+  
+  if (!zoomSlider || !zoomValue) return;
+  
+  // 슬라이더 값 업데이트
+  const updateZoomValue = (value) => {
+    const percentage = Math.round(value * 100);
+    zoomValue.textContent = `${percentage}%`;
+  };
+  
+  // 초기값 설정
+  updateZoomValue(sphereState.zoom);
+  
+  // 슬라이더 이벤트 리스너
+  zoomSlider.addEventListener('input', (e) => {
+    const newZoom = parseFloat(e.target.value);
+    sphereState.zoom = newZoom;
+    
+    // 값 표시 업데이트
+    updateZoomValue(newZoom);
+    
+    // 구체 다시 그리기
+    const ctx = canvas.getContext('2d');
+    Mechanics.RenderColorSphere(ctx, sphereState);
+  });
+  
+  // 키보드 접근성
+  zoomSlider.addEventListener('keydown', (e) => {
+    const step = 0.1;
+    let newZoom = sphereState.zoom;
+    
+    switch(e.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+        e.preventDefault();
+        newZoom = Math.min(3.0, sphereState.zoom + step);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        e.preventDefault();
+        newZoom = Math.max(0.1, sphereState.zoom - step);
+        break;
+      case 'Home':
+        e.preventDefault();
+        newZoom = 0.1;
+        break;
+      case 'End':
+        e.preventDefault();
+        newZoom = 3.0;
+        break;
+      default:
+        return;
+    }
+    
+    // 값 업데이트
+    sphereState.zoom = newZoom;
+    zoomSlider.value = newZoom;
+    updateZoomValue(newZoom);
+    
+    // 구체 다시 그리기
+    const ctx = canvas.getContext('2d');
+    Mechanics.RenderColorSphere(ctx, sphereState);
+  });
+}
+
+// 색상 정보 업데이트 설정 함수
+function setupColorInfoUpdate(sphereState, canvas) {
+  const colorPreview = document.getElementById('selected-color-preview');
+  const colorHex = document.getElementById('selected-color-hex');
+  const colorRgb = document.getElementById('selected-color-rgb');
+  const colorHsl = document.getElementById('selected-color-hsl');
+  
+  if (!colorPreview || !colorHex || !colorRgb || !colorHsl) return;
+  
+  // 색상 정보 업데이트 함수
+  const updateColorInfo = () => {
+    if (!sphereState.selectedColor) return;
+    
+    const { r, g, b } = sphereState.selectedColor;
+    
+    // HEX 색상
+    const hex = ColorConverter.rgbaToHex(r, g, b, 255);
+    
+    // RGB 색상
+    const rgb = `rgb(${r}, ${g}, ${b})`;
+    
+    // HSL 색상
+    const hsl = ColorConverter.rgbToHsl(r, g, b);
+    const hslString = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+    
+    // UI 업데이트
+    colorPreview.style.background = hex;
+    colorHex.textContent = hex;
+    colorRgb.textContent = rgb;
+    colorHsl.textContent = hslString;
+  };
+  
+  // 초기 색상 설정
+  updateColorInfo();
+  
+  // 색상 변경 감지를 위한 인터벌 (간단한 방법)
+  setInterval(() => {
+    if (sphereState.selectedColor) {
+      updateColorInfo();
+    }
+  }, 100);
+}
+
+/* ==============================
+  🌍 역학 시스템 모듈
+  ============================== */
+
+// 역학 시스템
+const Mechanics = {
+  // ========================================
+  // 🌍 전역 통합 색구체 상태
+  // ========================================
+  
+  UnifiedSphereState: {
+    dragging: false,
+    v0: null,
+    Q: [1, 0, 0, 0],  // 북극점 중심 정렬
+    last: [0, 0],
+    zoom: 1.0,
+    selectedColor: { r: 0, g: 0, b: 0 }, // 렌더링 색구체의 표면 중심점 색상과 일치
+    isDragging: false
+  },
+
+  // ========================================
+  // 🚀 초기화 시스템
+  // ========================================
+  
+  // 색구체 초기화 함수 (코드간 의존성 최적화)
+  initializeColorSphere(selector = '#color-sphere-canvas', onUpdate = null) {
+    const canvas = document.querySelector(selector);
+    if (!canvas) return;
+    
+    // 렌더링 및 인터랙션 설정
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.RenderColorSphere(ctx, this.UnifiedSphereState);
+    
+    // 인터랙션 설정 (코드간 의존성 최적화)
+    this.setupCanvasInteraction(canvas, this.UnifiedSphereState, onUpdate);
+    
+    // 확대/축소 슬라이더 설정 (코드간 의존성 최적화)
+    this.setupZoomSlider(this.UnifiedSphereState, canvas);
+    
+    // 색상 정보 업데이트 설정 (코드간 의존성 최적화)
+    this.setupColorInfoUpdate(this.UnifiedSphereState, canvas);
+  },
+
+  // 확대/축소 슬라이더 설정 함수 (코드간 의존성 최적화)
+  setupZoomSlider(sphereState, canvas) {
+    const zoomSlider = document.getElementById('zoom-slider');
+    const zoomValue = document.querySelector('.zoom-value');
+    
+    if (!zoomSlider || !zoomValue) return;
+    
+    // 슬라이더 이벤트 리스너
+    zoomSlider.addEventListener('input', (e) => {
+      sphereState.zoom = parseFloat(e.target.value);
+      
+      // 구체 다시 그리기
+      this.RenderColorSphere(canvas.getContext('2d'), sphereState);
+      
+      // 값 표시 업데이트
+      zoomValue.textContent = `${Math.round(sphereState.zoom * 100)}%`;
+    });
+    
+    // 초기값 설정
+    zoomSlider.value = sphereState.zoom;
+    zoomValue.textContent = `${Math.round(sphereState.zoom * 100)}%`;
+  },
+
+  // 색상 정보 업데이트 설정 함수 (코드간 의존성 최적화)
+  setupColorInfoUpdate(sphereState, canvas) {
+    const colorHex = document.querySelector('.color-hex');
+    const colorRgb = document.querySelector('.color-rgb');
+    const colorHsl = document.querySelector('.color-hsl');
+    
+    if (!colorHex || !colorRgb || !colorHsl) return;
+    
+    const updateColorInfo = () => {
+      const hex = `#${sphereState.selectedColor.r.toString(16).padStart(2, '0')}${sphereState.selectedColor.g.toString(16).padStart(2, '0')}${sphereState.selectedColor.b.toString(16).padStart(2, '0')}`.toUpperCase();
+      const rgb = `rgb(${sphereState.selectedColor.r}, ${sphereState.selectedColor.g}, ${sphereState.selectedColor.b})`;
+      const hslString = `hsl(${Math.round((sphereState.selectedColor.r + sphereState.selectedColor.g + sphereState.selectedColor.b) / 3 * 360 / 255)}, 50%, 50%)`;
+      
+      colorHex.textContent = hex;
+      colorRgb.textContent = rgb;
+      colorHsl.textContent = hslString;
+    };
+    
+    // 초기 색상 설정
+    updateColorInfo();
+    
+    // 주기적 업데이트 (100ms마다)
+    setInterval(() => {
+      if (sphereState.selectedColor) {
+        updateColorInfo();
+      }
+    }, 100);
+  },
+
+  // ========================================
+  // 🔄 좌표 변환 시스템
   // ========================================
   
   // 직교좌표 → 구면좌표 변환
   cartesianToSpherical(x, y, z) {
     const r = Math.sqrt(x * x + y * y + z * z);
-    const theta = Math.acos(Math.max(-1, Math.min(1, z / r))); // 위도각 (0 ~ π)
-    const phi = Math.atan2(y, x); // 경도각 (-π ~ π)
-    return { r, theta, phi };
+    return { r, theta: Math.acos(Math.max(-1, Math.min(1, z / r))), phi: Math.atan2(y, x) };
   },
   
   // 구면좌표 → 직교좌표 변환
   sphericalToCartesian(r, theta, phi) {
-    const x = r * Math.sin(theta) * Math.cos(phi);
-    const y = r * Math.sin(theta) * Math.sin(phi);
-    const z = r * Math.cos(theta);
-    return { x, y, z };
+    return { x: r * Math.sin(theta) * Math.cos(phi), y: r * Math.sin(theta) * Math.sin(phi), z: r * Math.cos(theta) };
+  },
+  
+  // 화면좌표 → 구면표면 좌표 변환
+  screenToSphericalSurface(screenX, screenY, radius) {
+    if (Math.sqrt(screenX * screenX + screenY * screenY) > radius) return null;    
+    const cartesian = { x: screenX/radius, y: screenY/radius, z: Math.sqrt(radius * radius - screenX * screenX - screenY * screenY)/radius };
+    return { screen: { x: screenX, y: screenY }, cartesian, spherical: this.cartesianToSpherical(cartesian.x, cartesian.y, cartesian.z) };
+  },
+
+  // 마우스 클릭 → 구면 좌표
+  mouseClickToSphericalCoordinates(screenX, screenY, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    return this.screenToSphericalSurface(screenX - rect.width / 2, screenY - rect.height / 2, Math.min(rect.width, rect.height) / 2);
+  },
+
+  // 색상 → 구면 좌표 변환
+  colorToCoordinate(hexColor) {
+    for (let theta = 0; theta <= Math.PI; theta += 0.05) {
+      for (let phi = -Math.PI; phi <= Math.PI; phi += 0.05) {
+        const color = Topology.calculateColor(theta, phi);
+        if (chroma.rgb(color.r, color.g, color.b).hex() === chroma(hexColor).hex()) return { theta, phi };
+      }
+    }
   },
 
   // ========================================
-  // 🔄 회전 시스템  
+  // 🔄 회전 시스템
   // ========================================
-
-  // 벡터 정규화
   normalize(v) {
     const length = Math.sqrt(v.reduce((sum, val) => sum + val * val, 0));
-    if (length === 0) {
-      throw new Error('영벡터는 정규화할 수 없습니다');
-    }
+    if (length === 0) throw new Error('영벡터는 정규화할 수 없습니다');
     return v.map(val => val / length);
   },
   
   // 쿼터니언 생성
   fromAxisAngle(axis, angle) {
-    const halfAngle = angle * 0.5;
-    const s = Math.sin(halfAngle);
-    return [axis[0] * s, axis[1] * s, axis[2] * s, Math.cos(halfAngle)];
+    const s = Math.sin(angle * 0.5);
+    return [axis[0] * s, axis[1] * s, axis[2] * s, Math.cos(angle * 0.5)];
   },
   
   // 쿼터니언 곱셈
@@ -214,89 +459,97 @@ const SphericalDynamics = {
   
   // 쿼터니언으로 벡터 회전
   rotateVector(q, v) {
-    const qv = [v[0], v[1], v[2], 0];
-    const qConj = [-q[0], -q[1], -q[2], q[3]];
-    const temp = this.multiply(q, qv);
-    const result = this.multiply(temp, qConj);
-    return [result[0], result[1], result[2]];
+    return this.multiply(this.multiply(q, [v[0], v[1], v[2], 0]), [-q[0], -q[1], -q[2], q[3]]).slice(0, 3);
   },
   
   // SLERP (구면 선형 보간)
   slerp(q1, q2, t) {
-    let dot = q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3];
+    const dot = q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3];
     const theta0 = Math.acos(Math.abs(dot));
     const theta = theta0 * t;
     const sinTheta0 = Math.sin(theta0);
-    const sinTheta = Math.sin(theta);
-    const s0 = Math.cos(theta) - dot * sinTheta / sinTheta0;
-    const s1 = sinTheta / sinTheta0;
-    
-    return [
-      s0 * q1[0] + s1 * q2[0],
-      s0 * q1[1] + s1 * q2[1],
-      s0 * q1[2] + s1 * q2[2],
-      s0 * q1[3] + s1 * q2[3]
-    ];
+    const s0 = Math.cos(theta) - dot * Math.sin(theta) / sinTheta0;
+    const s1 = Math.sin(theta) / sinTheta0;
+    return [s0 * q1[0] + s1 * q2[0], s0 * q1[1] + s1 * q2[1], s0 * q1[2] + s1 * q2[2], s0 * q1[3] + s1 * q2[3]];
   },
-
-  // ========================================
-  // 🎮 3D 구체 상호작용 시스템
-  // ========================================
   
-  // 드래그 회전 계산 (트랙볼 방식)
+  // 드래그 회전 계산
   fromDragRotation(dx, dy, sensitivity = 0.005) {
-    const angle = Math.sqrt(dx * dx + dy * dy) * sensitivity;
-    if (angle < 1e-6) return [1, 0, 0, 0]; // 단위 쿼터니언
-    
-    const axis = this.normalize([dy, -dx, 0]); // 범용 정규화
-    return this.fromAxisAngle(axis, angle);
+    return Math.sqrt(dx * dx + dy * dy) * sensitivity < 1e-6 ? [1, 0, 0, 0] : this.fromAxisAngle(this.normalize([dy, -dx, 0]), Math.sqrt(dx * dx + dy * dy) * sensitivity);
   },
   
-  // 클릭 회전 계산 (드래그와 동일한 좌표계)
+  // 클릭 회전 계산
   fromClickRotation(screenX, screenY) {
-    // 드래그와 동일한 방식: 클릭 거리에 비례한 회전
-    const distance = Math.sqrt(screenX * screenX + screenY * screenY);
-    const angle = distance * Math.PI * 0.5; // 클릭 거리에 비례
-    
-    if (angle < 1e-6) return [1, 0, 0, 0]; // 단위 쿼터니언
-    
-    // 드래그와 동일한 축 계산 방식
-    const axis = this.normalize([screenY, -screenX, 0]);
-    return this.fromAxisAngle(axis, angle);
+    return Math.sqrt(screenX * screenX + screenY * screenY) * Math.PI * 0.5 < 1e-6 ? [1, 0, 0, 0] : this.fromAxisAngle(this.normalize([screenY, -screenX, 0]), Math.sqrt(screenX * screenX + screenY * screenY) * Math.PI * 0.5);
   },
   
-  // 클릭 회전 애니메이션
-  animateToQuaternion(sphereState, targetQ, canvas) {
-    const startQ = [...sphereState.Q];
-    const duration = 300;
-    const startTime = Date.now();
+  // ========================================
+  // 🎨 구체 표면 렌더링
+  // ========================================
+  
+  // 3D 구체 렌더링 (코드간 의존성 최적화)
+  RenderColorSphere(ctx, sphereState) {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = (Math.min(width, height) / 2 - 20) * sphereState.zoom;
     
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      
-      sphereState.Q = this.slerp(startQ, targetQ, easeProgress);
-      
-      // 구체 다시 그리기
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        ColorSphereSystem.render3D(ctx, sphereState);
-      }
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
+    // 캔버스 초기화
+    ctx.clearRect(0, 0, width, height);
     
-    requestAnimationFrame(animate);
+    // 3D 색상구체 렌더링
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
+    
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const dx = x - centerX;
+        const dy = y - centerY;
+        
+        if (dx * dx + dy * dy <= radius * radius) {
+          const screenX = dx / radius;
+          const screenY = dy / radius;
+          const screenZ = Math.sqrt(Math.max(0, 1 - screenX * screenX - screenY * screenY));
+          
+          const rotatedVector = this.rotateVector(sphereState.Q, [screenX, screenY, screenZ]);
+          const color = Topology.calculateColor(Math.acos(Math.max(-1, Math.min(1, rotatedVector[2]))), Math.atan2(rotatedVector[1], rotatedVector[0]));
+          
+          const index = (y * width + x) * 4;
+          data[index] = color.r;
+          data[index + 1] = color.g;
+          data[index + 2] = color.b;
+          data[index + 3] = 255;
+        }
+      }
+    }
+    
+    ctx.putImageData(imageData, 0, 0);
+    
+    // 중심점 표시 (변수 의존성 최적화)
+    if (sphereState.selectedColor) {
+      ctx.fillStyle = `rgb(${sphereState.selectedColor.r}, ${sphereState.selectedColor.g}, ${sphereState.selectedColor.b})`;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // 대비되는 테두리 (변수 의존성 최적화)
+      const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+      ctx.strokeStyle = brightness > 127 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
   },
-
-  // 3D 캔버스 상호작용 설정
+  
+  // ========================================
+  // 🎮 상호작용 시스템
+  // ========================================
+  
+  // 3D 캔버스 상호작용 설정 (코드간 의존성 최적화)
   setupCanvasInteraction(canvas, sphereState, onUpdate) {
-    let renderPending = false;
     let dragStartPos = null;
     let hasDragged = false;
+    let ctx = canvas.getContext('2d');
     
     // pointerdown: 드래그 시작
     canvas.addEventListener('pointerdown', (e) => {
@@ -309,7 +562,7 @@ const SphericalDynamics = {
       canvas.style.cursor = 'grabbing';
     });
     
-    // pointermove: 회전
+    // 드래그 회전
     canvas.addEventListener('pointermove', (e) => {
       if (!sphereState.dragging) return;
       
@@ -319,16 +572,11 @@ const SphericalDynamics = {
       
       // 드래그 감지
       if (!hasDragged && dragStartPos) {
-        const dragDistance = Math.hypot(e.clientX - dragStartPos[0], e.clientY - dragStartPos[1]);
-        if (dragDistance > 3) {
-          hasDragged = true;
-        }
+        if (Math.hypot(e.clientX - dragStartPos[0], e.clientY - dragStartPos[1]) > 3) hasDragged = true;
       }
       
       // 회전 적용
-      const s = 0.45 * Math.min(canvas.clientWidth, canvas.clientHeight);
-      const sensitivity = 1 / s;
-      const dq = this.fromDragRotation(dx, dy, sensitivity);
+      const dq = this.fromDragRotation(dx, dy, 1 / (0.45 * Math.min(canvas.clientWidth, canvas.clientHeight)));
       
       if (dq[0] !== 1) {
         sphereState.Q = this.multiply(sphereState.Q, dq);
@@ -338,8 +586,7 @@ const SphericalDynamics = {
       if (onUpdate) onUpdate(canvas);
       
       // 즉시 렌더링
-      const ctx = canvas.getContext('2d');
-      ColorSphereSystem.render3D(ctx, sphereState);
+      this.RenderColorSphere(ctx, sphereState);
     });
     
     // pointerup: 드래그 종료
@@ -351,25 +598,22 @@ const SphericalDynamics = {
       
       // 고화질 최종 렌더링
       requestAnimationFrame(() => {
-        const ctx = canvas.getContext('2d');
-        const currentAlpha = this.getCurrentAlpha(canvas);
-        ColorSphereSystem.render3D(ctx, sphereState, currentAlpha);
+        this.RenderColorSphere(ctx, sphereState);
       });
     });
     
-    // click: 클릭한 지점이 중심점으로 이동
+    // 클릭 회전
     canvas.addEventListener('click', (e) => {
-      // 드래그가 아닌 클릭인 경우에만 중심점 이동
       if (!hasDragged) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
         // 클릭한 지점의 3D 좌표 계산
-        const point = ColorSphereSystem.screenToSphere(x, y, canvas);
-        if (point) {
+        const coordinates = this.mouseClickToSphericalCoordinates(x, y, canvas);
+        if (coordinates) {
           // 클릭한 지점이 중심점이 되도록 회전 계산
-          const targetVector = [point.x, point.y, point.z];
+          const targetVector = [coordinates.cartesian.x, coordinates.cartesian.y, coordinates.cartesian.z];
           const currentVector = [0, 0, 1]; // 현재 중심점 (북극)
           
           // 회전 축과 각도 계산
@@ -379,15 +623,11 @@ const SphericalDynamics = {
             currentVector[0] * targetVector[1] - currentVector[1] * targetVector[0]
           ];
           
-          const dot = currentVector[0] * targetVector[0] + currentVector[1] * targetVector[1] + currentVector[2] * targetVector[2];
-          const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
+          const angle = Math.acos(Math.max(-1, Math.min(1, currentVector[0] * targetVector[0] + currentVector[1] * targetVector[1] + currentVector[2] * targetVector[2])));
           
           if (angle > 0.01) {
-            const normalizedAxis = this.normalize(axis);
-            const targetQ = this.fromAxisAngle(normalizedAxis, angle);
-            
             // 부드러운 애니메이션으로 중심점 이동
-            this.animateToQuaternion(sphereState, targetQ, canvas);
+            this.animateToQuaternion(sphereState, this.fromAxisAngle(this.normalize(axis), angle), canvas);
           }
         }
       }
@@ -429,250 +669,20 @@ const SphericalDynamics = {
         }, 100);
       }
     });
-  },  
-};
-
-/* ==============================
-  🎨 색상 구체 시스템 모듈
-  ============================== */
-
-// 색상 구체 시스템 (구면좌표 → RGB 매핑 + 3D 렌더링)
-const ColorSphereSystem = {
-
-  // ========================================
-  // 🎨 색상 매핑 시스템
-  // ========================================
-
-  // 구면좌표에서 8자리 헥스코드 찾기 (역방향) - HSL 기반 단순화
-  findColor(theta, phi, alpha = 255) {
-    // theta (위도각) → Saturation, Lightness
-    const thetaDeg = theta * 180 / Math.PI;
-    const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177);
-    const isEquatorRegion = (Math.abs(thetaDeg - 90) < 3);
+    },
+  // 클릭 회전 애니메이션
+  animateToQuaternion(sphereState, targetQ, canvas) {
+    const startQ = [...sphereState.Q];
+    const startTime = performance.now();
+        const ctx = canvas.getContext('2d');
     
-    let saturation, lightness;
-    
-    if (isPolarRegion) {
-      // 극지방: 순백/순흑 (S=0)
-      saturation = 0;
-      lightness = thetaDeg < 3 ? 100 : 0; // 북극=백색, 남극=흑색
-    } else if (isEquatorRegion) {
-      // 적도: 순색 (S=100%, L=50%)
-      saturation = 100;
-      lightness = 50;
-    } else {
-      // 그라데이션 영역: 채도와 명도 스케일링
-      saturation = 100;
-      lightness = Math.round(((Math.PI - theta) / Math.PI) * 100);
-    }
-    
-    // phi (경도각) → Hue
-    const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
-    
-    return ColorConverter.hslToHex(hue, saturation, lightness, alpha);
-  },
-
-  // 화면 좌표를 구면 좌표로 변환
-  screenToSphere(screenX, screenY, canvas) {
-    const rect = canvas.getBoundingClientRect();
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // 화면 좌표를 중심점 기준으로 변환
-    const x = screenX - centerX;
-    const y = screenY - centerY;
-    
-    // 구체 반지름 계산 (캔버스 크기에 비례)
-    const radius = Math.min(rect.width, rect.height) / 2;
-    
-    // 구체 표면으로 투영
-    const distance = Math.sqrt(x * x + y * y);
-    if (distance > radius) return null; // 구체 밖 클릭
-    
-    // Z 좌표 계산 (구체 표면)
-    const z = Math.sqrt(radius * radius - x * x - y * y);
-    
-    // 정규화된 3D 좌표 반환
-    return {
-      x: x / radius,
-      y: y / radius,
-      z: z / radius
+    const animate = (currentTime) => {
+      const progress = Math.min((currentTime - startTime) / 1000, 1);
+      sphereState.Q = this.slerp(startQ, targetQ, 1 - Math.pow(1 - progress, 3));
+      this.RenderColorSphere(ctx, sphereState);
+      if (progress < 1) requestAnimationFrame(animate);
     };
-  },
-
-  // 8자리 헥스코드에서 구면좌표 찾기
-  findPosition(hexColor) {
-    const targetHex = chroma(hexColor).hex(); // 포매터 방식으로 6자리 변환
-    
-    // 구체 전체 검색
-    for (let theta = 0; theta <= Math.PI; theta += 0.05) {
-      for (let phi = -Math.PI; phi <= Math.PI; phi += 0.05) {
-        const color = this.calculateColor(theta, phi);
-        const testHex = chroma.rgb(color.r, color.g, color.b).hex(); // 포매터 방식으로 6자리 변환
-        
-        if (testHex === targetHex) {
-          return { theta, phi };
-        }
-      }
-    }
-    
-    // 검색 실패 시 예외 발생
-    throw new Error(`색상을 찾을 수 없습니다: ${hexColor}`);
-  },
-  
-  // 구면좌표에서 색상 계산
-  calculateColor(theta, phi) {
-    // 정확한 구간 설정: 극지방 6도 (좌우 3도씩), 적도 6도
-    const thetaDeg = theta * 180 / Math.PI;
-    const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177); // 0°~3°, 177°~180°
-    const isEquatorRegion = (Math.abs(thetaDeg - 90) < 3); // 87° ~ 93°
-    
-    let r, g, b;
-    
-    if (isPolarRegion) {
-      // 극지방: 완전한 순백/순흑
-      const value = thetaDeg < 3 ? 255 : 0; // 북극=백색, 남극=흑색
-      r = g = b = value;
-    } else if (isEquatorRegion) {
-      // 적도 띠: 순색 (명도=50% 고정)
-      const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
-      const h6 = Math.floor(hue / 60) % 6;
-      const f = (hue % 60) / 60;
-      
-      switch(h6) {
-        case 0: r = 255; g = Math.round(f * 255); b = 0; break;
-        case 1: r = Math.round((1-f) * 255); g = 255; b = 0; break;
-        case 2: r = 0; g = 255; b = Math.round(f * 255); break;
-        case 3: r = 0; g = Math.round((1-f) * 255); b = 255; break;
-        case 4: r = Math.round(f * 255); g = 0; b = 255; break;
-        case 5: r = 255; g = 0; b = Math.round((1-f) * 255); break;
-      }
-    } else {
-      // 그라데이션 영역: 극점과 적도 완전 제외 (3°~87°, 93°~177°)
-      const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
-      const h6 = Math.floor(hue / 60) % 6;
-      const f = (hue % 60) / 60;
-      
-      // 기본 순색 계산
-      let baseR, baseG, baseB;
-      switch(h6) {
-        case 0: baseR = 255; baseG = Math.round(f * 255); baseB = 0; break;
-        case 1: baseR = Math.round((1-f) * 255); baseG = 255; baseB = 0; break;
-        case 2: baseR = 0; baseG = 255; baseB = Math.round(f * 255); break;
-        case 3: baseR = 0; baseG = Math.round((1-f) * 255); baseB = 255; break;
-        case 4: baseR = Math.round(f * 255); baseG = 0; baseB = 255; break;
-        case 5: baseR = 255; baseG = 0; baseB = Math.round((1-f) * 255); break;
-      }
-      
-      // 그라데이션 영역에서만 명도 스케일링 적용
-      let lightnessRatio;
-      if (thetaDeg >= 3 && thetaDeg <= 87) {
-        // 북반구 그라데이션: 3°~87° → 100%~50% 명도
-        lightnessRatio = 1.0 - ((thetaDeg - 3) / (87 - 3)) * 0.5;
-      } else if (thetaDeg >= 93 && thetaDeg <= 177) {
-        // 남반구 그라데이션: 93°~177° → 50%~0% 명도  
-        lightnessRatio = 0.5 - ((thetaDeg - 93) / (177 - 93)) * 0.5;
-      } else {
-        // 극점/적도 경계: 가장 가까운 구간의 경계값
-        if (thetaDeg < 90) {
-          lightnessRatio = 0.5; // 적도 경계 (87°~93° 사이)
-        } else {
-          lightnessRatio = 0.5; // 적도 경계 (87°~93° 사이)
-        }
-      }
-      
-      // 채도와 명도 적용
-      const totalSaturation = Math.sin(theta);
-      const gray = Math.round(lightnessRatio * 255);
-      r = Math.round(gray + (baseR - gray) * totalSaturation);
-      g = Math.round(gray + (baseG - gray) * totalSaturation);
-      b = Math.round(gray + (baseB - gray) * totalSaturation);
-    }
-    
-    return { r, g, b };
-  },
-  
-  // ========================================
-  // 🖼️ 3D 렌더링 시스템
-  // ========================================
-  
-  // 3D 구체 렌더링
-  render3D(ctx, sphereState) {
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const baseRadius = Math.min(width, height) / 2 - 20;
-    const radius = baseRadius * sphereState.zoom;
-    
-    // 캔버스 초기화
-    ctx.clearRect(0, 0, width, height);
-    
-    // 3D 색상구체 렌더링
-    const imageData = ctx.createImageData(width, height);
-    const data = imageData.data;
-    
-    // 반지름의 제곱 (성능 최적화)
-    const radiusSquared = radius * radius;
-    const invRadius = 1 / radius;
-    
-    // 픽셀 처리 최적화 (드래그 중에는 해상도 낮춤)
-    const pixelStep = sphereState.isDragging ? 2 : 1;
-    
-    for (let y = 0; y < height; y += pixelStep) {
-      for (let x = 0; x < width; x += pixelStep) {
-        const dx = x - centerX;
-        const dy = y - centerY;
-        const distanceSquared = dx * dx + dy * dy;
-        
-        if (distanceSquared <= radiusSquared) {
-          // 3D 구체 좌표
-          const screenX = dx * invRadius;
-          const screenY = dy * invRadius;
-          const screenZ = Math.sqrt(Math.max(0, 1 - screenX * screenX - screenY * screenY));
-          
-          // 쿼터니언으로 3D 회전 적용
-          const rotatedVector = SphericalDynamics.rotateVector(sphereState.Q, [screenX, screenY, screenZ]);
-          const [rotatedX, rotatedY, rotatedZ] = rotatedVector;
-          
-          // 3D 좌표를 구면 좌표로 변환
-          const phi = Math.atan2(rotatedY, rotatedX);
-          const theta = Math.acos(Math.max(-1, Math.min(1, rotatedZ)));
-          
-          // ColorSphereSystem으로 색상 계산
-          const color = this.calculateColor(theta, phi);
-          const { r, g, b } = color;
-          
-          // 픽셀 채우기
-          for (let py = y; py < Math.min(y + pixelStep, height); py++) {
-            for (let px = x; px < Math.min(x + pixelStep, width); px++) {
-              const index = (py * width + px) * 4;
-              data[index] = r;
-              data[index + 1] = g;
-              data[index + 2] = b;
-              data[index + 3] = 255;
-            }
-          }
-        }
-      }
-    }
-    
-    ctx.putImageData(imageData, 0, 0);
-    
-    // 중심점 표시 (항상 불투명)
-    if (sphereState.selectedColor) {
-      const { r, g, b } = sphereState.selectedColor;
-      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      // 대비되는 테두리 (2px)
-      const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
-      ctx.strokeStyle = brightness > 127 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
+    requestAnimationFrame(animate);
   }
 };
 
@@ -1420,15 +1430,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   ============================== */
 
       CustomColorPicker: {
-        // 3D 구체 상태 관리 (쿼터니언 기반)
-        sphereState: {
-          dragging: false,
-          v0: null,
-          Q: [1, 0, 0, 0],  // 쿼터니언 [w, x, y, z]
-          last: [0, 0],     // 마지막 포인터 위치
-          zoom: 1.0,
-          selectedColor: { h: 0, s: 50, l: 50 },
-          isDragging: false
+      // 통합 색구체 상태 사용 (별도 상태 제거)
+      get sphereState() {
+        return Mechanics.Mechanics.UnifiedSphereState;
         },
       
       // ========================================
@@ -1470,16 +1474,50 @@ window.addEventListener('DOMContentLoaded', async () => {
               <div class="custom-color-picker" data-target="${picker.id}">
                 <div class="color-display" style="background: ${picker.color}"></div>
                 <div class="color-picker-panel">
-                  <div class="canvas-container">
-                    <canvas class="color-canvas-3d" width="600" height="600"></canvas>
+                  <!-- 색상구체 캔버스 -->
+                  <canvas id="color-sphere-canvas" class="color-canvas-3d" width="400" height="400" aria-label="3D 색상 구체 선택기"></canvas>
+                  
+                  <!-- 색상 정보 표시 -->
+                  <section class="color-info">
+                    <h2>선택된 색상</h2>
+                    <div class="color-display">
+                      <div class="color-preview" id="selected-color-preview"></div>
+                      <div class="color-details">
+                        <p>HEX: <span id="selected-color-hex">#FFFFFF</span></p>
+                        <p>RGB: <span id="selected-color-rgb">rgb(255, 255, 255)</span></p>
+                        <p>HSL: <span id="selected-color-hsl">hsl(0, 0%, 100%)</span></p>
+                      </div>
+                    </div>
+                    
+                    <!-- 확대/축소 컨트롤 -->
+                    <div class="zoom-controls">
+                      <h3>구체 크기 조절</h3>
+                      <div class="scaling zoom">
+                        <label for="zoom-slider">확대/축소:</label>
+                        <input 
+                          type="range" 
+                          id="zoom-slider" 
+                          min="0.1" 
+                          max="3.0" 
+                          step="0.1" 
+                          value="1.0"
+                          aria-label="색상 구체 확대/축소 (10% ~ 300%)"
+                        >
+                        <span class="size value zoom-value">100%</span>
+                      </div>
+                    </div>
+                    
+                    <!-- 구체 정보 -->
                     <div class="sphere-info">
                       <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
                     </div>
-                  </div>
+                    
+                    <!-- 색상 코드 입력 -->
                   <div class="color-input-group">
                     <label>색상 코드</label>
                     <input type="text" class="panel-hex-input" value="${picker.hex}" maxlength="9" placeholder="#RRGGBBAA">
                   </div>
+                  </section>
                 </div>
               </div>
               <input type="text" class="hex-input" value="${picker.hex}">
@@ -1512,16 +1550,50 @@ window.addEventListener('DOMContentLoaded', async () => {
               <div class="custom-color-picker" data-target="${picker.id}">
                 <div class="color-display" style="background: ${picker.color}"></div>
                 <div class="color-picker-panel">
-                  <div class="canvas-container">
-                    <canvas class="color-canvas-3d" width="600" height="600"></canvas>
+                  <!-- 색상구체 캔버스 -->
+                  <canvas id="color-sphere-canvas" class="color-canvas-3d" width="400" height="400" aria-label="3D 색상 구체 선택기"></canvas>
+                  
+                  <!-- 색상 정보 표시 -->
+                  <section class="color-info">
+                    <h2>선택된 색상</h2>
+                    <div class="color-display">
+                      <div class="color-preview" id="selected-color-preview"></div>
+                      <div class="color-details">
+                        <p>HEX: <span id="selected-color-hex">#FFFFFF</span></p>
+                        <p>RGB: <span id="selected-color-rgb">rgb(255, 255, 255)</span></p>
+                        <p>HSL: <span id="selected-color-hsl">hsl(0, 0%, 100%)</span></p>
+                      </div>
+                    </div>
+                    
+                    <!-- 확대/축소 컨트롤 -->
+                    <div class="zoom-controls">
+                      <h3>구체 크기 조절</h3>
+                      <div class="scaling zoom">
+                        <label for="zoom-slider">확대/축소:</label>
+                        <input 
+                          type="range" 
+                          id="zoom-slider" 
+                          min="0.1" 
+                          max="3.0" 
+                          step="0.1" 
+                          value="1.0"
+                          aria-label="색상 구체 확대/축소 (10% ~ 300%)"
+                        >
+                        <span class="size value zoom-value">100%</span>
+                      </div>
+                    </div>
+                    
+                    <!-- 구체 정보 -->
                     <div class="sphere-info">
                       <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
                     </div>
-                  </div>
+                    
+                    <!-- 색상 코드 입력 -->
                   <div class="color-input-group">
                     <label>색상 코드</label>
                     <input type="text" class="panel-hex-input" value="${picker.hex}" maxlength="9" placeholder="#RRGGBBAA">
                   </div>
+                  </section>
                 </div>
               </div>
               <input type="text" class="hex-input" value="${picker.hex}">
@@ -1584,22 +1656,28 @@ window.addEventListener('DOMContentLoaded', async () => {
       initialize3DCanvas(picker) {
         const canvas3D = picker.querySelector('.color-canvas-3d');
         if (canvas3D) {
-          // 통합 초기화 함수 사용 (컬러피커용)
-          initializeColorSphere(
-            `.custom-color-picker[data-target="${picker.dataset.target}"] .color-canvas-3d`,
+          // 통합 색구체 상태로 초기화
+          const ctx = canvas3D.getContext('2d');
+          ctx.clearRect(0, 0, canvas3D.width, canvas3D.height);
+          
+          // 구체 렌더링
+          Mechanics.RenderColorSphere(ctx, Mechanics.UnifiedSphereState);
+          
+          // 통합 상태로 인터랙션 설정
+          Mechanics.setupCanvasInteraction(
+            canvas3D, 
+            Mechanics.UnifiedSphereState, 
             (canvas) => this.updateCenterColorRealtime(canvas)
           );
         }
       },
       
-      // 구체 렌더링은 ColorSphereSystem.render3D로 이관됨
-      
       setup3DCanvasInteraction() {
-        // SphericalDynamics로 상호작용 설정
+        // 통합 색구체 상태로 상호작용 설정
         const handleCanvasSetup = (canvas) => {
-          SphericalDynamics.setupCanvasInteraction(
+          Mechanics.setupCanvasInteraction(
             canvas, 
-            this.sphereState, 
+            Mechanics.UnifiedSphereState, 
             (canvas) => this.updateCenterColorRealtime(canvas)
           );
         };
@@ -1623,8 +1701,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             const screenY = dy / radius;
             const screenZ = Math.sqrt(Math.max(0, 1 - screenX * screenX - screenY * screenY));  // 3D 구체 곡면
             
-            // 쿼터니언으로 회전 적용
-            const rotatedVector = SphericalDynamics.rotateVector(this.sphereState.Q, [screenX, screenY, screenZ]);
+            // 쿼터니언으로 회전 적용 (통합 상태 사용)
+            const rotatedVector = Mechanics.rotateVector(Mechanics.UnifiedSphereState.Q, [screenX, screenY, screenZ]);
             const [rotatedX, rotatedY, rotatedZ] = rotatedVector;
             
             // 구면 좌표로 변환
@@ -1638,11 +1716,11 @@ window.addEventListener('DOMContentLoaded', async () => {
             const radialFactor = distance / radius;  // 0~1
             const lightnessRatio = ((Math.PI - theta) / Math.PI); // 0(남극)~1(북극)
                       // SphericalSystem 모듈 사용 (통합된 색상 계산)
-          const color = ColorSphereSystem.calculateColor(theta, phi);
+          const color = Topology.calculateColor(theta, phi);
           const { r, g, b } = color;
             
-            // 8자리 헥스코드로 직접 처리
-            this.sphereState.selectedColor = { r, g, b, hue };
+            // 8자리 헥스코드로 직접 처리 (통합 상태 사용)
+            Mechanics.UnifiedSphereState.selectedColor = { r, g, b, hue };
             
             const picker = canvas.closest('.custom-color-picker');
             const targetId = picker.dataset.target;
@@ -1662,9 +1740,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             
             this.updateColorInputs(targetId, rgb, alpha, hexColor);
             
-            // 구체 다시 그리기 (선택점 업데이트, 투명도 반영)
-            const ctx = canvas.getContext('2d');
-            ColorSphereSystem.render3D(ctx, this.sphereState);
+            // 구체 다시 그리기 (선택점 업데이트, 투명도 반영) - 통합 상태 사용 (렌더링은 setupCanvasInteraction에서 처리)
           }
         };
         
@@ -1677,48 +1753,24 @@ window.addEventListener('DOMContentLoaded', async () => {
           // 화면 중심점 (0, 0, 1) 3D 구체 표면
           const screenX = 0;  // 중심점
           const screenY = 0;  // 중심점  
-          const screenZ = 1;  // 3D 구체 앞면
+          const screenZ = 1;  // 구체 표면 (z = 1)
           
-          // 쿼터니언으로 회전 적용
-          const rotatedVector = SphericalDynamics.rotateVector(this.sphereState.Q, [screenX, screenY, screenZ]);
+          // 쿼터니언으로 회전 적용 (통합 상태 사용)
+          const rotatedVector = Mechanics.rotateVector(Mechanics.UnifiedSphereState.Q, [screenX, screenY, screenZ]);
           const [rotatedX, rotatedY, rotatedZ] = rotatedVector;
           
           // 3D 좌표를 구면 좌표로 변환
           const phi = Math.atan2(rotatedY, rotatedX);  // 경도 (-π ~ π)
           const theta = Math.acos(Math.max(-1, Math.min(1, rotatedZ)));  // 위도 (0 ~ π)
 
+          // 렌더링과 동일한 색상 계산 사용
+          const color = Topology.calculateColor(theta, phi);
+          const { r, g, b } = color;
           
-          // 중심점도 직접 RGB 헥스코드 스케일링 (캘리브레이션)
-          let hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
-          if (hue >= 360) hue = 0;
+          // 8자리 헥스코드로 직접 처리 (통합 상태 사용)
+          Mechanics.UnifiedSphereState.selectedColor = { r, g, b };
           
-          const lightnessRatio = ((Math.PI - theta) / Math.PI); // 0(남극)~1(북극)
-          // 기본 순색 계산
-          const h6 = Math.floor(hue / 60) % 6;
-          const f = (hue % 60) / 60;
-          let baseR, baseG, baseB;
-          
-          switch(h6) {
-            case 0: baseR = 255; baseG = Math.round(f * 255); baseB = 0; break;
-            case 1: baseR = Math.round((1-f) * 255); baseG = 255; baseB = 0; break;
-            case 2: baseR = 0; baseG = 255; baseB = Math.round(f * 255); break;
-            case 3: baseR = 0; baseG = Math.round((1-f) * 255); baseB = 255; break;
-            case 4: baseR = Math.round(f * 255); baseG = 0; baseB = 255; break;
-            case 5: baseR = 255; baseG = 0; baseB = Math.round((1-f) * 255); break;
-          }
-          
-          // 위도에 따른 채도 계산 (적도에서 최대, 극지방에서 0)
-          const saturationByLatitude = Math.sin(theta);  // 적도(θ=π/2)에서 1, 극지방에서 0
-          const totalSaturation = saturationByLatitude;  // 중심점이므로 거리 요소 제외
-          
-          // 명도와 채도 동시 적용
-          const gray = Math.round(lightnessRatio * 255);
-          const r = Math.round(gray + (baseR - gray) * totalSaturation);
-          const g = Math.round(gray + (baseG - gray) * totalSaturation);
-          const b = Math.round(gray + (baseB - gray) * totalSaturation);
-          
-          // 8자리 헥스코드로 직접 처리
-          this.sphereState.selectedColor = { r, g, b, hue };
+          // 컬러피커 구체도 회전 상태 동기화 (렌더링은 setupCanvasInteraction에서 처리)
           
           const picker = canvas.closest('.custom-color-picker');
           if (!picker) return;
@@ -1847,7 +1899,7 @@ window.addEventListener('DOMContentLoaded', async () => {
               const canvas3d = picker.querySelector('.color-canvas-3d');
               if (canvas3d) {
                 const ctx3d = canvas3d.getContext('2d');
-                ColorSphereSystem.render3D(ctx3d, canvas3d.className);
+                Mechanics.RenderColorSphere(ctx3d, canvas3d.className);
               }
               
               // CSS 변수 및 UI 업데이트
@@ -1932,69 +1984,12 @@ window.addEventListener('DOMContentLoaded', async () => {
           }, 100);
         }
       },
-
-
-
-      
-      rgbToHsl(r, g, b) {
-        r /= 255; g /= 255; b /= 255;
-        const max = Math.max(r, g, b), min = Math.min(r, g, b);
-        let h, s, l = (max + min) / 2;
-        
-        if (max === min) {
-          h = s = 0;
-        } else {
-          const d = max - min;
-          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-          switch (max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
-          }
-          h /= 6;
-        }
-        
-        return { h: h * 360, s: s * 100, l: l * 100 };
-      },
-      
-      hslToRgb(h, s, l) {
-        // 입력값 정규화 및 범위 보정
-        h = ((h % 360) + 360) % 360;  // 0-360 범위로 정규화
-        s = Math.max(0, Math.min(100, s)) / 100;  // 0-1 범위로 정규화
-        l = Math.max(0, Math.min(100, l)) / 100;  // 0-1 범위로 정규화
-        
-        // HSL to RGB 정확한 변환 공식
-        const c = (1 - Math.abs(2 * l - 1)) * s;
-        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-        const m = l - c / 2;
-        
-        let r = 0, g = 0, b = 0;
-        
-        if (h >= 0 && h < 60) {
-          r = c; g = x; b = 0;
-        } else if (h >= 60 && h < 120) {
-          r = x; g = c; b = 0;
-        } else if (h >= 120 && h < 180) {
-          r = 0; g = c; b = x;
-        } else if (h >= 180 && h < 240) {
-          r = 0; g = x; b = c;
-        } else if (h >= 240 && h < 300) {
-          r = x; g = 0; b = c;
-        } else if (h >= 300 && h < 360) {
-          r = c; g = 0; b = x;
-        }
-        
-        // 0-255 범위로 변환 (정확한 반올림)
-        return {
-          r: Math.max(0, Math.min(255, Math.round((r + m) * 255))),
-          g: Math.max(0, Math.min(255, Math.round((g + m) * 255))),
-          b: Math.max(0, Math.min(255, Math.round((b + m) * 255)))
-        };
-      }
     },
     
     init() {
       this._initDOMCache();
+      
+      // CustomColorPicker는 즉시 초기화 (파레트 버튼 생성)
       this.CustomColorPicker.init();
       
       // 동적 생성 완료 후 DOM 캐시 업데이트 (더 긴 대기 시간)
@@ -2266,22 +2261,11 @@ window.addEventListener('DOMContentLoaded', async () => {
             const g = parseInt(hexValue.substr(2, 2), 16);
             const b = parseInt(hexValue.substr(4, 2), 16);
             
-            // 구체 위치 찾기 및 이동
-            const position = ColorSphereSystem.findPosition('#' + hexValue.substr(0, 6));
+            // 구체 위치 찾기 및 이동 (통합 상태 사용)
+            const position = Mechanics.colorToCoordinate('#' + hexValue.substr(0, 6));
             if (position) {
-              // 각 구체마다 독립적인 sphereState 생성 (기존 상태 복사)
-              const independentSphereState = {
-                dragging: false,
-                v0: null,
-                Q: [1, 0, 0, 0], // 기본 쿼터니언으로 초기화
-                last: [0, 0],
-                zoom: this.CustomColorPicker.sphereState.zoom,
-                selectedColor: { r, g, b },
-                isDragging: false
-              };
-              
-              // 해당 위치로 구체 회전 계산
-              const targetVector = SphericalDynamics.sphericalToCartesian(1, position.theta, position.phi);
+              // 통합 색구체 상태로 직접 회전
+              const targetVector = Mechanics.sphericalToCartesian(1, position.theta, position.phi);
               const currentVector = [0, 0, 1]; // 기본 중심점
               
               // 회전 축과 각도 계산
@@ -2294,25 +2278,25 @@ window.addEventListener('DOMContentLoaded', async () => {
               const dot = currentVector[0] * targetVector[0] + currentVector[1] * targetVector[1] + currentVector[2] * targetVector[2];
               const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
               
-              const normalizedAxis = SphericalDynamics.normalize(axis);
-              const targetQ = SphericalDynamics.fromAxisAngle(normalizedAxis, angle);
-              
-              // 모든 회전에 대해 부드러운 애니메이션 적용 (지연 시간 추가로 순차 실행)
-              setTimeout(() => {
-                SphericalDynamics.animateToQuaternion(
-                  independentSphereState, 
-                  targetQ, 
-                  canvas
-                );
-              }, index * 100); // 각 구체마다 100ms씩 지연
+                const normalizedAxis = Mechanics.normalize(axis);
+                const targetQ = Mechanics.fromAxisAngle(normalizedAxis, angle);
+                
+              // 통합 상태로 직접 애니메이션 적용
+                setTimeout(() => {
+                  Mechanics.animateToQuaternion(
+                  Mechanics.UnifiedSphereState, 
+                    targetQ, 
+                    canvas
+                  );
+                }, index * 100); // 각 구체마다 100ms씩 지연
             }
           }
         }
       });
       
-      // 공유 sphereState도 기본값으로 초기화
-      this.CustomColorPicker.sphereState.Q = [1, 0, 0, 0];
-      this.CustomColorPicker.sphereState.selectedColor = { r: 255, g: 0, b: 0 };
+      // 통합 색구체 상태도 기본값으로 초기화
+      Mechanics.UnifiedSphereState.Q = [1, 0, 0, 0];
+      Mechanics.UnifiedSphereState.selectedColor = Topology.COORDINATE_SYSTEM.POLAR_COLORS.NORTH_POLE;
     }
   };
 
@@ -2601,12 +2585,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       ButtonSystem.StyleManager.scheduleContrastUpdate();
     }
   }, { passive: true });
-/*
+
   window.AppUtils = AppUtils;
   window.ButtonSystem = ButtonSystem;
   window.ThemeManager = ThemeManager;
   window.LargeTextManager = LargeTextManager;
   window.SizeControlManager = SizeControlManager;
   window.CustomPaletteManager = CustomPaletteManager;
-*/
+
 });

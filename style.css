@@ -902,33 +902,116 @@
         border-radius: calc(var(--unit-xs) * 2);
         padding: var(--unit-sm);
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        width: 800px;
+        max-width: 90vw;
         
         &.active {
-          display: block;
+          display: flex;
+          flex-direction: row;
+          gap: var(--unit-lg);
+          align-items: flex-start;
         }
         
-        & .canvas-container {
-          position: relative;
-          margin-bottom: calc(var(--unit-xs) * 1.5);
-          text-align: center;
+        & .color-canvas-3d {
+          width: 400px;
+          height: 400px;
+          border: 2px solid var(--page-border-primary);
+          border-radius: calc(var(--unit-xs) * 1.5);
+          cursor: grab;
+          display: block;
+          margin: 0 auto;
+          flex: 1;
           
-          & .color-canvas-3d {
-            width: 600px;
-            height: 600px;
-            border: 2px solid var(--page-border-primary);
-            border-radius: calc(var(--unit-xs) * 1.5);
-            cursor: grab;
-            display: block;
-            margin: 0 auto;
+          &:active {
+            cursor: grabbing;
+          }
+        }
+        
+        
+        /* color-picker-panel 내부의 color-info 스타일 - index2.html과 동일 */
+        & .color-info {
+          padding: var(--unit-md);
+          background: var(--page-background-primary);
+          border-radius: var(--border-radius-md);
+          border: 1px solid var(--page-border-primary);
+          flex: 1;
+          min-width: 300px;
+          
+          & h2, & h3 {
+            margin-bottom: var(--unit-md);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--page-text-primary);
+            text-align: center;
+          }
+          
+          & h3 {
+            font-size: 1.2rem;
+            margin-bottom: var(--unit-sm);
+          }
+          
+          & .color-display {
+            display: flex;
+            align-items: center;
+            gap: var(--unit-md);
+            margin-bottom: var(--unit-md);
             
-            &:active {
-              cursor: grabbing;
+            & .color-preview {
+              width: 80px;
+              height: 80px;
+              border-radius: var(--border-radius-md);
+              border: 2px solid var(--page-border-primary);
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              flex-shrink: 0;
+            }
+            
+            & .color-details {
+              flex: 1;
+              
+              & p {
+                margin: var(--unit-xs) 0;
+                font-size: 1rem;
+                
+                & span {
+                  font-family: 'Courier New', monospace;
+                  font-weight: 600;
+                  color: var(--page-accent-primary);
+                }
+              }
+            }
+          }
+          
+          & .zoom-controls {
+            border-top: 1px solid var(--page-border-primary);
+            padding-top: var(--unit-md);
+            
+            & h3 {
+              margin-bottom: var(--unit-sm);
+              font-size: 1.2rem;
+              font-weight: 600;
+              color: var(--page-text-primary);
+              text-align: center;
+            }
+            
+            /* 기존 .scaling 스타일 사용 */
+            & .scaling.zoom {
+              justify-content: center;
+              
+              & .size.value {
+                min-width: 4rem;
+                text-align: left;
+                font-family: 'Courier New', monospace;
+                font-weight: 600;
+                color: var(--page-accent-primary);
+              }
             }
           }
           
           & .sphere-info {
-            margin-top: var(--unit-xs);
+            margin-top: var(--unit-md);
             text-align: center;
+            border-top: 1px solid var(--page-border-primary);
+            padding-top: var(--unit-md);
             
             & small {
               color: var(--page-text-tertiary);
@@ -937,42 +1020,119 @@
               font-weight: 500;
             }
           }
+          
+          & .color-input-group {
+            margin-top: var(--unit-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: calc(var(--unit-xs) * 1.5);
+            border-top: 1px solid var(--page-border-primary);
+            padding-top: var(--unit-md);
+            
+            & label {
+              font-size: 1.05rem;
+              font-weight: 600;
+              color: var(--page-text-secondary);
+            }
+            
+            & .panel-hex-input {
+              flex: 1;
+              max-width: 12rem;
+              padding: calc(var(--unit-xs) * 0.75);
+              border: 2px solid var(--page-border-primary);
+              border-radius: calc(var(--unit-xs) * 0.75);
+              font: 600 0.975rem 'Courier New', monospace;
+              background: var(--page-background-primary);
+              color: var(--page-text-primary);
+              text-align: center;
+              
+              &:focus {
+                outline: 1px solid var(--page-accent-primary);
+                background: var(--page-background-secondary);
+              }
+              
+              &::placeholder {
+                color: var(--page-text-tertiary);
+                font-size: 0.6rem;
+              }
+            }
+          }
         }
+      }
+    }
+  }
+
+  /* 색상 정보 섹션 */
+  .color-info {
+    margin: var(--unit-lg) 0;
+    padding: var(--unit-md);
+    background: var(--page-background-secondary);
+    border: 1px solid var(--page-border-primary);
+    border-radius: var(--unit-sm);
+    
+    & h2 {
+      margin-bottom: var(--unit-md);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--page-text-primary);
+      text-align: center;
+    }
+    
+    & .color-display {
+      display: flex;
+      align-items: center;
+      gap: var(--unit-md);
+      margin-bottom: var(--unit-lg);
+      
+      & .color-preview {
+        width: 4rem;
+        height: 4rem;
+        border: 2px solid var(--page-border-primary);
+        border-radius: var(--unit-sm);
+        background: #FFFFFF;
+      }
+      
+      & .color-details {
+        flex: 1;
         
-        & .color-input-group {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: calc(var(--unit-xs) * 1.5);
-          margin-top: calc(var(--unit-xs) * 1.5);
+        & p {
+          margin: calc(var(--unit-xs) / 2) 0;
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--page-text-secondary);
           
-          & label {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--page-text-secondary);
-          }
-          
-          & .panel-hex-input {
-            flex: 1;
-            max-width: 12rem;
-            padding: calc(var(--unit-xs) * 0.75);
-            border: 2px solid var(--page-border-primary);
-            border-radius: calc(var(--unit-xs) * 0.75);
-            font: 600 0.975rem 'Courier New', monospace;
-            background: var(--page-background-primary);
+          & span {
             color: var(--page-text-primary);
-            text-align: center;
-            
-            &:focus {
-              outline: 1px solid var(--page-accent-primary);
-              background: var(--page-background-secondary);
-            }
-            
-            &::placeholder {
-              color: var(--page-text-tertiary);
-              font-size: 0.6rem;
-            }
+            font-family: 'Courier New', monospace;
           }
+        }
+      }
+    }
+    
+    /* 확대/축소 컨트롤 */
+    & .zoom-controls {
+      border-top: 1px solid var(--page-border-primary);
+      padding-top: var(--unit-md);
+      
+      & h3 {
+        margin-bottom: var(--unit-sm);
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--page-text-primary);
+        text-align: center;
+      }
+      
+      /* 기존 .scaling 스타일 사용 */
+      & .scaling.zoom {
+        justify-content: center;
+        
+        & .size.value {
+          min-width: 4rem;
+          text-align: left;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          color: var(--page-accent-primary);
         }
       }
     }
@@ -1078,5 +1238,170 @@
     align-items: center; 
     gap: var(--unit-xs); 
     margin-bottom: var(--unit-xs);
+  }
+  
+  
+  /* === 🎨 3D 색상 구체 선택기 === */
+  #color-sphere-overlay {
+    display: flex;
+    justify-content: center;
+    margin: var(--unit-lg) 0;
+    
+    & .canvas-container {
+      position: relative;
+      display: inline-block;
+      
+      & .color-canvas-3d {
+        border: 2px solid var(--page-border-primary);
+        border-radius: var(--border-radius-md);
+        cursor: grab;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.2s ease;
+        
+        &:active {
+          cursor: grabbing;
+        }
+        
+        &:hover {
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+      }
+      
+      & .sphere-info {
+        text-align: center;
+        margin-top: var(--unit-sm);
+        
+        & small {
+          color: var(--page-text-secondary);
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+  
+  .color-info {
+    margin-top: var(--unit-lg);
+    padding: var(--unit-md);
+    background: var(--page-background-secondary);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--page-border-secondary);
+    
+    & h3, & h4 {
+      margin-bottom: var(--unit-md);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--page-text-primary);
+      text-align: center;
+    }
+    
+    & h4 {
+      font-size: 1.1rem;
+      margin-bottom: var(--unit-sm);
+    }
+    
+    & .color-display {
+      display: flex;
+      align-items: center;
+      gap: var(--unit-md);
+      margin-bottom: var(--unit-md);
+      
+      & .color-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--border-radius-md);
+        border: 2px solid var(--page-border-primary);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+      }
+      
+      & .color-details {
+        flex: 1;
+        
+        & p {
+          margin: var(--unit-xs) 0;
+          font-size: 1rem;
+          
+          & span {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--page-accent-primary);
+          }
+        }
+      }
+    }
+    
+    & .zoom-controls {
+      border-top: 1px solid var(--page-border-primary);
+      padding-top: var(--unit-md);
+      
+      & h3, & h4 {
+        margin-bottom: var(--unit-sm);
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--page-text-primary);
+        text-align: center;
+      }
+      
+      & h4 {
+        font-size: 1.1rem;
+      }
+      
+      /* 기존 .scaling 스타일 사용 */
+      & .scaling.zoom {
+        justify-content: center;
+        
+        & .size.value {
+          min-width: 4rem;
+          text-align: left;
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          color: var(--page-accent-primary);
+        }
+      }
+    }
+  }
+  
+  /* 사이드바용 색상 정보 스타일 */
+  .showcase.sidebar .color-info {
+    margin-top: var(--unit-sm);
+    padding: var(--unit-sm);
+    
+    & .color-display {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--unit-sm);
+      
+      & .color-preview {
+        width: 60px;
+        height: 60px;
+      }
+      
+      & .color-details {
+        width: 100%;
+        
+        & p {
+          font-size: 0.9rem;
+          text-align: center;
+        }
+      }
+    }
+    
+    & .zoom-controls {
+      padding-top: var(--unit-sm);
+      
+      & .scaling.zoom {
+        flex-direction: column;
+        gap: var(--unit-xs);
+        
+        & label {
+          font-size: 0.9rem;
+        }
+        
+        & .size.value {
+          text-align: center;
+          font-size: 0.9rem;
+        }
+      }
+    }
   }
 }
