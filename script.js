@@ -555,6 +555,7 @@ const Mechanics = {
     // pointerdown: 드래그 시작
     canvas.addEventListener('pointerdown', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       sphereState.dragging = true;
       sphereState.last = [e.clientX, e.clientY];
       sphereState.isDragging = true;
@@ -569,6 +570,7 @@ const Mechanics = {
       if (!sphereState.dragging) return;
       
       e.preventDefault();
+      e.stopPropagation();
       const dx = e.clientX - sphereState.last[0];
       const dy = e.clientY - sphereState.last[1];
       sphereState.last = [e.clientX, e.clientY];
@@ -595,6 +597,7 @@ const Mechanics = {
     // pointerup: 드래그 종료
     canvas.addEventListener('pointerup', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       sphereState.dragging = false;
       sphereState.isDragging = false;
       canvas.releasePointerCapture(e.pointerId);
@@ -609,6 +612,7 @@ const Mechanics = {
     // 클릭 회전
     canvas.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       if (!hasDragged) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -645,6 +649,7 @@ const Mechanics = {
     // wheel: 알파 조절
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       
       const picker = canvas.closest('.custom-color-picker');
       if (!picker) return;
@@ -1837,6 +1842,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           // 휠 이벤트 (알파 조절)
           canvas.addEventListener('wheel', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             
             const picker = canvas.closest('.custom-color-picker');
             const panelHexInput = picker.querySelector('.panel-hex-input');
