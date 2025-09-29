@@ -438,26 +438,25 @@
       <div id="color-sphere-overlay">
         <div class="canvas-container">
           <canvas id="color-sphere-canvas" class="color-canvas-3d" width="600" height="600" aria-label="3D 색상 구체 선택기"></canvas>
-          <div class="sphere-info">
-            <small>🌐 3D 색상 구체 | 드래그: 회전 | 클릭: 중심점 이동 | 휠: 알파 조절</small>
-          </div>
         </div>
       </div>
       
       <!-- 색상 정보 표시 -->
       <section class="color-info">
-        <h2>선택된 색상</h2>
-        <div class="color-display">
-          <div class="color-preview" id="selected-color-preview"></div>
-          <div class="color-details">
+        <div class="picker-color-display">
+          <h3>선택된 색상</h3>
+          <div class="picker-color-preview-container">
+            <div class="picker-color-preview" id="selected-color-preview"></div>
+            <div class="picker-color-details">
             <p>HEX: <span id="selected-color-hex">#FFFFFF</span></p>
             <p>RGB: <span id="selected-color-rgb">rgb(255, 255, 255)</span></p>
             <p>HSL: <span id="selected-color-hsl">hsl(0, 0%, 100%)</span></p>
+            </div>
           </div>
         </div>
         
         <!-- 확대/축소 컨트롤 -->
-        <div class="zoom-controls">
+        <div class="picker-zoom-controls">
           <h3>구체 크기 조절</h3>
           <div class="scaling zoom">
             <label for="zoom-slider">확대/축소:</label>
@@ -472,6 +471,11 @@
             >
             <span class="size value zoom-value">100%</span>
           </div>
+        </div>
+        
+        <!-- 구체 정보 -->
+        <div class="picker-sphere-info">
+          <small>🌐 3D 색상 구체 | 드래그: 회전 | 클릭: 중심점 이동 | 휠: 알파 조절</small>
         </div>
         
       </section>

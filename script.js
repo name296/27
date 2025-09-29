@@ -528,7 +528,8 @@ const Mechanics = {
     
     // 중심점 표시 (변수 의존성 최적화)
     if (sphereState.selectedColor) {
-      ctx.fillStyle = `rgb(${sphereState.selectedColor.r}, ${sphereState.selectedColor.g}, ${sphereState.selectedColor.b})`;
+      const { r, g, b } = sphereState.selectedColor;
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
       ctx.beginPath();
       ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
       ctx.fill();
@@ -553,6 +554,7 @@ const Mechanics = {
     
     // pointerdown: 드래그 시작
     canvas.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
       sphereState.dragging = true;
       sphereState.last = [e.clientX, e.clientY];
       sphereState.isDragging = true;
@@ -566,6 +568,7 @@ const Mechanics = {
     canvas.addEventListener('pointermove', (e) => {
       if (!sphereState.dragging) return;
       
+      e.preventDefault();
       const dx = e.clientX - sphereState.last[0];
       const dy = e.clientY - sphereState.last[1];
       sphereState.last = [e.clientX, e.clientY];
@@ -591,6 +594,7 @@ const Mechanics = {
     
     // pointerup: 드래그 종료
     canvas.addEventListener('pointerup', (e) => {
+      e.preventDefault();
       sphereState.dragging = false;
       sphereState.isDragging = false;
       canvas.releasePointerCapture(e.pointerId);
@@ -604,6 +608,7 @@ const Mechanics = {
     
     // 클릭 회전
     canvas.addEventListener('click', (e) => {
+      e.preventDefault();
       if (!hasDragged) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -1479,18 +1484,20 @@ window.addEventListener('DOMContentLoaded', async () => {
                   
                   <!-- 색상 정보 표시 -->
                   <section class="color-info">
-                    <h2>선택된 색상</h2>
-                    <div class="color-display">
-                      <div class="color-preview" id="selected-color-preview"></div>
-                      <div class="color-details">
+                    <div class="picker-color-display">
+                      <h3>선택된 색상</h3>
+                      <div class="picker-color-preview-container">
+                        <div class="picker-color-preview" id="selected-color-preview"></div>
+                        <div class="picker-color-details">
                         <p>HEX: <span id="selected-color-hex">#FFFFFF</span></p>
                         <p>RGB: <span id="selected-color-rgb">rgb(255, 255, 255)</span></p>
                         <p>HSL: <span id="selected-color-hsl">hsl(0, 0%, 100%)</span></p>
-                      </div>
+                    </div>
+                  </div>
                     </div>
                     
                     <!-- 확대/축소 컨트롤 -->
-                    <div class="zoom-controls">
+                    <div class="picker-zoom-controls">
                       <h3>구체 크기 조절</h3>
                       <div class="scaling zoom">
                         <label for="zoom-slider">확대/축소:</label>
@@ -1507,16 +1514,16 @@ window.addEventListener('DOMContentLoaded', async () => {
                       </div>
                     </div>
                     
-                    <!-- 구체 정보 -->
-                    <div class="sphere-info">
-                      <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
-                    </div>
-                    
                     <!-- 색상 코드 입력 -->
-                  <div class="color-input-group">
+                  <div class="picker-color-input-group">
                     <label>색상 코드</label>
                     <input type="text" class="panel-hex-input" value="${picker.hex}" maxlength="9" placeholder="#RRGGBBAA">
                   </div>
+                    
+                    <!-- 구체 정보 -->
+                    <div class="picker-sphere-info">
+                      <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
+                    </div>
                   </section>
                 </div>
               </div>
@@ -1555,18 +1562,20 @@ window.addEventListener('DOMContentLoaded', async () => {
                   
                   <!-- 색상 정보 표시 -->
                   <section class="color-info">
-                    <h2>선택된 색상</h2>
-                    <div class="color-display">
-                      <div class="color-preview" id="selected-color-preview"></div>
-                      <div class="color-details">
+                    <div class="picker-color-display">
+                      <h3>선택된 색상</h3>
+                      <div class="picker-color-preview-container">
+                        <div class="picker-color-preview" id="selected-color-preview"></div>
+                        <div class="picker-color-details">
                         <p>HEX: <span id="selected-color-hex">#FFFFFF</span></p>
                         <p>RGB: <span id="selected-color-rgb">rgb(255, 255, 255)</span></p>
                         <p>HSL: <span id="selected-color-hsl">hsl(0, 0%, 100%)</span></p>
-                      </div>
+                    </div>
+                  </div>
                     </div>
                     
                     <!-- 확대/축소 컨트롤 -->
-                    <div class="zoom-controls">
+                    <div class="picker-zoom-controls">
                       <h3>구체 크기 조절</h3>
                       <div class="scaling zoom">
                         <label for="zoom-slider">확대/축소:</label>
@@ -1583,16 +1592,16 @@ window.addEventListener('DOMContentLoaded', async () => {
                       </div>
                     </div>
                     
-                    <!-- 구체 정보 -->
-                    <div class="sphere-info">
-                      <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
-                    </div>
-                    
                     <!-- 색상 코드 입력 -->
-                  <div class="color-input-group">
+                  <div class="picker-color-input-group">
                     <label>색상 코드</label>
                     <input type="text" class="panel-hex-input" value="${picker.hex}" maxlength="9" placeholder="#RRGGBBAA">
                   </div>
+                    
+                    <!-- 구체 정보 -->
+                    <div class="picker-sphere-info">
+                      <small>🌐 3D 색상 구체 | 드래그: 회전 | 휠: 알파 조절</small>
+                    </div>
                   </section>
                 </div>
               </div>
@@ -1739,6 +1748,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             const hexColor = ColorConverter.rgbaToHex(r, g, b, alpha);
             
             this.updateColorInputs(targetId, rgb, alpha, hexColor);
+          this.updateSelectedColorInfo(rgb, alpha, hexColor);
+            this.updateSelectedColorInfo(rgb, alpha, hexColor);
             
             // 구체 다시 그리기 (선택점 업데이트, 투명도 반영) - 통합 상태 사용 (렌더링은 setupCanvasInteraction에서 처리)
           }
@@ -1793,6 +1804,8 @@ window.addEventListener('DOMContentLoaded', async () => {
           // UI 업데이트 (드래그 시 실시간 입력값 변경)
           requestAnimationFrame(() => {
             this.updateColorInputs(targetId, rgb, alpha, hexColor);
+          this.updateSelectedColorInfo(rgb, alpha, hexColor);
+            this.updateSelectedColorInfo(rgb, alpha, hexColor);
           });
         };
         
@@ -1815,6 +1828,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           const hexColor = ColorConverter.rgbaToHex(rgb.r, rgb.g, rgb.b, alpha);
           
           this.updateColorInputs(targetId, rgb, alpha, hexColor);
+          this.updateSelectedColorInfo(rgb, alpha, hexColor);
         };
         
         document.querySelectorAll('.color-canvas-3d').forEach(canvas => {
@@ -1905,6 +1919,8 @@ window.addEventListener('DOMContentLoaded', async () => {
               // CSS 변수 및 UI 업데이트
               this.updateColorInputs(targetId, {r, g, b}, a, fullHex);
               
+              // 선택된 색상 정보 업데이트
+              this.updateSelectedColorInfo({r, g, b}, a, fullHex);
 
             }
           });
@@ -1914,6 +1930,43 @@ window.addEventListener('DOMContentLoaded', async () => {
       // ========================================
       // 🔄 상태 업데이트 시스템
       // ========================================
+      
+      updateSelectedColorInfo(rgb, alpha, hexColor) {
+        // 선택된 색상 미리보기 업데이트 (모든 color-picker-panel 내의 preview)
+        document.querySelectorAll('.color-picker-panel .picker-color-preview').forEach(preview => {
+          preview.style.background = hexColor;
+        });
+        
+        // 선택된 색상 미리보기 업데이트 (index.html의 정적 요소)
+        const colorPreview = document.getElementById('selected-color-preview');
+        if (colorPreview) {
+          colorPreview.style.background = hexColor;
+        }
+        
+        // 색상 정보 텍스트 업데이트 (모든 color-picker-panel 내의 요소들)
+        document.querySelectorAll('.color-picker-panel #selected-color-hex').forEach(hex => {
+          hex.textContent = hexColor;
+        });
+        document.querySelectorAll('.color-picker-panel #selected-color-rgb').forEach(rgbEl => {
+          rgbEl.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        });
+        document.querySelectorAll('.color-picker-panel #selected-color-hsl').forEach(hslEl => {
+          const hslValue = ColorConverter.rgbToHsl(rgb.r, rgb.g, rgb.b);
+          hslEl.textContent = `hsl(${Math.round(hslValue.h)}, ${Math.round(hslValue.s)}%, ${Math.round(hslValue.l)}%)`;
+        });
+        
+        // index.html의 정적 요소들도 업데이트
+        const colorHex = document.getElementById('selected-color-hex');
+        const colorRgb = document.getElementById('selected-color-rgb');
+        const colorHsl = document.getElementById('selected-color-hsl');
+        
+        if (colorHex) colorHex.textContent = hexColor;
+        if (colorRgb) colorRgb.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        if (colorHsl) {
+          const hsl = ColorConverter.rgbToHsl(rgb.r, rgb.g, rgb.b);
+          colorHsl.textContent = `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+        }
+      },
       
       updateColorInputs(targetId, rgb, alpha, hexColor) {
         const picker = document.querySelector(`[data-target="${targetId}"]`);
@@ -1926,6 +1979,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         // 패널 내 hex 입력 업데이트
         if (panelHexInput) panelHexInput.value = hexColor;
+        
+        // 선택된 색상 정보는 updateSelectedColorInfo에서 처리
         
         // 컬러 디스플레이 업데이트
         if (display) display.style.background = hexColor;
