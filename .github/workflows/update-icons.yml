@@ -1,0 +1,46 @@
+name: Auto Update Icon Index
+
+on:
+  push:
+    paths:
+      - 'svg/icon/*.svg'
+  pull_request:
+    paths:
+      - 'svg/icon/*.svg'
+
+jobs:
+  update-icons:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Update icon index
+        run: node scripts/update-icons.js
+      
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if git diff --quiet svg/icon/index.js; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add svg/icon/index.js
+          git commit -m "🤖 Auto-update icon index"
+          git push
+

@@ -1,0 +1,36 @@
+name: Check Icon Index
+
+on:
+  pull_request:
+    paths:
+      - 'svg/icon/*.svg'
+
+jobs:
+  check-icons:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Generate expected index
+        run: node scripts/update-icons.js
+      
+      - name: Check if index.js is up to date
+        run: |
+          if git diff --quiet svg/icon/index.js; then
+            echo "✅ icon/index.js is up to date"
+          else
+            echo "❌ icon/index.js is outdated!"
+            echo "Please run: .\scripts\update-icons.ps1"
+            echo ""
+            echo "Changes needed:"
+            git diff svg/icon/index.js
+            exit 1
+          fi
+

@@ -1,0 +1,29 @@
+{
+  "name": "button-component-system",
+  "version": "1.0.0",
+  "description": "버튼 컴포넌트 시스템 - ES6 모듈 기반",
+  "type": "module",
+  "scripts": {
+    "update-icons": "node scripts/update-icons.js",
+    "dev": "npx serve",
+    "start": "npx serve"
+  },
+  "keywords": [
+    "button",
+    "component",
+    "accessibility",
+    "es6-modules"
+  ],
+  "author": "이강철",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "cdn": {
+    "chroma-js": "https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/chroma.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/button-component-system.git"
+  }
+}
+
