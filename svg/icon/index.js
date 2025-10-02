@@ -68,8 +68,14 @@ export function getIconPath(iconKey) {
 export function createIconMap() {
   const map = {};
   
+  // default는 placeholder로 매핑
+  map['default'] = {
+    path: getIconPath('placeholder'),
+    selector: getSelector('default')
+  };
+  
   for (const [key, filename] of Object.entries(iconPaths)) {
-    if (key === 'placeholder' && map['default']) continue;
+    if (key === 'placeholder') continue; // default로 이미 추가됨
     
     map[key] = {
       path: getIconPath(key),
@@ -87,6 +93,6 @@ export const fallbackIcon = 'placeholder';
   📊 메타데이터
   ============================== */
 // 총 아이콘 개수: 33
-// 생성 일시: 2025-10-02T19:25:45
+// 생성 일시: 2025-10-02T20:41:43
 // 아이콘 목록: add, arrow-left, arrow-right, cancel, contrast, delete, done, exit, extention, favicon, help, home, info, large, lowpos, minus, ok, order, pay, placeholder, plus, print, reset, restart, soldout-large, soldout-small, step, takein, takeout, time, toggle, volume, warning
 

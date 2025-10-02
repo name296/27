@@ -36,8 +36,14 @@ export function getIconPath(iconKey) {
 export function createIconMap() {
   const map = {};
   
+  // default는 placeholder로 매핑
+  map['default'] = {
+    path: getIconPath('placeholder'),
+    selector: getSelector('default')
+  };
+  
   for (const [key, filename] of Object.entries(iconPaths)) {
-    if (key === 'placeholder' && map['default']) continue;
+    if (key === 'placeholder') continue; // default로 이미 추가됨
     
     map[key] = {
       path: getIconPath(key),

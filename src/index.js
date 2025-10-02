@@ -18,6 +18,7 @@ import { ButtonSystem } from './modules/button/button-system.js';
 import { ThemeManager } from './modules/managers/theme-manager.js';
 import { LargeTextManager } from './modules/managers/large-mode-manager.js';
 import { SizeControlManager } from './modules/managers/size-control-manager.js';
+import { CustomPaletteManager } from './modules/managers/custom-palette-manager.js';
 import { createIconMap, getIconPath, fallbackIcon } from '../svg/icon/index.js';
 
 const moduleLoadEnd = performance.now();
@@ -33,6 +34,7 @@ window.ButtonSystem = ButtonSystem;
 window.ThemeManager = ThemeManager;
 window.LargeTextManager = LargeTextManager;
 window.SizeControlManager = SizeControlManager;
+window.CustomPaletteManager = CustomPaletteManager;
 window.BUTTON_CONSTANTS = BUTTON_CONSTANTS;
 window.PaletteManager = PaletteManager;
 window.StyleManager = StyleManager;
