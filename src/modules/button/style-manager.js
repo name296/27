@@ -1,5 +1,5 @@
 /* ==============================
-  ?렓 踰꾪듉 ?ㅽ???愿由ъ옄
+  🎨 버튼 스타일 관리자
   ============================== */
 
 export const StyleManager = {
@@ -82,7 +82,7 @@ export const StyleManager = {
   calculateContrast(color1, color2) {
     const getRGB = (color) => {
       if (!color || color === 'transparent') {
-        throw new Error('?좏슚?섏? ?딆? ?됱긽 媛믪엯?덈떎');
+        throw new Error('유효하지 않은 색상 값입니다');
       }
       
       const rgbaMatch = color.match(/rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)/);
@@ -105,7 +105,7 @@ export const StyleManager = {
         }
       }
       
-      throw new Error(`?됱긽 ?뚯떛 ?ㅽ뙣: ${color}`);
+      throw new Error(`색상 파싱 실패: ${color}`);
     };
     
     const [r1, g1, b1] = getRGB(color1);
@@ -241,4 +241,3 @@ export const StyleManager = {
     this.scheduleUpdate();
   }
 };
-

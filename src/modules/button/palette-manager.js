@@ -1,5 +1,5 @@
 /* ==============================
-  ?렓 ?붾젅??愿由ъ옄
+  🎨 팔레트 관리자
   ============================== */
 
 export const PaletteManager = {
@@ -79,7 +79,7 @@ export const PaletteManager = {
     });
     
     const cssContent = `
-/* HTML ?대옒??湲곕컲 ?섏젙???쒖뒪??- CSS ?곸냽 ?쒖슜 */
+/* HTML 클래스 기반 수정자 시스템 - CSS 상속 활용 */
 ${lightThemeCSS ? `:root {\n${lightThemeCSS}}` : ''}
 
 ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
@@ -90,8 +90,7 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
 }
 `;
     
-    window.AppUtils.CSSInjector.inject('palette-system-styles', cssContent, '?붾젅???쒖뒪??);
+    window.AppUtils.CSSInjector.inject('palette-system-styles', cssContent, '팔레트 시스템');
     return discoveredPalettes;
   }
 };
-
