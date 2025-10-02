@@ -563,7 +563,7 @@ const Mechanics = {
       hasDragged = false;
       canvas.setPointerCapture(e.pointerId);
       canvas.style.cursor = 'grabbing';
-    });
+    }, { passive: false });
     
     // 드래그 회전
     canvas.addEventListener('pointermove', (e) => {
@@ -702,16 +702,30 @@ const Mechanics = {
 
 const AppUtils = {
   SVGLoader: {
-    async loadSvg(path, selector) {
+    async loadSvg(path, selector, fallbackPath = 'svg/icon/placeholder.svg') {
+      try {
       const response = await fetch(path);
+        if (!response.ok) throw new Error('SVG not found');
       const svgMarkup = await response.text();
       document.querySelectorAll(selector).forEach(target => { target.innerHTML = svgMarkup; });
       return svgMarkup;
+      } catch (error) {
+        console.warn(`Failed to load SVG: ${path}, using fallback: ${fallbackPath}`);
+        try {
+          const fallbackResponse = await fetch(fallbackPath);
+          const fallbackMarkup = await fallbackResponse.text();
+          document.querySelectorAll(selector).forEach(target => { target.innerHTML = fallbackMarkup; });
+          return fallbackMarkup;
+        } catch (fallbackError) {
+          console.error(`Failed to load fallback SVG: ${fallbackPath}`);
+          return '';
+        }
+      }
     },
     
     async loadAllIcons() {
-      const iconPromise = this.loadSvg('icon.svg', '.content.icon');
-      const selectedIconPromise = this.loadSvg('selected.svg', '.content.icon.pressed')
+      const iconPromise = this.loadSvg('svg/icon.svg', '.content.icon');
+      const selectedIconPromise = this.loadSvg('svg/icon/toggle.svg', '.content.icon.pressed')
         .then(svg => { ButtonSystem.state.iconSelectedSvgContent = svg; });
       
               await Promise.all([iconPromise, selectedIconPromise]);

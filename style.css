@@ -54,6 +54,70 @@
     --unit-2xl: calc(var(--base-unit) * var(--scale-2xl)); 
     --unit-3xl: calc(var(--base-unit) * var(--scale-3xl));
 
+    /* === 폰트 정의 === */
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 100;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-Thin.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 200;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-ExtraLight.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 300;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-Light.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 400;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-Regular.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 500;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-Medium.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 600;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-SemiBold.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 700;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-Bold.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 800;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-ExtraBold.otf') format('opentype');
+    }
+    
+    @font-face {
+      font-family: 'Pretendard GOV';
+      font-weight: 900;
+      font-style: normal;
+      src: url('./fonts/PretendardGOV-Black.otf') format('opentype');
+    }
+
     /* === 🎯 타이포그래피 시스템 === */
     --font-family: 'Pretendard GOV', sans-serif;
     --font-size-base: 2.5rem;
@@ -923,6 +987,7 @@
           display: block;
           margin: 0 auto;
           flex: 1;
+          touch-action: none;
           
           &:active {
             cursor: grabbing;
@@ -1276,6 +1341,7 @@
         cursor: grab;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: box-shadow 0.2s ease;
+        touch-action: none;
         
         &:active {
           cursor: grabbing;
