@@ -1,5 +1,5 @@
 /* ==============================
-  🎨 SVG 로더 모듈
+  ?렓 SVG 濡쒕뜑 紐⑤뱢
   ============================== */
 
 import { createIconMap, getIconPath, fallbackIcon } from '../../../svg/icon/index.js';
@@ -28,9 +28,9 @@ export const SVGLoader = {
         if (!response.ok) throw new Error(`SVG not found: ${config.path}`);
         const svgMarkup = await response.text();
         this.cache.set(key, svgMarkup);
-        console.log(`✅ Loaded ${key} icon`);
+        console.log(`??Loaded ${key} icon`);
       } catch (error) {
-        console.warn(`⚠️ Failed to load ${key} icon from ${config.path}, using fallback`);
+        console.warn(`?좑툘 Failed to load ${key} icon from ${config.path}, using fallback`);
         try {
           const fallbackPath = getIconPath(fallbackIcon);
           const fallback = await fetch(fallbackPath);
@@ -40,7 +40,7 @@ export const SVGLoader = {
             this.cache.set(key, '');
           }
         } catch (fallbackError) {
-          console.error(`❌ Fallback also failed for ${key}`);
+          console.error(`??Fallback also failed for ${key}`);
           this.cache.set(key, '');
         }
       }
@@ -53,7 +53,7 @@ export const SVGLoader = {
     Object.entries(this.iconMap).forEach(([key, config]) => {
       const svgMarkup = this.cache.get(key);
       if (!svgMarkup) {
-        console.warn(`⚠️ No cached SVG for ${key}`);
+        console.warn(`?좑툘 No cached SVG for ${key}`);
         return;
       }
       
@@ -61,7 +61,7 @@ export const SVGLoader = {
       
       const targets = document.querySelectorAll(config.selector);
       if (targets.length === 0) {
-        console.log(`ℹ️ No elements found for selector: ${config.selector}`);
+        console.log(`?뱄툘 No elements found for selector: ${config.selector}`);
       }
       
       targets.forEach(el => {
@@ -69,7 +69,7 @@ export const SVGLoader = {
       });
     });
     
-    console.log('✅ All icons injected to DOM (converted to currentColor)');
+    console.log('??All icons injected to DOM (converted to currentColor)');
   },
   
   async loadAndInject() {

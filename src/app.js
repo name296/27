@@ -1,8 +1,7 @@
-﻿/* ==============================
-  ?벀 紐⑤뱢 Import
+/* ==============================
+  📦 모듈 Import
   ============================== */
 const { ColorConverter, Topology, Mechanics, AppUtils, ButtonSystem, ThemeManager, LargeTextManager, SizeControlManager, CustomPaletteManager } = window;
-
 
 /* ==============================
   🚀 시스템 초기화 및 무결성 검증
@@ -67,8 +66,6 @@ const initializeApp = async () => {
         button.classList.remove('pressed');
         button.setAttribute('aria-pressed', 'false');
         if (iconPressed) iconPressed.style.removeProperty('display');
-        
-
       });
     } else {
       if (iconPressed) iconPressed.style.removeProperty('display');
@@ -110,7 +107,6 @@ const initializeApp = async () => {
         const isToggleButton = enabledButton.classList.contains('toggle');
         
         if (isToggleButton) {
-          // 토글 버튼: 클릭 이벤트만 발생시키고 pressed 조작하지 않음
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
@@ -118,7 +114,6 @@ const initializeApp = async () => {
           });
           enabledButton.dispatchEvent(clickEvent);
         } else {
-          // 일반 버튼: momentary press 효과 (Enter/Space 동일)
           enabledButton.classList.add('pressed');
         setTimeout(() => {
           enabledButton.classList.remove('pressed');
@@ -128,8 +123,6 @@ const initializeApp = async () => {
             button: 0
           });
           enabledButton.dispatchEvent(clickEvent);
-          
-
         }, 100);
         }
       }
@@ -161,7 +154,6 @@ const initializeApp = async () => {
     switch (event.key) {
       case 'ArrowRight':
         event.preventDefault();
-        // 전체 버튼을 순환하여 다음 버튼으로 이동
         const currentIndex = allButtons.indexOf(focusedButton);
         const nextIndex = (currentIndex + 1) % allButtons.length;
         targetButton = allButtons[nextIndex];
@@ -169,7 +161,6 @@ const initializeApp = async () => {
         
       case 'ArrowLeft':
         event.preventDefault();
-        // 전체 버튼을 순환하여 이전 버튼으로 이동
         const currentIndex2 = allButtons.indexOf(focusedButton);
         const prevIndex = currentIndex2 === 0 ? allButtons.length - 1 : currentIndex2 - 1;
         targetButton = allButtons[prevIndex];
@@ -177,11 +168,9 @@ const initializeApp = async () => {
 
       case 'ArrowDown':
           event.preventDefault();
-        // 좌우 버튼 순환에서 다음 컨테이너 경계 찾기
         const currentContainer = focusedButton.closest('.showcase');
         const currentIndexForDown = allButtons.indexOf(focusedButton);
         
-        // 현재 버튼부터 다음 컨테이너의 첫 번째 버튼 찾기
         for (let i = 1; i < allButtons.length; i++) {
           const nextIndex = (currentIndexForDown + i) % allButtons.length;
           const nextButton = allButtons[nextIndex];
@@ -196,18 +185,15 @@ const initializeApp = async () => {
           
       case 'ArrowUp':
           event.preventDefault();
-        // 좌우 버튼 순환에서 이전 컨테이너 경계 찾기
         const currentContainerUp = focusedButton.closest('.showcase');
         const currentIndexUp = allButtons.indexOf(focusedButton);
         
-        // 현재 버튼부터 역순으로 이전 컨테이너의 첫 번째 버튼 찾기
         for (let i = 1; i < allButtons.length; i++) {
           const prevIndex = (currentIndexUp - i + allButtons.length) % allButtons.length;
           const prevButton = allButtons[prevIndex];
           const prevContainer = prevButton.closest('.showcase');
           
           if (prevContainer !== currentContainerUp) {
-            // 이전 컨테이너의 첫 번째 버튼 찾기
             const buttonsInPrevContainer = allButtons.filter(btn => btn.closest('.showcase') === prevContainer);
             targetButton = buttonsInPrevContainer[0];
             break;
@@ -235,8 +221,6 @@ const initializeApp = async () => {
     const button = event.target?.closest?.('.button');
     if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
       button.classList.add('pressed');
-      
-
     }
   }, true);
 
@@ -266,8 +250,6 @@ const initializeApp = async () => {
     const button = event.target?.closest?.('.button');
     if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
       button.classList.add('pressed');
-      
-
     }
   }, { passive: true });
 

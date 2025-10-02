@@ -13,4 +13,3 @@ export const CSSInjector = {
     document.head.appendChild(styleElement);
   }
 };
-

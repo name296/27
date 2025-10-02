@@ -50,4 +50,3 @@ export const ButtonSystem = {
     console.log(`🎉 [ButtonSystem] 초기화 완료 (총 ${(initEnd - initStart).toFixed(2)}ms)`);
   }
 };
-

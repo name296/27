@@ -3,36 +3,30 @@
   ============================== */
 
 export const Topology = {
-  // 공통 좌표계 상수
   COORDINATE_SYSTEM: {
-    // 구면 좌표계 (3D 구체 표면)
     SPHERICAL: {
       NORTH_POLE: { theta: 0, phi: 0 },
       SOUTH_POLE: { theta: Math.PI, phi: 0 },
       EQUATOR: { theta: Math.PI/2, phi: 0 }
     },
     
-    // 직교 좌표계 (3D 공간)
     CARTESIAN: {
       ORIGIN: { x: 0, y: 0, z: 0 },
       NORTH_POLE: { x: 0, y: 0, z: 1 },
-      NORTH_POLE: { x: 0, y: 0, z: -1 }
+      SOUTH_POLE: { x: 0, y: 0, z: -1 }
     },
     
-    // 구체 극점 색상 정의
     POLAR_COLORS: {
       NORTH_POLE: { r: 255, g: 255, b: 255 },
       SOUTH_POLE: { r: 0, g: 0, b: 0 }
     },
 
-    // 화면 좌표계 (2D 평면)
     SCREEN: {
       CENTER: { x: 0, y: 0 },
       UNIT_RADIUS: 1
     },
   },
 
-  // 구면좌표 → 표면색상 / 구간없음
   calculateColor(theta, phi) {
     const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
     const h6 = Math.floor(hue / 60) % 6;
@@ -62,7 +56,6 @@ export const Topology = {
     };
   },
 
-  // 구면좌표 → 색상 / 구간있음
   calculateColor2(theta, phi) {
     const thetaDeg = theta * 180 / Math.PI;
     const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177);
@@ -103,4 +96,3 @@ export const Topology = {
     };
   }
 };
-

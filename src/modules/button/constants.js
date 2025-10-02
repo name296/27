@@ -12,4 +12,3 @@ export const BUTTON_CONSTANTS = {
   get BUTTON_OUTLINE_OFFSET() { return -1 * this.BACKGROUND_OUTLINE_WIDTH; },
   get SELECTED_ICON_SIZE() { return 4 * this.BASE; }
 };
-

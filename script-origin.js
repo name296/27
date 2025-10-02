@@ -1,4 +1,11 @@
 /* ==============================
+  📦 모듈 Import
+  ============================== */
+// main.js에서 일부 모듈이 로드됩니다
+// (ColorConverter, Topology, Mechanics는 아래에서 재정의됨)
+import { createIconMap, getIconPath, fallbackIcon } from './svg/icon/index.js';
+
+/* ==============================
   Chroma.js 로컬 로딩
   ============================== */
 const chromaScript = document.createElement('script');
@@ -702,33 +709,81 @@ const Mechanics = {
 
 const AppUtils = {
   SVGLoader: {
-    async loadSvg(path, selector, fallbackPath = 'svg/icon/placeholder.svg') {
-      try {
-      const response = await fetch(path);
-        if (!response.ok) throw new Error('SVG not found');
-      const svgMarkup = await response.text();
-      document.querySelectorAll(selector).forEach(target => { target.innerHTML = svgMarkup; });
-      return svgMarkup;
-      } catch (error) {
-        console.warn(`Failed to load SVG: ${path}, using fallback: ${fallbackPath}`);
-        try {
-          const fallbackResponse = await fetch(fallbackPath);
-          const fallbackMarkup = await fallbackResponse.text();
-          document.querySelectorAll(selector).forEach(target => { target.innerHTML = fallbackMarkup; });
-          return fallbackMarkup;
-        } catch (fallbackError) {
-          console.error(`Failed to load fallback SVG: ${fallbackPath}`);
-          return '';
-        }
-      }
+    cache: new Map(),
+    
+    get iconMap() {
+      return createIconMap();
     },
     
-    async loadAllIcons() {
-      const iconPromise = this.loadSvg('svg/icon.svg', '.content.icon');
-      const selectedIconPromise = this.loadSvg('svg/icon/toggle.svg', '.content.icon.pressed')
-        .then(svg => { ButtonSystem.state.iconSelectedSvgContent = svg; });
+    convertToCurrentColor(svgMarkup) {
+      return svgMarkup
+        .replace(/fill="(?!none|transparent)[^"]*"/gi, 'fill="currentColor"')
+        .replace(/stroke="(?!none|transparent)[^"]*"/gi, 'stroke="currentColor"')
+        .replace(/fill='(?!none|transparent)[^']*'/gi, "fill='currentColor'")
+        .replace(/stroke='(?!none|transparent)[^']*'/gi, "stroke='currentColor'")
+        .replace(/fill:\s*(?!none|transparent)[^;}\s]+/gi, 'fill: currentColor')
+        .replace(/stroke:\s*(?!none|transparent)[^;}\s]+/gi, 'stroke: currentColor');
+    },
+    
+    async preloadAllIcons() {
+      const loadPromises = Object.entries(this.iconMap).map(async ([key, config]) => {
+        try {
+          const response = await fetch(config.path);
+          if (!response.ok) throw new Error(`SVG not found: ${config.path}`);
+          const svgMarkup = await response.text();
+          this.cache.set(key, svgMarkup);
+          console.log(`✅ Loaded ${key} icon`);
+        } catch (error) {
+          console.warn(`⚠️ Failed to load ${key} icon from ${config.path}, using fallback`);
+          try {
+            const fallbackPath = getIconPath(fallbackIcon);
+            const fallback = await fetch(fallbackPath);
+            if (fallback.ok) {
+              this.cache.set(key, await fallback.text());
+            } else {
+              this.cache.set(key, '');
+            }
+          } catch (fallbackError) {
+            console.error(`❌ Fallback also failed for ${key}`);
+            this.cache.set(key, '');
+          }
+        }
+      });
       
-              await Promise.all([iconPromise, selectedIconPromise]);
+      await Promise.all(loadPromises);
+    },
+    
+    injectAllIcons() {
+      Object.entries(this.iconMap).forEach(([key, config]) => {
+        const svgMarkup = this.cache.get(key);
+        if (!svgMarkup) {
+          console.warn(`⚠️ No cached SVG for ${key}`);
+          return;
+        }
+        
+        const processedSvg = this.convertToCurrentColor(svgMarkup);
+        
+        const targets = document.querySelectorAll(config.selector);
+        if (targets.length === 0) {
+          console.log(`ℹ️ No elements found for selector: ${config.selector}`);
+        }
+        
+        targets.forEach(el => {
+          el.innerHTML = processedSvg;
+        });
+      });
+      
+      console.log('✅ All icons injected to DOM (converted to currentColor)');
+    },
+    
+    async loadAndInject() {
+      await this.preloadAllIcons();
+      this.injectAllIcons();
+    },
+    
+    getCached(key, convertColor = true) {
+      const svg = this.cache.get(key) || '';
+      return convertColor ? this.convertToCurrentColor(svg) : svg;
     }
   },
   
@@ -740,7 +795,7 @@ const AppUtils = {
       const styleElement = document.createElement('style');
       styleElement.id = id;
       styleElement.textContent = content;
-              document.head.appendChild(styleElement);
+      document.head.appendChild(styleElement);
     }
   }
 };
@@ -762,7 +817,6 @@ const ButtonSystem = {
   },
   
   state: {
-    iconSelectedSvgContent: null,
     styleCache: new WeakMap()
   },
   
@@ -1093,7 +1147,6 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
     },
     
     async setupIconInjection() {
-      // 렌더링 완료 후 안정된 상태에서 아이콘 주입
       await this.waitForRenderCompletion();
       
       const allButtons = document.querySelectorAll('.button');
@@ -1104,18 +1157,20 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
         
         const isToggleButton = button.classList.contains('toggle');
         
-        if (isToggleButton && !background.querySelector('.content.icon.pressed')) {
-          const iconPressedSpan = document.createElement('span');
-          iconPressedSpan.className = 'content icon pressed';
+        if (isToggleButton) {
+          let iconPressedSpan = background.querySelector('.content.icon.pressed');
           
-          // SVG 로딩 완료 확인 후 주입
-                      if (ButtonSystem.state.iconSelectedSvgContent) {
-              iconPressedSpan.innerHTML = ButtonSystem.state.iconSelectedSvgContent;
+          if (!iconPressedSpan) {
+            iconPressedSpan = document.createElement('span');
+            iconPressedSpan.className = 'content icon pressed';
+            
+            const iconEl = background.querySelector('.content.icon:not(.pressed)');
+            if (iconEl && iconEl.parentNode) {
+              background.insertBefore(iconPressedSpan, iconEl);
+            } else {
+              background.insertBefore(iconPressedSpan, background.firstChild);
             }
-          
-          const iconEl = background.querySelector('.content.icon');
-          if (iconEl && iconEl.parentNode) background.insertBefore(iconPressedSpan, iconEl);
-          else background.insertBefore(iconPressedSpan, background.firstChild);
+          }
         }
       }
       
@@ -1127,15 +1182,15 @@ ${darkThemeCSS ? `.dark {\n${darkThemeCSS}}` : ''}
           button.dataset.isToggleButton = 'true';
           button.setAttribute('aria-pressed', isInitiallyPressed ? 'true' : 'false');
         }
-              }
+      }
     }
   },
   
   async init() {
-    // 1단계: SVG 로딩 완료 대기
-    await AppUtils.SVGLoader.loadAllIcons();
+    // 1단계: SVG 로딩 및 DOM 주입
+    await AppUtils.SVGLoader.loadAndInject();
     
-    // 2단계: 아이콘 주입 완료 대기  
+    // 2단계: 토글 버튼 구조 준비
     await this.StyleManager.setupIconInjection();
     
     // 3단계: 팔레트 CSS 생성

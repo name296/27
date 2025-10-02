@@ -58,4 +58,3 @@ export const ColorConverter = {
     return chroma.hsl(h, s, l).alpha(a / 255).hex('rgba').toUpperCase();
   }
 };
-
