@@ -72,17 +72,36 @@ ES6 모듈 기반의 현대적인 버튼 컴포넌트 시스템입니다.
 
 ## 🚀 시작하기
 
-### 로컬 서버 실행
+### 개발 환경 설정
+
+**필수:**
+- Bun 설치: https://bun.sh
+
+**설치:**
+```bash
+# 의존성 설치
+bun install
+```
+
+### 개발 모드
+
+**터미널 1 - Watch 모드 (자동 빌드):**
+```bash
+bun run dev
+# 파일 변경 시 자동으로 dist/index.js 갱신
+```
+
+**터미널 2 - 서버:**
+```bash
+npm run serve
+# http://localhost:8000
+```
+
+### 일회성 빌드
 
 ```bash
-# Python
-python -m http.server 8000
-
-# Node.js
-npx serve
-
-# PHP
-php -S localhost:8000
+bun run build
+# dist/index.js 생성
 ```
 
 ### 개발 워크플로우
@@ -101,7 +120,7 @@ git commit -m "Add new icon"
 ```
 
 **2. 모듈 추가:**
-```javascript
+   ```javascript
 // src/modules/my-module.js
 export const MyModule = {
   // ...
@@ -120,7 +139,7 @@ window.MyModule = MyModule;
 - **Tree Shaking** - 사용하지 않는 코드 제거 가능
 
 ### 2. SVG currentColor 자동 변환
-```javascript
+   ```javascript
 // SVG 로드 시 자동으로 currentColor로 변환
 fill="white" → fill="currentColor"
 stroke="#000" → stroke="currentColor"
@@ -153,32 +172,99 @@ SVGLoader.injectAllIcons();         // 일괄 주입
 | 스타일 계산 | 캐시 사용 | 불필요한 재계산 방지 |
 | 이벤트 | 쓰로틀링 | 성능 향상 |
 
-## 🔄 의존성 그래프
+## 🔄 의존성 그래프 및 빌드 절차
+
+### 📋 전체 실행 순서:
+
+```
+개발 단계 (로컬):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. 아이콘 추가
+   svg/icon/*.svg
+   ↓
+2. 빌드 타임 의존성 해결
+   scripts/update-icons.js (Bun 실행)
+   ↓
+   svg/icon/index.js 자동 생성 ← 소스 코드가 됨!
+   ↓
+3. 모듈 번들링
+   bun build src/index.js
+   ↓
+   모든 모듈 의존성 해결:
+   ├─ svg/icon/index.js import
+   ├─ src/modules/ (14개 모듈)
+   ├─ Chroma.js (CDN 폴백 코드)
+   └─ src/app.js
+   ↓
+   dist/index.js 생성 (2193줄, 93KB)
+   ↓
+4. 브라우저 실행
+   index.html → dist/index.js
+   ↓
+   모든 기능 작동! ✅
+
+
+배포 단계 (GitHub Actions):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. git push
+   ↓
+2. GitHub Actions 트리거
+   ↓
+3. Bun 설치
+   ↓
+4. bun install (의존성 설치)
+   ↓
+5. bun run update-icons  ← 아이콘 인덱스 생성
+   ↓
+6. bun build             ← 모듈 번들링
+   ↓
+7. GitHub Pages 배포
+   ↓
+8. 전 세계 사용자 접근 가능! 🌍
+```
+
+### 🔗 런타임 모듈 의존성:
 
 ```
 독립적 (레벨 0):
+  ├─ svg/icon/index.js (scripts가 생성)
   ├─ color/converter.js
   ├─ color/topology.js
   ├─ button/constants.js
   └─ utils/css-injector.js
 
 레벨 1:
-  ├─ color/mechanics.js → Topology, ColorConverter
+  ├─ color/mechanics.js → Topology, ColorConverter, ui/color-sphere-ui.js
   ├─ utils/svg-loader.js → svg/icon/index.js
+  ├─ ui/color-sphere-ui.js (독립적)
   ├─ managers/theme-manager.js
   ├─ managers/large-mode-manager.js
   └─ managers/size-control-manager.js
 
 레벨 2:
   ├─ button/palette-manager.js → CSSInjector
-  └─ button/style-manager.js
+  ├─ button/style-manager.js
+  └─ ui/palette-ui-generator.js
 
 레벨 3:
-  └─ button/button-system.js → PaletteManager, StyleManager
+  ├─ button/button-system.js → PaletteManager, StyleManager
+  └─ managers/custom-palette-manager.js
 
 레벨 4:
+  ├─ index.js → 모든 모듈 통합
   └─ app.js → ButtonSystem, 모든 매니저
+
+레벨 5:
+  └─ dist/index.js (Bun 번들 결과)
 ```
+
+### 🛠️ 빌드 타임 vs 런타임:
+
+| 단계 | 실행 환경 | 의존성 |
+|------|-----------|--------|
+| **scripts/** | Node.js/Bun (터미널) | 파일 시스템 접근 |
+| **src/** | 모듈 시스템 | ES6 import/export |
+| **dist/** | 브라우저 | 번들링된 단일 파일 |
 
 ## 🛠️ 기술 스택
 

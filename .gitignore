@@ -1,8 +1,9 @@
-# Node.js
+# Node.js / Bun
 node_modules/
 npm-debug.log
 yarn-error.log
 package-lock.json
+bun.lockb
 
 # OS
 .DS_Store
@@ -16,7 +17,7 @@ desktop.ini
 *.swo
 *~
 
-# 빌드 결과물 (현재는 없지만 미래 대비)
+# 빌드 결과물 (GitHub Actions에서 자동 생성)
 dist/
 build/
 .cache/
