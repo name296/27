@@ -7,7 +7,7 @@
     "update-icons": "bun run scripts/update-icons.js",
     "build": "bun build src/index.js --outdir dist --target browser --format esm",
     "watch": "bun build src/index.js --outdir dist --target browser --format esm --watch",
-    "dev": "bun run watch",
+    "dev": "bun run build && python -m http.server 8000",
     "serve": "python -m http.server 8000",
     "start": "python -m http.server 8000"
   },
@@ -20,9 +20,7 @@
   ],
   "author": "이강철",
   "license": "MIT",
-  "devDependencies": {
-    "chroma-js": "^2.4.2"
-  },
+  "devDependencies": {},
   "dependencies": {},
   "repository": {
     "type": "git",

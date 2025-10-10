@@ -42,6 +42,7 @@ const initializeApp = async () => {
   🎮 글로벌 이벤트 시스템
   ============================== */
 
+  // 윈도우 리사이즈 시 버튼 스타일 재계산 (쓰로틀링)
   let resizeScheduled = false;
   window.addEventListener("resize", () => {
     if (resizeScheduled) return;
@@ -52,6 +53,7 @@ const initializeApp = async () => {
     });
   });
 
+  // 토글 버튼 클릭 처리
   document.addEventListener('click', (event) => {
     const button = event.target?.closest?.('.button');
     if (!button || button.getAttribute('aria-disabled') === 'true' || 
@@ -77,6 +79,7 @@ const initializeApp = async () => {
     }
   }, false);
 
+  // 비활성 버튼 이벤트 차단
   const blockDisabledButtonEvents = (event) => {
     const disabledButton = event.target?.closest?.('.button[aria-disabled="true"]');
     if (disabledButton) {
@@ -90,6 +93,7 @@ const initializeApp = async () => {
 
   document.addEventListener('click', blockDisabledButtonEvents, true);
 
+  // 키보드 입력 처리 (비활성 버튼)
   document.addEventListener('keydown', (event) => {
     const disabledButton = event.target?.closest?.('.button[aria-disabled="true"]');
     if (disabledButton && (event.key === ' ' || event.key === 'Enter' || event.key === 'NumpadEnter')) {
@@ -129,6 +133,7 @@ const initializeApp = async () => {
     }
   }, true);
 
+  // 방향키 네비게이션 (초점 이동)
   document.addEventListener('keydown', (event) => {
     const focusedButton = document.activeElement;
     const isArrowKey = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key);
@@ -217,6 +222,7 @@ const initializeApp = async () => {
     }
   }, true);
 
+  // 마우스 다운 - pressed 상태 추가
   document.addEventListener('mousedown', (event) => {
     const button = event.target?.closest?.('.button');
     if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
@@ -224,6 +230,7 @@ const initializeApp = async () => {
     }
   }, true);
 
+  // 마우스 업 - pressed 상태 제거 및 명도대비 업데이트
   document.addEventListener('mouseup', (event) => {
     const button = event.target?.closest?.('.button');
     if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
@@ -234,6 +241,7 @@ const initializeApp = async () => {
     }
   }, true);
 
+  // 마우스 영역 벗어남 - pressed 상태 제거
   document.addEventListener('mouseleave', (event) => {
     if (event.target && typeof event.target.closest === 'function') {
       const button = event.target?.closest?.('.button');
@@ -246,6 +254,7 @@ const initializeApp = async () => {
     }
   }, true);
 
+  // 터치 시작 - pressed 상태 추가
   document.addEventListener('touchstart', (event) => {
     const button = event.target?.closest?.('.button');
     if (button && button.getAttribute('aria-disabled') !== 'true' && !button.classList.contains('toggle')) {
@@ -253,6 +262,7 @@ const initializeApp = async () => {
     }
   }, { passive: true });
 
+  // 터치 종료 - pressed 상태 제거
   document.addEventListener('touchend', (event) => {
     const button = event.target?.closest?.('.button');
     if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
@@ -263,6 +273,7 @@ const initializeApp = async () => {
     }
   }, { passive: true });
 
+  // 터치 취소 - pressed 상태 제거
   document.addEventListener('touchcancel', (event) => {
     const button = event.target?.closest?.('.button');
     if (button && button.classList.contains('pressed') && !button.classList.contains('toggle')) {
@@ -273,6 +284,7 @@ const initializeApp = async () => {
     }
   }, { passive: true });
 
+  // 전역 객체 노출 (디버깅 및 하위 호환성)
   window.AppUtils = AppUtils;
   window.ButtonSystem = ButtonSystem;
   window.ThemeManager = ThemeManager;
@@ -281,7 +293,7 @@ const initializeApp = async () => {
   window.CustomPaletteManager = CustomPaletteManager;
 };
 
-// DOMContentLoaded 체크 및 실행
+// DOM 로드 완료 후 초기화 실행
 if (document.readyState === 'loading') {
   window.addEventListener('DOMContentLoaded', initializeApp);
 } else {

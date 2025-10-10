@@ -3,6 +3,7 @@
   ============================== */
 
 export const Topology = {
+  // 좌표계 상수 정의
   COORDINATE_SYSTEM: {
     SPHERICAL: {
       NORTH_POLE: { theta: 0, phi: 0 },
@@ -27,6 +28,7 @@ export const Topology = {
     },
   },
 
+  // 구면 좌표(theta, phi) → RGB 색상 계산
   calculateColor(theta, phi) {
     const hue = ((phi + Math.PI) / (2 * Math.PI)) * 360;
     const h6 = Math.floor(hue / 60) % 6;
@@ -56,6 +58,7 @@ export const Topology = {
     };
   },
 
+  // 대체 색상 계산 (극지방 및 적도 최적화)
   calculateColor2(theta, phi) {
     const thetaDeg = theta * 180 / Math.PI;
     const isPolarRegion = (thetaDeg < 3 || thetaDeg > 177);
