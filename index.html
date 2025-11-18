@@ -456,31 +456,6 @@
     </footer>
 
     <!-- 스크립트 로딩 -->
-    <!-- dist/index.js(프로덕션) → 실패 시 src/index.js(로컬 개발) -->
-    <script type="module">
-      const loadEntryModule = async () => {
-        const tryImport = async (path, label) => {
-          try {
-            await import(path);
-            console.info(`✅ [bootstrap] ${label} 모듈 로드 성공 (${path})`);
-            return true;
-          } catch (error) {
-            console.warn(`⚠️ [bootstrap] ${label} 모듈 로드 실패 (${path})`, error);
-            return false;
-          }
-        };
-
-        if (await tryImport('./dist/index.js', 'dist')) return;
-        if (await tryImport('./src/index.js', 'src')) return;
-
-        console.error('❌ [bootstrap] 버튼 컴포넌트 시스템 로드를 완료할 수 없습니다.');
-        const announcer = document.getElementById('theme-announcer');
-        if (announcer) {
-          announcer.textContent = '버튼 컴포넌트 시스템 초기화 실패';
-        }
-      };
-
-      loadEntryModule();
-    </script>
+    <script type="module" src="dist/index.js"></script>
   </body>
 </html>
