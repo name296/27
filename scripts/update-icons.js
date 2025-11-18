@@ -83,6 +83,9 @@ export const fallbackIcon = 'placeholder';
   ============================== */
 // 총 아이콘 개수: ${files.length}
 // 생성 일시: ${new Date().toISOString()}
+
+
+
 // 아이콘 목록: ${Object.keys(iconPaths).join(', ')}
 `;
 
@@ -93,4 +96,3 @@ console.log('\n✅ icon/index.js 생성 완료!');
 console.log(`📊 총 ${files.length}개 아이콘 등록됨`);
 console.log(`📝 파일 위치: ${outputFile}`);
 console.log('\n🎉 완료! 이제 아이콘을 사용할 수 있습니다.');
-

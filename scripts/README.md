@@ -50,4 +50,3 @@ Node.js가 설치되어 있다면:
 ```bash
 npm run update-icons
 ```
-
