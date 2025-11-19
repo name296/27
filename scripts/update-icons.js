@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const iconDir = path.join(__dirname, '../svg/icon/');
+const iconDir = path.join(__dirname, '../src/assets/icons/');
 const outputFile = path.join(iconDir, 'index.js');
 
 console.log('🔍 아이콘 디렉토리 스캔 중:', iconDir);
@@ -53,9 +53,9 @@ export function getIconPath(iconKey) {
   const filename = iconPaths[iconKey];
   if (!filename) {
     console.warn(\`⚠️ Icon "\${iconKey}" not found in iconPaths, using placeholder\`);
-    return 'svg/icon/placeholder.svg';
+    return 'src/assets/icons/placeholder.svg';
   }
-  return \`svg/icon/\${filename}\`;
+  return \`src/assets/icons/\${filename}\`;
 }
 
 // iconMap 생성 함수

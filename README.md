@@ -46,15 +46,17 @@ ES6 모듈 기반의 현대적인 버튼 컴포넌트 시스템입니다.
 │           ├── large-mode-manager.js # 큰글씨 모드
 │           └── size-control-manager.js # 크기 조절
 │
-├── svg/
-│   ├── icon/
-│   │   ├── index.js            # 아이콘 중앙 관리 (자동 생성)
-│   │   └── *.svg               # 아이콘 파일들
+├── src/
+│   ├── assets/
+│   │   └── icons/
+│   │       ├── index.js        # 아이콘 중앙 관리 (자동 생성)
+│   │       └── *.svg           # 아이콘 파일들
+│
+├── public/
+│   ├── fonts/
+│   │   └── PretendardGOV-*.otf # Pretendard GOV 폰트
 │   ├── guide/
 │   └── guide-paper/
-│
-├── fonts/
-│   └── PretendardGOV-*.otf     # Pretendard GOV 폰트
 │
 ├── scripts/                    # 개발 도구
 │   ├── update-icons.ps1        # 아이콘 인덱스 자동 생성
@@ -109,7 +111,7 @@ bun run build
 **1. 아이콘 추가:**
 ```bash
 # 1. SVG 파일 추가
-svg/icon/new-icon.svg
+src/assets/icons/new-icon.svg
 
 # 2. 인덱스 갱신
 .\scripts\update-icons.ps1
@@ -180,18 +182,18 @@ SVGLoader.injectAllIcons();         // 일괄 주입
 개발 단계 (로컬):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 1. 아이콘 추가
-   svg/icon/*.svg
+   src/assets/icons/*.svg
    ↓
 2. 빌드 타임 의존성 해결
    scripts/update-icons.js (Bun 실행)
    ↓
-   svg/icon/index.js 자동 생성 ← 소스 코드가 됨!
+   src/assets/icons/index.js 자동 생성 ← 소스 코드가 됨!
    ↓
 3. 모듈 번들링
    bun build src/index.js
    ↓
    모든 모듈 의존성 해결:
-   ├─ svg/icon/index.js import
+   ├─ src/assets/icons/index.js import
    ├─ src/modules/ (14개 모듈)
    ├─ Chroma.js (CDN 폴백 코드)
    └─ src/app.js
@@ -227,7 +229,7 @@ SVGLoader.injectAllIcons();         // 일괄 주입
 
 ```
 독립적 (레벨 0):
-  ├─ svg/icon/index.js (scripts가 생성)
+  ├─ src/assets/icons/index.js (scripts가 생성)
   ├─ color/converter.js
   ├─ color/topology.js
   ├─ button/constants.js
@@ -235,7 +237,7 @@ SVGLoader.injectAllIcons();         // 일괄 주입
 
 레벨 1:
   ├─ color/mechanics.js → Topology, ColorConverter, ui/color-sphere-ui.js
-  ├─ utils/svg-loader.js → svg/icon/index.js
+  ├─ utils/svg-loader.js → src/assets/icons/index.js
   ├─ ui/color-sphere-ui.js (독립적)
   ├─ managers/theme-manager.js
   ├─ managers/large-mode-manager.js

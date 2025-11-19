@@ -59,9 +59,9 @@ export function getIconPath(iconKey) {
   const filename = iconPaths[iconKey];
   if (!filename) {
     console.warn(`⚠️ Icon "${iconKey}" not found in iconPaths, using placeholder`);
-    return 'svg/icon/placeholder.svg';
+    return 'src/assets/icons/placeholder.svg';
   }
-  return `svg/icon/${filename}`;
+  return `src/assets/icons/${filename}`;
 }
 
 // iconMap 생성 함수
@@ -88,5 +88,8 @@ export const fallbackIcon = 'placeholder';
   📊 메타데이터
   ============================== */
 // 총 아이콘 개수: 33
-// 생성 일시: 2025-10-02T13:13:21.376Z
+// 생성 일시: 2025-11-19T11:51:00.280Z
+
+
+
 // 아이콘 목록: add, arrow-left, arrow-right, cancel, contrast, delete, done, exit, extention, favicon, help, home, info, large, lowpos, minus, ok, order, pay, placeholder, plus, print, reset, restart, soldout-large, soldout-small, step, takein, takeout, time, toggle, volume, warning

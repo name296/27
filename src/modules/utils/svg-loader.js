@@ -2,7 +2,7 @@
   🎨 SVG 로더 모듈
   ============================== */
 
-import { createIconMap, getIconPath, fallbackIcon } from '../../../svg/icon/index.js';
+import { createIconMap, getIconPath, fallbackIcon } from '../../assets/icons/index.js';
 
 export const SVGLoader = {
   cache: new Map(),

@@ -1,6 +1,6 @@
 # 아이콘 인덱스 자동 생성 스크립트
 
-$iconDir = Resolve-Path (Join-Path $PSScriptRoot "..\svg\icon")
+$iconDir = Resolve-Path (Join-Path $PSScriptRoot "..\src\assets\icons")
 $indexPath = Join-Path $iconDir "index.js"
 
 Write-Host "Scanning: $iconDir" -ForegroundColor Cyan

@@ -27,9 +27,9 @@ export function getIconPath(iconKey) {
   const filename = iconPaths[iconKey];
   if (!filename) {
     console.warn(`⚠️ Icon "${iconKey}" not found in iconPaths, using placeholder`);
-    return 'svg/icon/placeholder.svg';
+    return 'src/assets/icons/placeholder.svg';
   }
-  return `svg/icon/${filename}`;
+  return `src/assets/icons/${filename}`;
 }
 
 // iconMap 생성 함수

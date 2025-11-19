@@ -6,9 +6,8 @@
   "scripts": {
     "update-icons": "bun run scripts/update-icons.js",
     "build": "bun build src/index.js --outdir dist --target browser --format esm",
-    "watch": "bun build src/index.js --outdir dist --target browser --format esm --watch",
-    "dev": "bun run build && bun server.js",
-    "serve": "bun server.js",
+    "dev": "bun server.js",
+    "serve": "bun server.js --preview",
     "start": "bun server.js"
   },
   "keywords": [

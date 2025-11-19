@@ -20,7 +20,7 @@ import { LargeTextManager } from './modules/managers/large-mode-manager.js';
 import { SizeControlManager } from './modules/managers/size-control-manager.js';
 import { CustomPaletteManager } from './modules/managers/custom-palette-manager.js';
 import { ColorSphereUI } from './modules/ui/color-sphere-ui.js';
-import { createIconMap, getIconPath, fallbackIcon } from '../svg/icon/index.js';
+import { createIconMap, getIconPath, fallbackIcon } from './assets/icons/index.js';
 
 const moduleLoadEnd = performance.now();
 console.log(`✅ [index.js] 모든 모듈 import 완료 (${(moduleLoadEnd - moduleLoadStart).toFixed(2)}ms)`);

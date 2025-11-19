@@ -56,7 +56,7 @@ src/
 ### utils/ - 유틸리티
 | 파일 | Export | 설명 | 의존성 |
 |------|--------|------|--------|
-| svg-loader.js | SVGLoader | SVG 파일 로딩, currentColor 변환 | svg/icon/index.js |
+| svg-loader.js | SVGLoader | SVG 파일 로딩, currentColor 변환 | src/assets/icons/index.js |
 | css-injector.js | CSSInjector | <style> 태그 동적 주입 | - |
 
 ### button/ - 버튼 시스템
@@ -176,7 +176,7 @@ console.log(window.AppUtils.SVGLoader.cache);
 
 - [../README.md](../README.md) - 프로젝트 전체 개요
 - [scripts/README.md](../scripts/README.md) - 스크립트 사용법
-- [svg/icon/index.js](../svg/icon/index.js) - 아이콘 목록 (자동 생성)
+- [src/assets/icons/index.js](./assets/icons/index.js) - 아이콘 목록 (자동 생성)
 
 ---
 
