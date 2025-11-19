@@ -17,11 +17,10 @@ desktop.ini
 *.swo
 *~
 
-# 빌드 결과물
-# dist/ - 배포에 필요하므로 커밋함
+# 빌드 결과물 (GitHub Actions에서 자동 생성)
+dist/
 build/
 .cache/
-dist-dev/
 
 # 임시 파일
 *.tmp
