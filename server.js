@@ -136,13 +136,6 @@ const serveStatic = async (pathname) => {
     }
   }
   
-  // style.css
-  if (pathname === '/style.css') {
-    const file = Bun.file('./style.css');
-    if (await file.exists()) {
-      return new Response(file, { headers: { 'Content-Type': 'text/css' } });
-    }
-  }
   
   // 기존 STATIC_PREFIXES, STATIC_FILES 처리
   if (STATIC_FILES.includes(pathname) || STATIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
