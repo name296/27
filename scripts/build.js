@@ -1,0 +1,23 @@
+// 빌드 스크립트
+// set-base-path.js를 먼저 실행하여 BASE_PATH와 NODE_ENV 설정
+// 그 다음 bun build 실행
+
+import './set-base-path.js';
+
+// set-base-path.js가 환경 변수를 설정했으므로, 그 값을 사용
+const nodeEnv = process.env.NODE_ENV || 'production';
+
+// bun build 직접 실행
+import { build } from 'bun';
+
+await build({
+  entrypoints: ['src/index.js'],
+  outdir: 'dist',
+  target: 'browser',
+  format: 'esm',
+  minify: true,
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(nodeEnv)
+  }
+});
+

@@ -25,8 +25,10 @@ jobs:
       - name: Update icon index
         run: bun run update-icons
       
-      - name: Build with Bun
-        run: bun build src/index.js --outdir dist --target browser --format esm
+      - name: Build with BASE_PATH
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+        run: bun run build
       
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'

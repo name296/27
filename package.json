@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "update-icons": "bun run scripts/update-icons.js",
-    "build": "bun build src/index.js --outdir dist --target browser --format esm",
+    "build": "bun run scripts/build.js",
+    "build:dev": "bun build src/index.js --outdir dist --target browser --format esm --define:\"process.env.NODE_ENV='development'\"",
     "dev": "bun server.js",
-    "serve": "bun server.js --preview",
-    "start": "bun server.js"
+    "start": "bun run dev"
   },
   "keywords": [
     "button",
@@ -20,7 +20,9 @@
   "author": "이강철",
   "license": "이강철",
   "devDependencies": {},
-  "dependencies": {},
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/yourusername/button-component-system.git"
