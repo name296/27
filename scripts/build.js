@@ -6,6 +6,7 @@ import './set-base-path.js';
 
 // set-base-path.js가 환경 변수를 설정했으므로, 그 값을 사용
 const nodeEnv = process.env.NODE_ENV || 'production';
+const basePath = process.env.BASE_PATH || '';
 
 // bun build 직접 실행
 import { build } from 'bun';
@@ -17,7 +18,8 @@ await build({
   format: 'esm',
   minify: true,
   define: {
-    'process.env.NODE_ENV': JSON.stringify(nodeEnv)
+    'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+    'process.env.BASE_PATH': JSON.stringify(basePath)
   }
 });
 
