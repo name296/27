@@ -7,9 +7,13 @@ export const PaletteManager = {
     const buttons = document.querySelectorAll('.button');
     const discoveredPalettes = new Set();
     
+    // 토글 버튼으로 처리할 클래스 목록 (팔레트로 인식하지 않음)
+    const toggleButtonClasses = ['toggle'];
+    
     buttons.forEach(button => {
       const classList = Array.from(button.classList);
-      const palette = classList.find(cls => !['button', 'pressed', 'toggle', 'dynamic'].includes(cls));
+      const excludedClasses = ['button', 'pressed', 'dynamic', ...toggleButtonClasses];
+      const palette = classList.find(cls => !excludedClasses.includes(cls));
       if (palette) discoveredPalettes.add(palette);
     });
     
@@ -20,10 +24,10 @@ export const PaletteManager = {
       
       [
         { name: 'default', selector: '', disabled: false },
-        { name: 'pressed', selector: '.pressed:not(.toggle)', disabled: false },
-        { name: 'pressed', selector: '.pressed.toggle', disabled: false },
-        { name: 'disabled', selector: '[aria-disabled="true"]', disabled: true }
-      ].forEach(({name: state, selector: stateSelector, disabled}) => {
+        { name: 'pressed', selector: '.pressed:not(.toggle)', disabled: false, isToggle: false },
+        { name: 'pressed', selector: '.pressed.toggle', disabled: false, isToggle: true },
+        { name: 'disabled', selector: '[aria-disabled="true"]', disabled: true, isToggle: false }
+      ].forEach(({name: state, selector: stateSelector, disabled, isToggle = false}) => {
         const baseSelector = palette === 'primary1' && state === 'default' && !disabled ? `&${stateSelector}` : null;
         const paletteSelector = `&.${palette}${stateSelector}`;
         
@@ -59,7 +63,7 @@ export const PaletteManager = {
           color: var(--${palette}-content-color-${state});
         }
       }
-      ${state === 'pressed' ? '&.toggle { & .content.icon.pressed { display: var(--content-icon-display-pressed-toggle); } }' : ''}
+      ${state === 'pressed' && isToggle ? '&.toggle { & .content.icon.pressed { display: var(--content-icon-display-pressed-toggle); } }' : ''}
       ${disabled ? 'cursor: var(--button-cursor-disabled);' : ''}
     }`;
       });

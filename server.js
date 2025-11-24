@@ -73,7 +73,7 @@ const bundleOnce = async (tag = "manual") => {
 };
 
 // 초기 번들링 실행
-await bundleOnce("initial");
+  await bundleOnce("initial");
 
 // ---------------------------------------------------------------------------
 // 파일 감시
