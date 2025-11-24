@@ -6,34 +6,36 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-      
+
       - name: Install dependencies
         run: bun install
-      
+
       - name: Update icon index
         run: bun run update-icons
-      
+
       - name: Build with BASE_PATH
         env:
           BASE_PATH: /${{ github.event.repository.name }}
         run: bun run build
-      
+
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          exclude_assets: '.github,node_modules,src,scripts'
+          publish_dir: ./dist
